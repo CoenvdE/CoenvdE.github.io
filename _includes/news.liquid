@@ -5,7 +5,7 @@
     {% if site.news %}
       <div class="news-item">
         {% for item in site.news %}
-          <div class="news-date">{{ item.date | date: "%b %-d, %Y" }}</div>
+          <div class="news-date">{{ item.date | date: '%b %-d, %Y' }}</div>
           <div class="news-content">{{ item.content }}</div>
         {% endfor %}
       </div>
@@ -13,4 +13,4 @@
       <p>No news to display at this time.</p>
     {% endif %}
   </div>
-</div> 
+</div>
