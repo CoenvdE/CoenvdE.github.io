@@ -1,0 +1,16 @@
+<!-- A simple template for displaying news/updates -->
+<div class="news">
+  <h2>News</h2>
+  <div class="news-list">
+    {% if site.news %}
+      <div class="news-item">
+        {% for item in site.news %}
+          <div class="news-date">{{ item.date | date: "%b %-d, %Y" }}</div>
+          <div class="news-content">{{ item.content }}</div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>No news to display at this time.</p>
+    {% endif %}
+  </div>
+</div> 
