@@ -9,7 +9,13 @@ chapter_number: 1
 img: assets/img/12.jpg
 importance: 1
 category: blog-collection
+toc:
+  sidebar: left
 ---
+
+<div class="chapter-navigation">
+  <a href="/blogs/my-blog-collection/" class="btn btn-sm">← Back to Collection</a>
+</div>
 
 # Chapter 1: Introduction
 
@@ -28,3 +34,27 @@ In this section, you can provide an overview of what readers will learn througho
 ## What's Next
 
 In the next chapter, we'll dive deeper into specific aspects of the topic.
+
+<div class="chapter-navigation bottom">
+  <a href="/blogs/my-blog-collection/" class="btn btn-sm">← Back to Collection</a>
+  {% assign chapters = site.blogs | where: "collection_id", "my_blog_collection" | sort: "chapter_number" %}
+  {% for chapter in chapters %}
+    {% if chapter.chapter_number == 2 %}
+      <a href="{{ chapter.url | relative_url }}" class="btn btn-sm">Next Chapter →</a>
+    {% endif %}
+  {% endfor %}
+</div>
+
+<style>
+.chapter-navigation {
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.chapter-navigation.bottom {
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+  margin-top: 40px;
+}
+</style>

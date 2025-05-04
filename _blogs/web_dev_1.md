@@ -9,7 +9,13 @@ chapter_number: 1
 img: assets/img/12.jpg
 importance: 1
 category: web-development
+toc:
+  sidebar: left
 ---
+
+<div class="chapter-navigation">
+  <a href="/blogs/web-dev-tutorial/" class="btn btn-sm">← Back to Collection</a>
+</div>
 
 # Chapter 1: Web Development Basics
 
@@ -47,3 +53,27 @@ Let's create a simple HTML page:
 ## What's Next
 
 In the next chapter, we'll dive deeper into HTML elements and structure.
+
+<div class="chapter-navigation bottom">
+  <a href="/blogs/web-dev-tutorial/" class="btn btn-sm">← Back to Collection</a>
+  {% assign chapters = site.blogs | where: "collection_id", "web_dev_tutorial" | sort: "chapter_number" %}
+  {% for chapter in chapters %}
+    {% if chapter.chapter_number == 2 %}
+      <a href="{{ chapter.url | relative_url }}" class="btn btn-sm">Next Chapter →</a>
+    {% endif %}
+  {% endfor %}
+</div>
+
+<style>
+.chapter-navigation {
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.chapter-navigation.bottom {
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+  margin-top: 40px;
+}
+</style>
