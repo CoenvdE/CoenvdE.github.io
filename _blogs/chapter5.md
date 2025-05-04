@@ -13,7 +13,7 @@ category: blog-collection
 
 # Chapter 5: Challenges and Limitations
 
-This chapter addresses the challenges and limitations you might encounter when applying the concepts from previous chapters.
+This chapter addresses the challenges and limitations you might encounter when applying the concepts from previous chapters.x
 
 ## Common Obstacles
 
