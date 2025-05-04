@@ -37,6 +37,13 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/repositories/";
           },
+        },{id: "nav-blogs",
+          title: "Blogs",
+          description: "Blog collections and individual posts",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/blogs/";
+          },
         },{id: "nav-cv",
           title: "cv",
           description: "This is a description of the page. You can modify it in &#39;_pages/cv.md&#39;. You can also change or remove the top pdf download button.",
@@ -44,8 +51,8 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/cv/";
           },
-        },{id: "nav-teaching-assistant-at-the-university-of-amsterdam",
-          title: "Teaching assistant at the University of Amsterdam",
+        },{id: "nav-teaching",
+          title: "Teaching",
           description: "As a teaching assistant at the University of Amsterdam, I&#39;ve taught various programming and mathematics courses to undergraduate students.",
           section: "Navigation",
           handler: () => {
@@ -84,7 +91,42 @@ ninja.data = [{
             window.location.href = "/blog/2015/formatting-and-links/";
           
         },
-      },{id: "projects-project-1",
+      },{id: "blogs-chapter-1-introduction",
+          title: 'Chapter 1 - Introduction',
+          description: "The first chapter of our blog collection",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/chapter1/";
+            },},{id: "blogs-chapter-2-core-concepts",
+          title: 'Chapter 2 - Core Concepts',
+          description: "The second chapter exploring core concepts",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/chapter2/";
+            },},{id: "blogs-chapter-3-practical-applications",
+          title: 'Chapter 3 - Practical Applications',
+          description: "The third chapter covering practical applications",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/chapter3/";
+            },},{id: "blogs-chapter-4-advanced-techniques",
+          title: 'Chapter 4 - Advanced Techniques',
+          description: "The fourth chapter covering advanced techniques",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/chapter4/";
+            },},{id: "blogs-chapter-5-challenges-and-limitations",
+          title: 'Chapter 5 - Challenges and Limitations',
+          description: "The fifth chapter addressing challenges and limitations",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/chapter5/";
+            },},{id: "blogs-chapter-6-future-trends",
+          title: 'Chapter 6 - Future Trends',
+          description: "The final chapter exploring future trends and developments",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/chapter6/";
+            },},{id: "blogs-my-blog-collection",
+          title: 'My Blog Collection',
+          description: "A comprehensive blog series in 6 chapters",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/";
+            },},{id: "projects-project-1",
           title: 'project 1',
           description: "with background image",
           section: "Projects",handler: () => {
