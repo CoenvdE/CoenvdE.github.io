@@ -30,8 +30,8 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/projects/";
           },
-        },{id: "nav-repositories",
-          title: "repositories",
+        },{id: "nav-github",
+          title: "Github",
           description: "Edit the `_data/repositories.yml` and change the `github_users` and `github_repos` lists to include your own GitHub profile and repositories.",
           section: "Navigation",
           handler: () => {
@@ -121,11 +121,41 @@ ninja.data = [{
           description: "The final chapter exploring future trends and developments",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/chapter6/";
+            },},{id: "blogs-blog-collections",
+          title: 'Blog Collections',
+          description: "A library of comprehensive blog series on various topics",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/";
             },},{id: "blogs-my-blog-collection",
           title: 'My Blog Collection',
           description: "A comprehensive blog series in 6 chapters",
           section: "Blogs",handler: () => {
-              window.location.href = "/blogs/";
+              window.location.href = "/blogs/my-blog-collection/";
+            },},{id: "blogs-chapter-1-python-fundamentals",
+          title: 'Chapter 1 - Python Fundamentals',
+          description: "Introduction to Python programming language",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/python_basics_1/";
+            },},{id: "blogs-chapter-2-data-types-and-variables",
+          title: 'Chapter 2 - Data Types and Variables',
+          description: "Understanding Python data types and variables",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/python_basics_2/";
+            },},{id: "blogs-python-tutorial",
+          title: 'Python Tutorial',
+          description: "Learn Python programming from the basics to advanced concepts",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/python-tutorial/";
+            },},{id: "blogs-chapter-1-web-development-basics",
+          title: 'Chapter 1 - Web Development Basics',
+          description: "Introduction to web development",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/web_dev_1/";
+            },},{id: "blogs-web-development-tutorial",
+          title: 'Web Development Tutorial',
+          description: "Master web development with HTML, CSS, and JavaScript",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/web-dev-tutorial/";
             },},{id: "projects-project-1",
           title: 'project 1',
           description: "with background image",
