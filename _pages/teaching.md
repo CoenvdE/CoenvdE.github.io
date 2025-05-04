@@ -1,7 +1,7 @@
 ---
 layout: page
 permalink: /teaching/
-title: Teaching assistant at the University of Amsterdam
+title: Teaching
 description: As a teaching assistant at the University of Amsterdam, I've taught various programming and mathematics courses to undergraduate students.
 nav: true
 nav_order: 6
