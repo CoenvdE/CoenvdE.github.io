@@ -4,8 +4,6 @@ title: My Blog Collection
 description: A comprehensive blog series in 6 chapters
 permalink: /blogs/my-blog-collection/
 nav_order: 1
-toc:
-  sidebar: left
 ---
 
 # My Blog Collection
@@ -18,23 +16,71 @@ This blog collection is designed to provide a comprehensive overview of importan
 
 The materials are organized into a logical progression, allowing you to build your knowledge step by step. Feel free to read from start to finish or jump to specific chapters that interest you most.
 
-## Chapter Overview
+## Chapters
 
 {% assign sorted_blogs = site.blogs | where: "collection_id", "my_blog_collection" | sort: "chapter_number" %}
 
-<div class="blog-collection">
+<div class="chapters-container">
   {% for blog in sorted_blogs %}
     {% if blog.title != page.title %}
-    <div class="blog-card">
-      <h3 class="blog-title">
+    <div class="chapter-card">
+      <div class="chapter-number">Chapter {{ blog.chapter_number }}</div>
+      <h3 class="chapter-title">
         <a href="{{ blog.url | relative_url }}">{{ blog.title }}</a>
       </h3>
-      <p class="blog-description">{{ blog.description }}</p>
+      <p class="chapter-description">{{ blog.description }}</p>
+      <a href="{{ blog.url | relative_url }}" class="btn btn-sm">Read Chapter →</a>
     </div>
     {% endif %}
   {% endfor %}
 </div>
 
-## Navigation
+<style>
+.chapters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 30px 0;
+}
 
-Use the table of contents in the sidebar to navigate directly to any chapter in this collection. Each chapter builds on the concepts introduced in previous chapters, but they can also be read independently.
+.chapter-card {
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.chapter-card:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.chapter-number {
+  font-weight: bold;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.chapter-title {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.chapter-description {
+  margin-bottom: 15px;
+  color: #555;
+}
+
+.btn {
+  display: inline-block;
+  background-color: #4285f4;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background-color: #3367d6;
+}
+</style>

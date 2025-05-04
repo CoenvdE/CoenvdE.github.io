@@ -4,8 +4,6 @@ title: Python Tutorial
 description: Learn Python programming from the basics to advanced concepts
 permalink: /blogs/python-tutorial/
 nav_order: 2
-toc:
-  sidebar: left
 ---
 
 # Python Tutorial
@@ -18,31 +16,71 @@ Python is one of the most popular programming languages in the world, known for 
 
 Whether you're interested in data science, web development, automation, or just want to learn programming, Python is an excellent language to start with. Each chapter builds on the previous one, so you can follow along step by step.
 
-## Chapter Overview
+## Chapters
 
 {% assign sorted_blogs = site.blogs | where: "collection_id", "python_tutorial" | sort: "chapter_number" %}
 
-<div class="blog-collection">
+<div class="chapters-container">
   {% for blog in sorted_blogs %}
     {% if blog.title != page.title %}
-    <div class="blog-card">
-      <h3 class="blog-title">
+    <div class="chapter-card">
+      <div class="chapter-number">Chapter {{ blog.chapter_number }}</div>
+      <h3 class="chapter-title">
         <a href="{{ blog.url | relative_url }}">{{ blog.title }}</a>
       </h3>
-      <p class="blog-description">{{ blog.description }}</p>
+      <p class="chapter-description">{{ blog.description }}</p>
+      <a href="{{ blog.url | relative_url }}" class="btn btn-sm">Read Chapter →</a>
     </div>
     {% endif %}
   {% endfor %}
 </div>
 
-## Navigation
+<style>
+.chapters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 30px 0;
+}
 
-Use the table of contents in the sidebar to navigate directly to any chapter in this tutorial. While the chapters are designed to be followed in order, you can also jump to specific topics if you already have some Python experience.
+.chapter-card {
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  position: relative;
+}
 
-## Prerequisites
+.chapter-card:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
 
-No prior programming experience is required for this tutorial. All you need is:
+.chapter-number {
+  font-weight: bold;
+  color: #666;
+  margin-bottom: 5px;
+}
 
-- A computer with Python installed (we cover this in Chapter 1)
-- Curiosity and willingness to learn
-- Time to practice the concepts
+.chapter-title {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.chapter-description {
+  margin-bottom: 15px;
+  color: #555;
+}
+
+.btn {
+  display: inline-block;
+  background-color: #4285f4;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background-color: #3367d6;
+}
+</style>

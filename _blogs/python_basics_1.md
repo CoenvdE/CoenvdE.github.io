@@ -9,12 +9,10 @@ chapter_number: 1
 img: assets/img/12.jpg
 importance: 1
 category: python
-toc:
-  sidebar: left
 ---
 
 <div class="chapter-navigation">
-  <a href="/blogs/python-tutorial/" class="btn btn-sm">← Back to Collection</a>
+  <a href="/blogs/python-tutorial/" class="btn">← Back to Collection</a>
 </div>
 
 # Chapter 1: Python Fundamentals
@@ -42,11 +40,11 @@ print("Hello, World!")
 In the next chapter, we'll learn about Python data types and variables.
 
 <div class="chapter-navigation bottom">
-  <a href="/blogs/python-tutorial/" class="btn btn-sm">← Back to Collection</a>
+  <a href="/blogs/python-tutorial/" class="btn">← Back to Collection</a>
   {% assign chapters = site.blogs | where: "collection_id", "python_tutorial" | sort: "chapter_number" %}
   {% for chapter in chapters %}
     {% if chapter.chapter_number == 2 %}
-      <a href="{{ chapter.url | relative_url }}" class="btn btn-sm">Next Chapter →</a>
+      <a href="{{ chapter.url | relative_url }}" class="btn">Next Chapter →</a>
     {% endif %}
   {% endfor %}
 </div>
@@ -62,5 +60,18 @@ In the next chapter, we'll learn about Python data types and variables.
   border-top: 1px solid #eee;
   padding-top: 20px;
   margin-top: 40px;
+}
+
+.btn {
+  display: inline-block;
+  background-color: #4285f4;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background-color: #3367d6;
 }
 </style>
