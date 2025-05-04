@@ -11,7 +11,9 @@ nav_order: 5
 
 ## Blog Collections
 
-[My Blog Collection](/blogs/) - A comprehensive blog series in 6 chapters covering important topics.
+- [My Blog Collection](/blogs/my-blog-collection/) - A comprehensive blog series in 6 chapters covering important concepts.
+- [Python Tutorial](/blogs/python-tutorial/) - Learn Python programming from the basics to advanced concepts.
+- [Web Development Tutorial](/blogs/web-dev-tutorial/) - Master web development with HTML, CSS, and JavaScript.
 
 ## Recent Blog Posts
 
