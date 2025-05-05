@@ -3,6 +3,12 @@ layout: default
 ---
 <div class="post">
   <header class="post-header">
+    <div class="toggle-nav-container">
+      <button class="toggle-nav" aria-label="Toggle navigation">
+        <span class="toggle-nav-icon"></span>
+        <span class="toggle-nav-text">Toggle navigation</span>
+      </button>
+    </div>
     <h1 class="post-title">{{ page.title }}</h1>
     <p class="post-description">{{ page.description }}</p>
   </header>
@@ -10,8 +16,10 @@ layout: default
   <div class="row">
     <!-- Left sidebar with chapter navigation -->
     <div class="col-sm-12 col-md-3 blog-sidebar">
-      <h3>Chapters</h3>
-      {% include collection_sidebar.liquid %}
+      <div class="sidebar-sticky">
+        <h3>Contents</h3>
+        {% include collection_sidebar.liquid %}
+      </div>
     </div>
 
     <!-- Right column with main content -->
@@ -30,13 +38,21 @@ layout: default
 
 <style>
   .blog-sidebar {
-    border-right: 1px solid #eee;
+    border-right: 1px solid var(--global-divider-color);
     padding-right: 20px;
+  }
+
+  .sidebar-sticky {
+    position: sticky;
+    top: 4rem;
+    height: calc(100vh - 6rem);
+    overflow-y: auto;
   }
 
   .blog-nav-list {
     list-style-type: none;
     padding-left: 0;
+    margin-top: 15px;
   }
 
   .blog-nav-item {
@@ -47,12 +63,16 @@ layout: default
   }
 
   .blog-nav-item:hover {
-    background-color: #f5f5f5;
+    background-color: var(--global-hover-color);
   }
 
   .blog-nav-item.active {
-    background-color: #eee;
+    background-color: var(--global-theme-color);
     font-weight: bold;
+  }
+
+  .blog-nav-item.active a {
+    color: white;
   }
 
   .chapters-container {
@@ -68,6 +88,7 @@ layout: default
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     position: relative;
+    background-color: var(--global-card-bg-color);
   }
 
   .chapter-card:hover {
@@ -77,26 +98,82 @@ layout: default
 
   .chapter-number {
     font-weight: bold;
-    color: #666;
+    color: var(--global-text-color-light);
     margin-bottom: 5px;
   }
 
   .chapter-title {
     margin-top: 0;
     margin-bottom: 10px;
+    color: var(--global-theme-color);
   }
 
   .chapter-description {
     margin-bottom: 15px;
-    color: #555;
+    color: var(--global-text-color);
+  }
+
+  /* Toggle Navigation */
+  .toggle-nav-container {
+    text-align: right;
+    margin-bottom: 1rem;
+  }
+
+  .toggle-nav {
+    display: inline-block;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--global-text-color);
+  }
+
+  .toggle-nav-icon {
+    display: inline-block;
+    width: 1.25rem;
+    height: 2px;
+    background-color: var(--global-text-color);
+    position: relative;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+  }
+
+  .toggle-nav-icon:before,
+  .toggle-nav-icon:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: var(--global-text-color);
+    position: absolute;
+    left: 0;
+  }
+
+  .toggle-nav-icon:before {
+    top: -6px;
+  }
+
+  .toggle-nav-icon:after {
+    bottom: -6px;
+  }
+
+  .toggle-nav-text {
+    vertical-align: middle;
   }
 
   @media (max-width: 768px) {
     .blog-sidebar {
       border-right: none;
-      border-bottom: 1px solid #eee;
+      border-bottom: 1px solid var(--global-divider-color);
       margin-bottom: 20px;
       padding-bottom: 20px;
+    }
+
+    .sidebar-sticky {
+      position: relative;
+      height: auto;
+      overflow-y: visible;
     }
 
     .blog-nav-list {
@@ -110,3 +187,25 @@ layout: default
     }
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const toggleBtn = document.querySelector('.toggle-nav');
+    const sidebar = document.querySelector('.blog-sidebar');
+    const content = document.querySelector('.blog-content');
+
+    if (toggleBtn && sidebar && content) {
+      toggleBtn.addEventListener('click', function () {
+        if (sidebar.style.display === 'none') {
+          sidebar.style.display = 'block';
+          content.classList.remove('col-md-12');
+          content.classList.add('col-md-9');
+        } else {
+          sidebar.style.display = 'none';
+          content.classList.remove('col-md-9');
+          content.classList.add('col-md-12');
+        }
+      });
+    }
+  });
+</script>

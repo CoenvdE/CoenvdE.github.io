@@ -11,8 +11,75 @@
           <a href="{{ blog.url | relative_url }}">{{ blog.title }}</a>
         </h3>
         <p class="chapter-description">{{ blog.description }}</p>
-        <a href="{{ blog.url | relative_url }}" class="btn btn-sm z-depth-0">Read Chapter →</a>
+        <a href="{{ blog.url | relative_url }}" class="read-chapter-btn">Read Chapter →</a>
       </div>
     {% endif %}
   {% endfor %}
 </div>
+
+<style>
+  .chapters-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .chapter-card {
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    background-color: var(--global-card-bg-color);
+    border: 1px solid var(--global-divider-color);
+  }
+
+  .chapter-card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .chapter-number {
+    font-weight: bold;
+    color: var(--global-text-color-light);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .chapter-title {
+    margin-top: 0;
+    margin-bottom: 0.8rem;
+    font-size: 1.5rem;
+  }
+
+  .chapter-title a {
+    color: var(--global-theme-color);
+    text-decoration: none;
+  }
+
+  .chapter-title a:hover {
+    text-decoration: underline;
+  }
+
+  .chapter-description {
+    margin-bottom: 1.2rem;
+    color: var(--global-text-color);
+    line-height: 1.5;
+  }
+
+  .read-chapter-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: var(--global-code-bg-color);
+    color: var(--global-text-color);
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  .read-chapter-btn:hover {
+    background-color: var(--global-hover-color);
+    text-decoration: none;
+  }
+</style>
