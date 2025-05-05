@@ -10,4 +10,24 @@ importance: 1
 category: blog-collection
 ---
 
-{% include external_content.liquid path="../_external_blogs_links/optimizing_data.md" remove_frontmatter=true %}
+<div class="external-content" data-repo-path="_external_blogs/training-at-larger-scale">
+{% capture file_content %}{% include_relative ../_external_blogs/training-at-larger-scale/3. Optimizing the pipeline: Data.md %}{% endcapture %}
+{{ file_content | markdownify }}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const externalContent = document.querySelector('.external-content');
+  if (externalContent) {
+    const repoPath = externalContent.dataset.repoPath;
+    const images = externalContent.querySelectorAll('img');
+    
+    images.forEach(img => {
+      const src = img.getAttribute('src');
+      if (src && src.startsWith('images/')) {
+        img.setAttribute('src', `{{ site.baseurl }}/${repoPath}/${src}`);
+      }
+    });
+  }
+});
+</script>

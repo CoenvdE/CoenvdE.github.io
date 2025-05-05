@@ -1,1 +1,0 @@
-../_external_blogs/training-at-larger-scale/2. Bigger data in the cloud.md

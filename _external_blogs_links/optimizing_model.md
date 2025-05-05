@@ -1,1 +1,0 @@
-../_external_blogs/training-at-larger-scale/4. Optimizing the pipeline: Model.md

@@ -1,1 +1,0 @@
-../_external_blogs/training-at-larger-scale/0. The Setup.md
