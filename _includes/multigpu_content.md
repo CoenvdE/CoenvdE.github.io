@@ -1,1 +1,0 @@
-../_external_blogs/training-at-larger-scale/multigpu.md
