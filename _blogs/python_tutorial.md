@@ -1,86 +1,27 @@
 ---
-layout: page
+layout: blog_collection
 title: Python Tutorial
 description: Learn Python programming from the basics to advanced concepts
 permalink: /blogs/python-tutorial/
-nav_order: 2
+nav_order: 3
+collection_id: python_tutorial
+display_chapters: true
+img: assets/img/11.jpg
 ---
 
 # Python Tutorial
 
-Welcome to the Python Tutorial series! This comprehensive guide will help you learn Python programming from basic concepts to more advanced topics.
+Welcome to this comprehensive Python tutorial series where you'll learn one of the most popular programming languages from scratch.
 
 ## About This Collection
 
-Python is one of the most popular programming languages in the world, known for its readability, versatility, and powerful ecosystem. This tutorial series is designed to take you from complete beginner to proficient Python programmer through a series of carefully structured chapters.
+Python is a versatile, high-level programming language known for its simplicity and readability. This tutorial series is designed for beginners with no prior programming experience, but it also covers advanced topics for those looking to deepen their Python knowledge.
 
-Whether you're interested in data science, web development, automation, or just want to learn programming, Python is an excellent language to start with. Each chapter builds on the previous one, so you can follow along step by step.
+Throughout this series, you'll learn:
 
-## Chapters
+- Core Python syntax and concepts
+- Working with data structures and functions
+- Object-oriented programming in Python
+- Building practical applications and scripts
 
-{% assign sorted_blogs = site.blogs | where: "collection_id", "python_tutorial" | sort: "chapter_number" %}
-
-<div class="chapters-container">
-  {% for blog in sorted_blogs %}
-    {% if blog.title != page.title %}
-    <div class="chapter-card">
-      <div class="chapter-number">Chapter {{ blog.chapter_number }}</div>
-      <h3 class="chapter-title">
-        <a href="{{ blog.url | relative_url }}">{{ blog.title }}</a>
-      </h3>
-      <p class="chapter-description">{{ blog.description }}</p>
-      <a href="{{ blog.url | relative_url }}" class="btn btn-sm">Read Chapter →</a>
-    </div>
-    {% endif %}
-  {% endfor %}
-</div>
-
-<style>
-.chapters-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin: 30px 0;
-}
-
-.chapter-card {
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.chapter-card:hover {
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.chapter-number {
-  font-weight: bold;
-  color: #666;
-  margin-bottom: 5px;
-}
-
-.chapter-title {
-  margin-top: 0;
-  margin-bottom: 10px;
-}
-
-.chapter-description {
-  margin-bottom: 15px;
-  color: #555;
-}
-
-.btn {
-  display: inline-block;
-  background-color: #4285f4;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 4px;
-  text-decoration: none;
-}
-
-.btn:hover {
-  background-color: #3367d6;
-}
-</style>
+Whether you're interested in web development, data science, automation, or general programming, this tutorial will give you the foundation you need to succeed with Python.

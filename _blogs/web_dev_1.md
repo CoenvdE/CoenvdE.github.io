@@ -1,79 +1,63 @@
 ---
-layout: page
-title: Chapter 1 - Web Development Basics
-description: Introduction to web development
-date: 2024-05-23
+layout: blog_chapter
+title: HTML Fundamentals
+description: Learn the basics of HTML structure and elements
+date: 2024-05-25
 collection: blogs
 collection_id: web_dev_tutorial
 chapter_number: 1
-img: assets/img/12.jpg
+img: assets/img/7.jpg
 importance: 1
-category: web-development
-toc:
-  sidebar: left
+category: blog-collection
 ---
 
-<div class="chapter-navigation">
-  <a href="/blogs/web-dev-tutorial/" class="btn btn-sm">← Back to Collection</a>
-</div>
+# HTML Fundamentals
 
-# Chapter 1: Web Development Basics
+HTML (HyperText Markup Language) is the standard markup language for creating web pages. In this chapter, we'll cover the basics of HTML.
 
-This is the first chapter of our web development series. We'll explore the fundamentals of building websites.
+## What is HTML?
 
-## The Three Pillars of Web Development
+HTML is the foundation of all web pages. It's a markup language that defines the structure of your content. HTML consists of a series of elements that you use to enclose or wrap different parts of the content to make it appear or act in a certain way.
 
-Web development relies on three core technologies:
+## Basic Structure
 
-- HTML (structure)
-- CSS (styling)
-- JavaScript (interactivity)
-
-## Setting Up Your Development Environment
-
-In this section, we'll set up a basic development environment for web development.
-
-## Your First Webpage
-
-Let's create a simple HTML page:
+Every HTML document has a basic structure:
 
 ```html
 <!doctype html>
 <html>
   <head>
-    <title>My First Webpage</title>
+    <title>Page Title</title>
   </head>
   <body>
-    <h1>Hello, World!</h1>
-    <p>This is my first webpage.</p>
+    <h1>My First Heading</h1>
+    <p>My first paragraph.</p>
   </body>
 </html>
 ```
 
-## What's Next
+Let's break down each part:
 
-In the next chapter, we'll dive deeper into HTML elements and structure.
+- `<!DOCTYPE html>`: Declaration that tells the browser what version of HTML the page is written in.
+- `<html>`: The root element of an HTML page.
+- `<head>`: Contains meta-information about the document.
+- `<title>`: Specifies a title for the document.
+- `<body>`: Contains the visible page content.
+- `<h1>`: Defines a large heading.
+- `<p>`: Defines a paragraph.
 
-<div class="chapter-navigation bottom">
-  <a href="/blogs/web-dev-tutorial/" class="btn btn-sm">← Back to Collection</a>
-  {% assign chapters = site.blogs | where: "collection_id", "web_dev_tutorial" | sort: "chapter_number" %}
-  {% for chapter in chapters %}
-    {% if chapter.chapter_number == 2 %}
-      <a href="{{ chapter.url | relative_url }}" class="btn btn-sm">Next Chapter →</a>
-    {% endif %}
-  {% endfor %}
-</div>
+## Common HTML Elements
 
-<style>
-.chapter-navigation {
-  margin: 20px 0;
-  display: flex;
-  justify-content: space-between;
-}
+Here are some common HTML elements you'll use frequently:
 
-.chapter-navigation.bottom {
-  border-top: 1px solid #eee;
-  padding-top: 20px;
-  margin-top: 40px;
-}
-</style>
+- Headings: `<h1>` to `<h6>`
+- Paragraphs: `<p>`
+- Links: `<a href="url">link text</a>`
+- Images: `<img src="image.jpg" alt="Description">`
+- Lists: `<ul>`, `<ol>`, and `<li>`
+- Divs: `<div>` (for grouping elements)
+- Spans: `<span>` (for styling part of text)
+
+## Next Steps
+
+In the next chapter, we'll dive into CSS to style our HTML elements and make them visually appealing.
