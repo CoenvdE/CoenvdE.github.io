@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: blog_collection
 title: "Part 3 - Wrapping Up"
 description: "Concluding the example series and summarizing the collection feature."
 date: 2024-07-29

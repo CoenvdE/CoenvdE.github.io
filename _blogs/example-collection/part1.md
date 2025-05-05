@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: blog_collection
 title: "Part 1 - Getting Started"
 description: "The first part of our example blog series, laying the groundwork."
 date: 2024-07-27

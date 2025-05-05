@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: blog_collection
 title: "Part 2 - More Features"
 description: "Exploring further capabilities in the second part of the series."
 date: 2024-07-28

@@ -58,11 +58,6 @@ layout: default
     </p>
   </header>
 
-  {# Add Back to Collections Button #}
-  <div class="back-to-collections" style="margin-bottom: 1.5rem;">
-    <a href="{{ '/blogs/' | relative_url }}" class="btn btn-sm"> <i class="fas fa-arrow-left"></i> Back to Collections </a>
-  </div>
-
   <article class="post-content">
     {% if page.toc and page.toc.beginning %}
       <div id="table-of-contents">
@@ -85,9 +80,6 @@ layout: default
       {% bibliography --group_by none --cited_in_order %}
     </div>
   {% endif %}
-
-  {#% if site.related_blog_posts and site.related_blog_posts.enabled %#} {#% if page.related_posts == null or page.related_posts %#} {#% include
-  related_posts.liquid %#} {#% endif %#} {#% endif %#}
 
   {% if site.disqus_shortname and page.disqus_comments %}
     {% include disqus.liquid %}
