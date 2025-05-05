@@ -19,7 +19,6 @@ nav_order: 3
       
       {% if collection_landing_page %}
         <div class="col">
-          {# Use the landing page URL directly for the link #}
           <a href="{{ collection_landing_page.url | relative_url }}">
             <div class="card h-100 hoverable">
               {% if collection_landing_page.img %}

@@ -58,6 +58,11 @@ layout: default
     </p>
   </header>
 
+  {# Add Back to Collections Button #}
+  <div class="back-to-collections" style="margin-bottom: 1.5rem;">
+    <a href="{{ '/blogs/' | relative_url }}" class="btn btn-sm"> <i class="fas fa-arrow-left"></i> Back to Collections </a>
+  </div>
+
   <article class="post-content">
     {% if page.toc and page.toc.beginning %}
       <div id="table-of-contents">
