@@ -18,8 +18,27 @@ nav_order: 3
       
       
       {% if collection_landing_page %}
-        
-        {% include blogs.liquid blog=collection_landing_page %}
+        <div class="col">
+          {# Use the landing page URL directly for the link #}
+          <a href="{{ collection_landing_page.url | relative_url }}">
+            <div class="card h-100 hoverable">
+              {% if collection_landing_page.img %}
+                {%
+                  include figure.liquid
+                  loading="eager"
+                  path=collection_landing_page.img
+                  sizes = "250px"
+                  alt="blog collection thumbnail"
+                  class="card-img-top"
+                %}
+              {% endif %}
+              <div class="card-body">
+                <h2 class="card-title">{{ collection_landing_page.title }}</h2>
+                <p class="card-text">{{ collection_landing_page.description }}</p>
+              </div>
+            </div>
+          </a>
+        </div>
       {% endif %}
     {% endfor %}
   </div>
