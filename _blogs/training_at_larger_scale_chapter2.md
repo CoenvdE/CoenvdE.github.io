@@ -11,7 +11,7 @@ category: blog-collection
 ---
 
 <div class="external-content" data-repo-path="_external_blogs/training-at-larger-scale">
-{% include_relative "../_external_blogs/training-at-larger-scale/1._Multi-GPU_training.md" %}
+{% include_relative "../_external_blogs/training-at-larger-scale/multigpu.md" %}
 </div>
 
 <script>
