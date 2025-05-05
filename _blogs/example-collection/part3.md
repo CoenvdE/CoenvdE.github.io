@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Example Collection: Part 3 - Wrapping Up"
+title: "Part 3 - Wrapping Up"
 description: "Concluding the example series and summarizing the collection feature."
 date: 2024-07-29
 # Required for Collection Structure:

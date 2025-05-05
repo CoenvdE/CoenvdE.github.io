@@ -9,12 +9,17 @@ nav_order: 3
 
 <div class="projects blogs">
   <div class="row row-cols-1 row-cols-md-3">
-    {% assign blog_collections = site.blogs | where_exp: "item", "item.collection_id" | map: "collection_id" | uniq %}
+    {# Find unique collection IDs first #}
+    {% assign collection_ids = site.blogs | map: "collection_id" | uniq %}
     
-    {% for collection_id in blog_collections %}
-      {% assign blog = site.blogs | where: "collection_id", collection_id | first %}
-      {% if blog.title != blog.collection_id %}
-        {% include blogs.liquid %}
+    {% for collection_id in collection_ids %}
+      {# Find the index.md file for this collection_id #}
+      {% assign collection_landing_page = site.blogs | where_exp: "item", "item.collection_id == collection_id and item.name == 'index.md'" | first %}
+      
+      {# If an index.md landing page exists for this collection #}
+      {% if collection_landing_page %}
+        {# Use the landing page's data (title, desc, img) for the card include #}
+        {% include blogs.liquid blog=collection_landing_page %}
       {% endif %}
     {% endfor %}
   </div>
