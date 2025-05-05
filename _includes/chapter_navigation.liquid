@@ -2,6 +2,8 @@
   {% assign collection_url = site.baseurl | append: '/blog/' | append: page.collection_id | append: '/' %}
 {% endif %}
 
+{% assign blogs_url = site.baseurl | append: '/blogs/' %}
+
 <div class="chapter-navigation{% if include.position == 'bottom' %} bottom{% endif %}">
   <div class="nav-prev">
     {% assign prev_chapter = page.chapter_number | minus: 1 %}
@@ -13,9 +15,7 @@
   </div>
 
   <div class="nav-home">
-    {% if page.collection_id %}
-      <a href="{{ collection_url }}" class="btn btn-sm"> <i class="fas fa-home"></i> Contents </a>
-    {% endif %}
+    <a href="{{ blogs_url }}" class="btn btn-sm"> <i class="fas fa-home"></i> All Collections </a>
   </div>
 
   <div class="nav-next">

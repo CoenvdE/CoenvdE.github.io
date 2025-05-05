@@ -18,6 +18,11 @@ layout: default
     <div class="col-sm-12 col-md-3 blog-sidebar">
       <div class="sidebar-sticky">
         <h3>Contents</h3>
+        <div class="collection-link">
+          <a href="{{ site.baseurl }}/blogs/" class="back-to-collection">
+            <i class="fas fa-arrow-left"></i> Back to Collections
+          </a>
+        </div>
         {% include collection_sidebar.liquid %}
       </div>
     </div>
@@ -73,6 +78,26 @@ layout: default
 
   .blog-nav-item.active a {
     color: white;
+  }
+  
+  .collection-link {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--global-divider-color);
+  }
+
+  .back-to-collection {
+    display: block;
+    padding: 8px 10px;
+    background-color: var(--global-code-bg-color);
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .back-to-collection:hover {
+    background-color: var(--global-hover-color);
+    text-decoration: none;
   }
 
   .chapters-container {
