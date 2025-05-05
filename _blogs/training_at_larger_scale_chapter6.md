@@ -11,8 +11,7 @@ category: blog-collection
 ---
 
 <div class="external-content" data-repo-path="_external_blogs/training-at-larger-scale">
-{% capture file_content %}{% include_relative "../_external_blogs/training-at-larger-scale/5. What Is Next.md" %}{% endcapture %}
-{{ file_content | markdownify }}
+{% include_relative "../_external_blogs/training-at-larger-scale/5. What Is Next.md" | markdownify %}
 </div>
 
 <script>
