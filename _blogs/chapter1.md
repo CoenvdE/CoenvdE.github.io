@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: blog_chapter
 title: Chapter 1 - Introduction
 description: The first chapter of our blog collection
 date: 2024-05-23
@@ -10,10 +10,6 @@ img: assets/img/12.jpg
 importance: 1
 category: blog-collection
 ---
-
-<div class="chapter-navigation">
-  <a href="/blogs/my-blog-collection/" class="btn">← Back to Collection</a>
-</div>
 
 # Chapter 1: Introduction
 
@@ -34,11 +30,11 @@ In this section, you can provide an overview of what readers will learn througho
 In the next chapter, we'll dive deeper into specific aspects of the topic.
 
 <div class="chapter-navigation bottom">
-  <a href="/blogs/my-blog-collection/" class="btn">← Back to Collection</a>
+  <a href="/blogs/my-blog-collection/" class="btn btn-sm z-depth-0">← Back to Collection</a>
   {% assign chapters = site.blogs | where: "collection_id", "my_blog_collection" | sort: "chapter_number" %}
   {% for chapter in chapters %}
     {% if chapter.chapter_number == 2 %}
-      <a href="{{ chapter.url | relative_url }}" class="btn">Next Chapter →</a>
+      <a href="{{ chapter.url | relative_url }}" class="btn btn-sm z-depth-0">Next Chapter →</a>
     {% endif %}
   {% endfor %}
 </div>

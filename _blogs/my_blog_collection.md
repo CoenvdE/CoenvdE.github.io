@@ -1,9 +1,11 @@
 ---
-layout: page
+layout: blog_collection
 title: My Blog Collection
 description: A comprehensive blog series in 6 chapters
 permalink: /blogs/my-blog-collection/
 nav_order: 1
+collection_id: my_blog_collection
+display_chapters: true
 ---
 
 # My Blog Collection
