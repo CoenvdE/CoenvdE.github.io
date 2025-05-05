@@ -98,59 +98,29 @@ ninja.data = [{
               window.location.href = "/blogs/chapter1/";
             },},{id: "blogs-chapter-2-core-concepts",
           title: 'Chapter 2 - Core Concepts',
-          description: "The second chapter exploring core concepts",
+          description: "Exploring the fundamental concepts and principles",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/chapter2/";
-            },},{id: "blogs-chapter-3-practical-applications",
-          title: 'Chapter 3 - Practical Applications',
-          description: "The third chapter covering practical applications",
-          section: "Blogs",handler: () => {
-              window.location.href = "/blogs/chapter3/";
-            },},{id: "blogs-chapter-4-advanced-techniques",
-          title: 'Chapter 4 - Advanced Techniques',
-          description: "The fourth chapter covering advanced techniques",
-          section: "Blogs",handler: () => {
-              window.location.href = "/blogs/chapter4/";
-            },},{id: "blogs-chapter-5-challenges-and-limitations",
-          title: 'Chapter 5 - Challenges and Limitations',
-          description: "The fifth chapter addressing challenges and limitations",
-          section: "Blogs",handler: () => {
-              window.location.href = "/blogs/chapter5/";
-            },},{id: "blogs-chapter-6-future-trends",
-          title: 'Chapter 6 - Future Trends',
-          description: "The final chapter exploring future trends and developments",
-          section: "Blogs",handler: () => {
-              window.location.href = "/blogs/chapter6/";
-            },},{id: "blogs-blog-collections",
-          title: 'Blog Collections',
-          description: "A library of comprehensive blog series on various topics",
-          section: "Blogs",handler: () => {
-              window.location.href = "/blogs/";
             },},{id: "blogs-my-blog-collection",
           title: 'My Blog Collection',
           description: "A comprehensive blog series in 6 chapters",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/my-blog-collection/";
-            },},{id: "blogs-chapter-1-python-fundamentals",
-          title: 'Chapter 1 - Python Fundamentals',
-          description: "Introduction to Python programming language",
+            },},{id: "blogs-html-fundamentals",
+          title: 'HTML Fundamentals',
+          description: "Learn the basics of HTML structure and elements",
           section: "Blogs",handler: () => {
-              window.location.href = "/blogs/python_basics_1/";
-            },},{id: "blogs-chapter-2-data-types-and-variables",
-          title: 'Chapter 2 - Data Types and Variables',
-          description: "Understanding Python data types and variables",
+              window.location.href = "/blogs/web_dev_1/";
+            },},{id: "blogs-python-basics",
+          title: 'Python Basics',
+          description: "Getting started with Python and basic syntax",
           section: "Blogs",handler: () => {
-              window.location.href = "/blogs/python_basics_2/";
+              window.location.href = "/blogs/python_1/";
             },},{id: "blogs-python-tutorial",
           title: 'Python Tutorial',
           description: "Learn Python programming from the basics to advanced concepts",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/python-tutorial/";
-            },},{id: "blogs-chapter-1-web-development-basics",
-          title: 'Chapter 1 - Web Development Basics',
-          description: "Introduction to web development",
-          section: "Blogs",handler: () => {
-              window.location.href = "/blogs/web_dev_1/";
             },},{id: "blogs-web-development-tutorial",
           title: 'Web Development Tutorial',
           description: "Master web development with HTML, CSS, and JavaScript",
