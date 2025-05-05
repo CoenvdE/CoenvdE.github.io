@@ -1,0 +1,41 @@
+---
+layout: default
+---
+<div class="post">
+  <header class="post-header">
+    <h1 class="post-title">{{ page.title }}</h1>
+    <p class="post-description">{{ page.description }}</p>
+    {% if page.source_repo %}
+      <p class="source-repo">
+        <a href="{{ page.source_repo }}" target="_blank" rel="noopener noreferrer"> <i class="fab fa-github"></i> View on GitHub </a>
+      </p>
+    {% endif %}
+  </header>
+
+  <article>
+    {{ content }}
+  </article>
+</div>
+
+<style>
+  .source-repo {
+    font-size: 0.9rem;
+    margin-top: 10px;
+  }
+
+  .source-repo a {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    background-color: #f6f8fa;
+    border-radius: 4px;
+    color: #0366d6;
+    text-decoration: none;
+  }
+
+  .source-repo a:hover {
+    background-color: #ebeef0;
+    text-decoration: underline;
+  }
+</style>

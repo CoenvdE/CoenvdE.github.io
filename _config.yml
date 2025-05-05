@@ -151,6 +151,9 @@ collections:
     output: true
   blogs:
     output: true
+  external_blogs:
+    output: true
+    permalink: /blogs/external/:path/
 
 # -----------------------------------------------------------------------------
 # Jekyll settings
