@@ -11,10 +11,7 @@ category: blog-collection
 ---
 
 <div class="external-content" data-repo-path="_external_blogs/training-at-larger-scale">
-{% capture included_content %}
 {% include "multigpu_content.md" %}
-{% endcapture %}
-{{ included_content | markdownify }}
 </div>
 
 <script>
