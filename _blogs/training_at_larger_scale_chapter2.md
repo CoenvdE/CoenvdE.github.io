@@ -12,7 +12,7 @@ category: blog-collection
 
 <div class="external-content" data-repo-path="_external_blogs/training-at-larger-scale">
 {% capture included_content %}
-{% include "_external_blogs/training-at-larger-scale/multigpu.md" %}
+{% include_relative "../_external_blogs/training-at-larger-scale/multigpu.md" %}
 {% endcapture %}
 {{ included_content | markdownify }}
 </div>
