@@ -10,4 +10,4 @@ importance: 1
 category: blog-collection
 ---
 
-{% include external_content.liquid path="../_external_blogs/training-at-larger-scale/5. What Is Next.md" remove_frontmatter=true %} 
+{% include external_content.liquid path="../_external_blogs/training-at-larger-scale/5. What Is Next.md" remove_frontmatter=true %}

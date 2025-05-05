@@ -10,4 +10,4 @@ importance: 1
 category: blog-collection
 ---
 
-{% include external_content.liquid path="../_external_blogs/training-at-larger-scale/3. Optimizing the pipeline: Data.md" remove_frontmatter=true %} 
+{% include external_content.liquid path="../_external_blogs/training-at-larger-scale/3. Optimizing the pipeline: Data.md" remove_frontmatter=true %}
