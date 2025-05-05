@@ -44,11 +44,11 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/repositories/";
           },
-        },{id: "blogs-example-collection-a-series",
-          title: 'Example Collection: A Series',
-          description: "An example blog series showing the folder-based structure with a landing page.",
+        },{id: "blogs-dummy-collection",
+          title: 'Dummy Collection',
+          description: "A placeholder collection to demonstrate multiple blog series.",
           section: "Blogs",handler: () => {
-              window.location.href = "/blogs/example-collection/index/";
+              window.location.href = "/blogs/dummy/index/";
             },},{id: "blogs-part-1-getting-started",
           title: 'Part 1 - Getting Started',
           description: "The first part of our example blog series, laying the groundwork.",
@@ -64,6 +64,16 @@ ninja.data = [{
           description: "Concluding the example series and summarizing the collection feature.",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/example-collection/part3/";
+            },},{id: "blogs-dummy-post-part-1",
+          title: 'Dummy Post - Part 1',
+          description: "The first and only part of the dummy collection.",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/dummy/part1/";
+            },},{id: "blogs-example-collection-a-series",
+          title: 'Example Collection: A Series',
+          description: "An example blog series showing the folder-based structure with a landing page.",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/example-collection/index/";
             },},{
       id: 'light-theme',
       title: 'Change theme to light',
