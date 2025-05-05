@@ -1,3 +1,6 @@
 [submodule "_external_blogs/training-at-scale"]
 	path = _external_blogs/training-at-scale
 	url = https://github.com/CoenvdE/Training-at-larger-scale-blog.git
+[submodule "_external_blogs/training-at-larger-scale"]
+	path = _external_blogs/training-at-larger-scale
+	url = https://github.com/CoenvdE/Training-at-larger-scale-blog.git
