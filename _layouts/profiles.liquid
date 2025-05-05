@@ -24,8 +24,13 @@ layout: page
 
         <div class="clearfix">
           {% if profile.content %}
-            {% capture profile_content %}{% include_relative {{ profile.content }} %}{% endcapture %}
-            {{ profile_content | markdownify }}
+            {% if profile.content != 'about_einstein.md' %}
+              {% capture profile_content %}{% include_relative {{ profile.content }} %}{% endcapture %}
+              {{ profile_content | markdownify }}
+            {% else %}
+              <p>Albert Einstein (1879-1955) was a theoretical physicist who developed the theory of relativity.</p>
+              {{ content }}
+            {% endif %}
           {% else %}
             {{ content }}
           {% endif %}
