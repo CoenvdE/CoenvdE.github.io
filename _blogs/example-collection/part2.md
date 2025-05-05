@@ -26,7 +26,7 @@ _Remember to replace `/assets/img/placeholder.jpg` with an actual image path in 
 
 Links are also straightforward: [Visit Google](https://www.google.com).
 
-You can also link to other parts of your site, like [Part 1](./part1.html) of this series (note: relative links should work within the same folder).
+You can also link to other parts of your site, like [Part 1](../part1/) of this series (note: relative links should work within the same folder).
 
 ## Section 4: Collection Navigation
 
