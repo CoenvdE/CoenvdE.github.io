@@ -1,6 +1,6 @@
 ---
 layout: blog_chapter
-title: Chapter 5 - Optimizing the Pipeline: Model
+title: "Chapter 5 - Optimizing the Pipeline: Model"
 description: Techniques for optimizing model architecture and training
 date: 2023-10-29
 collection: blogs
@@ -10,4 +10,4 @@ importance: 1
 category: blog-collection
 ---
 
-{% include external_content.liquid path="../_external_blogs/training-at-larger-scale/4. Optimizing the pipeline: Model.md" remove_frontmatter=true %}
+{% include external_content.liquid path="../_external_blogs_links/optimizing_model.md" remove_frontmatter=true %}

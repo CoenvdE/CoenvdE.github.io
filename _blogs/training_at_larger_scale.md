@@ -9,7 +9,7 @@ display_chapters: true
 img: assets/img/12.jpg
 ---
 
-{% include external_content.liquid path="../_external_blogs/training-at-larger-scale/README.md" remove_frontmatter=true %}
+{% include external_content.liquid path="../_external_blogs_links/readme.md" remove_frontmatter=true %}
 
 {% if page.display_chapters %}
 

@@ -10,4 +10,4 @@ importance: 1
 category: blog-collection
 ---
 
-{% include external_content.liquid path="../_external_blogs/training-at-larger-scale/1. Multi-GPU training.md" remove_frontmatter=true %}
+{% include external_content.liquid path="../_external_blogs_links/multi_gpu_training.md" remove_frontmatter=true %}

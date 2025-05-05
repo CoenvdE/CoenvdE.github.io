@@ -8,7 +8,7 @@
   {% endif %}
 {% endif %}
 
-{% assign repo_path = external_file_path | split: '/' | pop | join: '/' %}
+{% assign repo_path = '_external_blogs/training-at-larger-scale' %}
 <div class="external-content" data-repo-path="{{ repo_path }}">
   {{ external_content | markdownify }}
 </div>
