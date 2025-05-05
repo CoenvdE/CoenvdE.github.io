@@ -1,10 +1,10 @@
 ---
 layout: page
 permalink: /blogs/
-title: Blog Collections
+title: Blogs
 description: Explore my different blog collections
 nav: true
-nav_order: 5
+nav_order: 3
 ---
 
 <div class="projects blogs">
