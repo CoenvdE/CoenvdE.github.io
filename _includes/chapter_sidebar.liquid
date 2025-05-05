@@ -3,14 +3,39 @@
   <a href="{{ collection_url }}" class="back-to-collection"> <i class="fas fa-arrow-left"></i> Back to Collection </a>
 </div>
 
-{% assign sorted_blogs = site.blogs | where: 'collection_id', page.collection_id | sort: 'chapter_number' %}
+<div class="toc-container">
+  {% assign sorted_blogs = site.blogs | where: 'collection_id', page.collection_id | sort: 'chapter_number' %}
 
-<ul class="blog-nav-list">
-  {% for blog in sorted_blogs %}
-    {% if blog.chapter_number %}
-      <li class="blog-nav-item{% if page.url == blog.url %} active{% endif %}">
-        <a href="{{ blog.url | relative_url }}"> Ch {{ blog.chapter_number }}: {{ blog.title }} </a>
-      </li>
-    {% endif %}
-  {% endfor %}
-</ul>
+  <ul class="blog-nav-list">
+    {% for blog in sorted_blogs %}
+      {% if blog.chapter_number %}
+        <li class="blog-nav-item{% if page.url == blog.url %} active{% endif %}">
+          <a href="{{ blog.url | relative_url }}">
+            {% if blog.chapter_number %}Ch {{ blog.chapter_number }}:{% endif %}
+            {{ blog.title }}
+          </a>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+
+<style>
+  .toc-container {
+    padding: 0.5rem 0;
+  }
+
+  .blog-nav-item a {
+    display: block;
+    text-decoration: none;
+    color: var(--global-text-color);
+  }
+
+  .blog-nav-item:hover a {
+    text-decoration: none;
+  }
+
+  .blog-nav-item.active a {
+    text-decoration: none;
+  }
+</style>

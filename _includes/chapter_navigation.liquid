@@ -1,20 +1,88 @@
 {% assign collection_url = site.baseurl | append: '/blogs/' | append: page.collection_id | append: '/' %}
 
 <div class="chapter-navigation{% if include.position == 'bottom' %} bottom{% endif %}">
-  <a href="{{ collection_url }}" class="btn btn-sm z-depth-0">← Back to Collection</a>
+  <div class="nav-prev">
+    {% assign prev_chapter = page.chapter_number | minus: 1 %}
+    {% for blog in sorted_blogs %}
+      {% if blog.chapter_number == prev_chapter %}
+        <a href="{{ blog.url | relative_url }}" class="btn btn-sm"> <i class="fas fa-arrow-left"></i> Previous: {{ blog.title }} </a>
+      {% endif %}
+    {% endfor %}
+  </div>
 
-  {% assign next_chapter = page.chapter_number | plus: 1 %}
-  {% assign prev_chapter = page.chapter_number | minus: 1 %}
+  <div class="nav-home">
+    <a href="{{ collection_url }}" class="btn btn-sm"> <i class="fas fa-home"></i> Contents </a>
+  </div>
 
-  {% for blog in sorted_blogs %}
-    {% if blog.chapter_number == prev_chapter %}
-      <a href="{{ blog.url | relative_url }}" class="btn btn-sm z-depth-0">← Previous Chapter</a>
-    {% endif %}
-  {% endfor %}
-
-  {% for blog in sorted_blogs %}
-    {% if blog.chapter_number == next_chapter %}
-      <a href="{{ blog.url | relative_url }}" class="btn btn-sm z-depth-0">Next Chapter →</a>
-    {% endif %}
-  {% endfor %}
+  <div class="nav-next">
+    {% assign next_chapter = page.chapter_number | plus: 1 %}
+    {% for blog in sorted_blogs %}
+      {% if blog.chapter_number == next_chapter %}
+        <a href="{{ blog.url | relative_url }}" class="btn btn-sm">
+          Next: {{ blog.title }}
+          <i class="fas fa-arrow-right"></i>
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
 </div>
+
+<style>
+  .chapter-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--global-divider-color);
+  }
+
+  .chapter-navigation .btn {
+    padding: 0.5rem 1rem;
+    background-color: var(--global-code-bg-color);
+    border: none;
+    color: var(--global-text-color);
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+  }
+
+  .chapter-navigation .btn:hover {
+    background-color: var(--global-hover-color);
+    text-decoration: none;
+  }
+
+  .nav-prev {
+    text-align: left;
+    flex: 1;
+  }
+
+  .nav-home {
+    text-align: center;
+    flex: 1;
+  }
+
+  .nav-next {
+    text-align: right;
+    flex: 1;
+  }
+
+  @media (max-width: 768px) {
+    .chapter-navigation {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .nav-prev,
+    .nav-home,
+    .nav-next {
+      width: 100%;
+      text-align: center;
+    }
+
+    .chapter-navigation .btn {
+      width: 100%;
+      display: block;
+    }
+  }
+</style>
