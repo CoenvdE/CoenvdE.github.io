@@ -106,6 +106,11 @@ ninja.data = [{
           description: "A comprehensive blog series in 6 chapters",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/my-blog-collection/";
+            },},{id: "blogs-html-fundamentals",
+          title: 'HTML Fundamentals',
+          description: "Learn the basics of HTML structure and elements",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/web_dev_1/";
             },},{id: "blogs-python-basics",
           title: 'Python Basics',
           description: "Getting started with Python and basic syntax",
@@ -116,51 +121,11 @@ ninja.data = [{
           description: "Learn Python programming from the basics to advanced concepts",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/python-tutorial/";
-            },},{id: "blogs-training-at-larger-scale",
-          title: 'Training at Larger Scale',
-          description: "A comprehensive guide to scaling machine learning training",
-          section: "Blogs",handler: () => {
-              window.location.href = "/blogs/training-at-scale/";
-            },},{id: "blogs-html-fundamentals",
-          title: 'HTML Fundamentals',
-          description: "Learn the basics of HTML structure and elements",
-          section: "Blogs",handler: () => {
-              window.location.href = "/blogs/web_dev_1/";
             },},{id: "blogs-web-development-tutorial",
           title: 'Web Development Tutorial',
           description: "Master web development with HTML, CSS, and JavaScript",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/web-dev-tutorial/";
-            },},{id: "external_blogs-training-at-scale-1",
-          title: 'Training_at_scale_1',
-          description: "",
-          section: "External_blogs",handler: () => {
-              window.location.href = "/blogs/external/training_at_scale_1/";
-            },},{id: "external_blogs-training-at-scale-2",
-          title: 'Training_at_scale_2',
-          description: "",
-          section: "External_blogs",handler: () => {
-              window.location.href = "/blogs/external/training_at_scale_2/";
-            },},{id: "external_blogs-training-at-scale-3",
-          title: 'Training_at_scale_3',
-          description: "",
-          section: "External_blogs",handler: () => {
-              window.location.href = "/blogs/external/training_at_scale_3/";
-            },},{id: "external_blogs-training-at-scale-4",
-          title: 'Training_at_scale_4',
-          description: "",
-          section: "External_blogs",handler: () => {
-              window.location.href = "/blogs/external/training_at_scale_4/";
-            },},{id: "external_blogs-training-at-scale-5",
-          title: 'Training_at_scale_5',
-          description: "",
-          section: "External_blogs",handler: () => {
-              window.location.href = "/blogs/external/training_at_scale_5/";
-            },},{id: "external_blogs-training-at-scale-6",
-          title: 'Training_at_scale_6',
-          description: "",
-          section: "External_blogs",handler: () => {
-              window.location.href = "/blogs/external/training_at_scale_6/";
             },},{id: "projects-project-1",
           title: 'project 1',
           description: "with background image",
