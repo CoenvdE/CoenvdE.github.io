@@ -1,0 +1,16 @@
+{% assign collection_url = site.baseurl | append: '/blogs/' | append: page.collection_id | append: '/' %}
+<div class="collection-link">
+  <a href="{{ collection_url }}" class="back-to-collection"> <i class="fas fa-arrow-left"></i> Back to Collection </a>
+</div>
+
+{% assign sorted_blogs = site.blogs | where: 'collection_id', page.collection_id | sort: 'chapter_number' %}
+
+<ul class="blog-nav-list">
+  {% for blog in sorted_blogs %}
+    {% if blog.chapter_number %}
+      <li class="blog-nav-item{% if page.url == blog.url %} active{% endif %}">
+        <a href="{{ blog.url | relative_url }}"> Ch {{ blog.chapter_number }}: {{ blog.title }} </a>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>

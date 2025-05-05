@@ -1,0 +1,22 @@
+{% if blog.collection_id %}
+  <div class="col">
+    <a href="{{ site.baseurl }}/blogs/{{ blog.collection_id | slugify }}/">
+      <div class="card h-100 hoverable">
+        {% if blog.img %}
+          {%
+            include figure.liquid
+            loading="eager"
+            path=blog.img
+            sizes = "250px"
+            alt="blog collection thumbnail"
+            class="card-img-top"
+          %}
+        {% endif %}
+        <div class="card-body">
+          <h2 class="card-title">{{ blog.title }}</h2>
+          <p class="card-text">{{ blog.description }}</p>
+        </div>
+      </div>
+    </a>
+  </div>
+{% endif %}

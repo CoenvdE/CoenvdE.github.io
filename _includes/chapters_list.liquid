@@ -1,0 +1,18 @@
+{% assign sorted_blogs = site.blogs | where: 'collection_id', page.collection_id | sort: 'chapter_number' %}
+
+<div class="chapters-container">
+  {% for blog in sorted_blogs %}
+    {% if blog.url != page.url %}
+      <div class="chapter-card">
+        <div class="chapter-number">
+          {% if blog.chapter_number %}Chapter {{ blog.chapter_number }}{% endif %}
+        </div>
+        <h3 class="chapter-title">
+          <a href="{{ blog.url | relative_url }}">{{ blog.title }}</a>
+        </h3>
+        <p class="chapter-description">{{ blog.description }}</p>
+        <a href="{{ blog.url | relative_url }}" class="btn btn-sm z-depth-0">Read Chapter →</a>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>

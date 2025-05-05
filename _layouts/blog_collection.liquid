@@ -1,7 +1,6 @@
 ---
 layout: default
 ---
-
 <div class="post">
   <header class="post-header">
     <h1 class="post-title">{{ page.title }}</h1>
@@ -12,34 +11,17 @@ layout: default
     <!-- Left sidebar with chapter navigation -->
     <div class="col-sm-12 col-md-3 blog-sidebar">
       <h3>Chapters</h3>
-      {% assign sorted_blogs = site.blogs | where: "collection_id", page.collection_id | sort: "chapter_number" %}
-
-      <ul class="blog-nav-list">
-        {% for blog in sorted_blogs %} {% if blog.url != page.url %}
-        <li class="blog-nav-item{% if page.url == blog.url %} active{% endif %}">
-          <a href="{{ blog.url | relative_url }}"> {% if blog.chapter_number %}Ch {{ blog.chapter_number }}:{% endif %} {{ blog.title }} </a>
-        </li>
-        {% endif %} {% endfor %}
-      </ul>
+      {% include collection_sidebar.liquid %}
     </div>
 
     <!-- Right column with main content -->
     <div class="col-sm-12 col-md-9 blog-content">
       <article>
-        {{ content }} {% if page.display_chapters %}
-        <h2>All Chapters</h2>
-        <div class="chapters-container">
-          {% for blog in sorted_blogs %} {% if blog.url != page.url %}
-          <div class="chapter-card">
-            <div class="chapter-number">{% if blog.chapter_number %}Chapter {{ blog.chapter_number }}{% endif %}</div>
-            <h3 class="chapter-title">
-              <a href="{{ blog.url | relative_url }}">{{ blog.title }}</a>
-            </h3>
-            <p class="chapter-description">{{ blog.description }}</p>
-            <a href="{{ blog.url | relative_url }}" class="btn btn-sm z-depth-0">Read Chapter →</a>
-          </div>
-          {% endif %} {% endfor %}
-        </div>
+        {{ content }}
+
+        {% if page.display_chapters %}
+          <h2>All Chapters</h2>
+          {% include chapters_list.liquid %}
         {% endif %}
       </article>
     </div>

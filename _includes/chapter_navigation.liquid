@@ -1,0 +1,20 @@
+{% assign collection_url = site.baseurl | append: '/blogs/' | append: page.collection_id | append: '/' %}
+
+<div class="chapter-navigation{% if include.position == 'bottom' %} bottom{% endif %}">
+  <a href="{{ collection_url }}" class="btn btn-sm z-depth-0">← Back to Collection</a>
+
+  {% assign next_chapter = page.chapter_number | plus: 1 %}
+  {% assign prev_chapter = page.chapter_number | minus: 1 %}
+
+  {% for blog in sorted_blogs %}
+    {% if blog.chapter_number == prev_chapter %}
+      <a href="{{ blog.url | relative_url }}" class="btn btn-sm z-depth-0">← Previous Chapter</a>
+    {% endif %}
+  {% endfor %}
+
+  {% for blog in sorted_blogs %}
+    {% if blog.chapter_number == next_chapter %}
+      <a href="{{ blog.url | relative_url }}" class="btn btn-sm z-depth-0">Next Chapter →</a>
+    {% endif %}
+  {% endfor %}
+</div>

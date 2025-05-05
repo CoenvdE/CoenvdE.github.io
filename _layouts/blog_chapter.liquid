@@ -1,7 +1,6 @@
 ---
 layout: default
 ---
-
 <div class="post">
   <header class="post-header">
     <h1 class="post-title">{{ page.title }}</h1>
@@ -12,37 +11,14 @@ layout: default
     <!-- Left sidebar with chapter navigation -->
     <div class="col-sm-12 col-md-3 blog-sidebar">
       <h3>Chapters</h3>
-      {% assign collection_url = "/blogs/" | append: page.collection_id | append: "/" %}
-      <div class="collection-link">
-        <a href="{{ collection_url }}" class="back-to-collection"> <i class="fas fa-arrow-left"></i> Back to Collection </a>
-      </div>
-
-      {% assign sorted_blogs = site.blogs | where: "collection_id", page.collection_id | sort: "chapter_number" %}
-
-      <ul class="blog-nav-list">
-        {% for blog in sorted_blogs %} {% if blog.chapter_number %}
-        <li class="blog-nav-item{% if page.url == blog.url %} active{% endif %}">
-          <a href="{{ blog.url | relative_url }}"> Ch {{ blog.chapter_number }}: {{ blog.title }} </a>
-        </li>
-        {% endif %} {% endfor %}
-      </ul>
+      {% include chapter_sidebar.liquid %}
     </div>
 
     <!-- Right column with main content -->
     <div class="col-sm-12 col-md-9 blog-content">
       <article>
         {{ content }}
-
-        <div class="chapter-navigation bottom">
-          <a href="{{ collection_url }}" class="btn btn-sm z-depth-0">← Back to Collection</a>
-
-          {% assign next_chapter = page.chapter_number | plus: 1 %} {% assign prev_chapter = page.chapter_number | minus: 1 %} {% for blog in
-          sorted_blogs %} {% if blog.chapter_number == prev_chapter %}
-          <a href="{{ blog.url | relative_url }}" class="btn btn-sm z-depth-0">← Previous Chapter</a>
-          {% endif %} {% endfor %} {% for blog in sorted_blogs %} {% if blog.chapter_number == next_chapter %}
-          <a href="{{ blog.url | relative_url }}" class="btn btn-sm z-depth-0">Next Chapter →</a>
-          {% endif %} {% endfor %}
-        </div>
+        {% include chapter_navigation.liquid position="bottom" %}
       </article>
     </div>
   </div>

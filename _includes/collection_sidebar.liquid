@@ -1,0 +1,14 @@
+{% assign sorted_blogs = site.blogs | where: 'collection_id', page.collection_id | sort: 'chapter_number' %}
+
+<ul class="blog-nav-list">
+  {% for blog in sorted_blogs %}
+    {% if blog.url != page.url %}
+      <li class="blog-nav-item{% if page.url == blog.url %} active{% endif %}">
+        <a href="{{ blog.url | relative_url }}">
+          {% if blog.chapter_number %}Ch {{ blog.chapter_number }}:{% endif %}
+          {{ blog.title }}
+        </a>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
