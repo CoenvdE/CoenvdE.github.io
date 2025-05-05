@@ -44,21 +44,26 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/repositories/";
           },
-        },{id: "blogs-example-collection-part-1-getting-started",
-          title: 'Example Collection: Part 1 - Getting Started',
+        },{id: "blogs-example-collection-a-series",
+          title: 'Example Collection: A Series',
+          description: "An example blog series showing the folder-based structure with a landing page.",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/example-collection/index/";
+            },},{id: "blogs-part-1-getting-started",
+          title: 'Part 1 - Getting Started',
           description: "The first part of our example blog series, laying the groundwork.",
           section: "Blogs",handler: () => {
-              window.location.href = "/blogs/2024-07-27-example-collection-part1/";
-            },},{id: "blogs-example-collection-part-2-more-features",
-          title: 'Example Collection: Part 2 - More Features',
+              window.location.href = "/blogs/example-collection/part1/";
+            },},{id: "blogs-part-2-more-features",
+          title: 'Part 2 - More Features',
           description: "Exploring further capabilities in the second part of the series.",
           section: "Blogs",handler: () => {
-              window.location.href = "/blogs/2024-07-28-example-collection-part2/";
-            },},{id: "blogs-example-collection-part-3-wrapping-up",
-          title: 'Example Collection: Part 3 - Wrapping Up',
+              window.location.href = "/blogs/example-collection/part2/";
+            },},{id: "blogs-part-3-wrapping-up",
+          title: 'Part 3 - Wrapping Up',
           description: "Concluding the example series and summarizing the collection feature.",
           section: "Blogs",handler: () => {
-              window.location.href = "/blogs/2024-07-29-example-collection-part3/";
+              window.location.href = "/blogs/example-collection/part3/";
             },},{
       id: 'light-theme',
       title: 'Change theme to light',
