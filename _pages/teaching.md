@@ -12,6 +12,7 @@ From September 2020 to January 2025, I have been working as a Teaching Assistant
 ### Courses Taught
 
 - **Programming Courses**
+
   - **Programming in C and Python**
   - **Introduction to Programming (AI)**
   - **Introduction to Programming (Natural and Social Sciences)**
@@ -19,10 +20,12 @@ From September 2020 to January 2025, I have been working as a Teaching Assistant
   - **Information Visualization**
 
 - **Mathematics Courses**
+
   - **Linear Algebra**
   - **Calculus and Optimisation**
 
 - **Other Courses**
+
   - **Orientation on Study and Career**
 
 - **Mentoring**
