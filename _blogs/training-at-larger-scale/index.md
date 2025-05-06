@@ -6,6 +6,8 @@ collection_id: training-at-larger-scale
 display_chapters: true
 ---
 
+# Training at larger scale
+
 NOTE GET IMAGES THAT ARE THERE AND QUOTE THEM IS THAT OKAY?
 WRTE WHATS NEXT BETTER
 
@@ -25,16 +27,22 @@ I want to note that this is not a definitive guide on how everything should be d
 
 ## What's next
 
-I'll walk you through my process of implementing and optimizing everything I learned. Each chapter folder contains code examples that demonstrate the concepts discussed in the corresponding markdown file. To run the examples, navigate to the specific chapter folder and follow the instructions in the markdown file. I strongly advice to run through them in order, as they build on top of eachother and I expect previous chapters as background knowledge for the following one. I especially encourage you to get familiar with pytorch lightning ([1. Multi-GPU training](1.%20Multi-GPU%20training.md)) as it will streamline, improve and speed up your workflow a lot.
+```
+TODO: uv stuff?
+TODO: UPDATE ALL REQUIREMENTS OR COMBINE THEM IN THE END TO GET A NEW ONE
+install -r requirements.txt
+```
+
+I'll walk you through my process of implementing and optimizing everything I learned. Each chapter folder contains code examples that demonstrate the concepts discussed in the corresponding markdown file. To run the examples, navigate to the specific chapter folder and follow the instructions in the markdown file. I strongly advice to run through them in order, as they build on top of eachother and I expect previous chapters as background knowledge for the following one. I especially encourage you to get familiar with pytorch lightning ([1. Multi-GPU training](/blogs/training-at-larger-scale/part2/)) as it will streamline, improve and speed up your workflow a lot.
 
 ## Chapters
 
-1. [0. The Setup](0.%20The%20Setup.md) - Overview of the initial setup as a starting point
-2. [1. Multi-GPU training](1.%20Multi-GPU%20training.md) - Scaling from a single GPU to multiple GPUs and using Lightning for better code
-3. [2. Bigger data in the cloud](2.%20Bigger%20data%20in%20the%20cloud.md) - Working with bigger data
-4. [3. Optimizing the pipeline: Data](3.%20Optimizing%20the%20pipeline%3A%20Data.md) - Maximizing DataLoader efficiency
-5. [4. Optimizing the pipeline: Model](4.%20Optimizing%20the%20pipeline%3A%20Model.md) - Profiling and fixing slowdowns
-6. [5. What Is Next](5.%20What%20Is%20Next.md) - Further optimizations and improvements
+1. [0. The Setup](/blogs/training-at-larger-scale/part1/) - Overview of the initial setup as a starting point
+2. [1. Multi-GPU training](/blogs/training-at-larger-scale/part2/) - Scaling from a single GPU to multiple GPUs and using Lightning for better code
+3. [2. Bigger data in the cloud](/blogs/training-at-larger-scale/part3/) - Working with bigger data
+4. [3. Optimizing the pipeline: Data](/blogs/training-at-larger-scale/part4/) - Maximizing DataLoader efficiency
+5. [4. Optimizing the pipeline: Model](/blogs/training-at-larger-scale/part5/) - Profiling and fixing slowdowns
+6. [5. What Is Next](/blogs/training-at-larger-scale/part6/) - Further optimizations and improvements
 
 ```
 Training-at-larger-scale-blog/

@@ -1,14 +1,16 @@
 ---
 layout: blog_collection
-title: "2. Bigger Data In The Cloud"
-description: "Chapter 3 of the Training at Larger Scale series"
-date: 2025-04-15
+title: "Part 3"
+description: "Part 3 of the Training at Larger Scale series"
+date: 2025-04-08
 collection_id: training-at-larger-scale
 chapter_number: 3
 toc: true
-categories: [Machine Learning, Training, PyTorch, Optimization]
+categories: [Training, ML, GPU]
 giscus_comments: true
 ---
+
+## 2. Bigger Data In The Cloud
 
 In this part, I will provide a general overview of what streaming is and how to work with data in the cloud, I will also provide a usecase specific example for loading and working with geospatial data (xarray) to show an example of with bigger datasets.
 

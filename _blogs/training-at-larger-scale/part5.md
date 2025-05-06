@@ -1,18 +1,20 @@
 ---
 layout: blog_collection
-title: "4. Optimizing the pipeline: Model"
-description: "Chapter 5 of the Training at Larger Scale series"
-date: 2025-04-29
+title: "Import your model and data classes here"
+description: "Part 5 of the Training at Larger Scale series"
+date: 2025-04-10
 collection_id: training-at-larger-scale
 chapter_number: 5
 toc: true
-categories: [Machine Learning, Training, PyTorch, Optimization]
+categories: [Training, ML, GPU]
 giscus_comments: true
 ---
 
+## 4. Optimizing the pipeline: Model
+
 After optimizing the data pipeline, the next step is profiling the model pipeline to catch bottlenecks like slow ops or CPU–GPU data transfers.
 This is an optional step that, if the code is implemented correctly, will probably not have a big impact on the training time.
-if you don't want to do it, you can skip this section and look at [What Is Next](5.%20What%20Is%20Next.md).
+if you don't want to do it, you can skip this section and look at [What Is Next](/blogs/training-at-larger-scale/part6/).
 Note that I give a few nice tools to help you analyse the model pipeline performance. I do suggest you to run the benchmark (and a pytorch profiler) and let ChatGPT or another good LLM analyse the results for you and help you figure out if you need to change something. This part is mainly about getting the time it takes for a batch to pass through your model pipeline down.
 
 The time it takes for a batch to pass through your model depends on several factors:
@@ -109,7 +111,7 @@ The benchmark tool will create several files in the specified output directory:
 
 2. **Forward/Backward Pass**:
 
-   - Try mixed precision training with `--precision 16-mixed` for faster computation (discussed in [5. What Is Next](5.%20What%20Is%20Next.md))
+   - Try mixed precision training with `--precision 16-mixed` for faster computation (discussed in [5. What Is Next](/blogs/training-at-larger-scale/part6/))
    - Consider model architecture changes to reduce computation
 
 3. **Optimizer**:
@@ -219,7 +221,7 @@ Here’s what to look for in each profiler and how to make sense of the data.
 
 Congratulations on optimizing your entire training pipeline! Explore what's next:
 
-[5. What Is Next](5.%20What%20Is%20Next.md)
+[5. What Is Next](/blogs/training-at-larger-scale/part6/)
 
 TODO read and review
 

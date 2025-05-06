@@ -1,14 +1,16 @@
 ---
 layout: blog_collection
-title: "1. Single- to Multi-GPU training"
-description: "Chapter 2 of the Training at Larger Scale series"
-date: 2025-04-08
+title: "Part 2"
+description: "Part 2 of the Training at Larger Scale series"
+date: 2025-04-07
 collection_id: training-at-larger-scale
 chapter_number: 2
 toc: true
-categories: [Machine Learning, Training, PyTorch, Optimization]
+categories: [Training, ML, GPU]
 giscus_comments: true
 ---
+
+## 1. Single- to Multi-GPU training
 
 Multi-GPU training provides accelerated computing power, meaning faster training once setup correctly. This is necessary when having bigger datasets and larger models.
 
@@ -61,8 +63,8 @@ These averaged gradients are then used to update the model parameters consistent
 This strategy is commonly used because it's relatively straightforward and scales well across multiple GPUs.
 
 <div align="center">
-  <img src="/images/training-blog/data_parallel.webp" alt="Data Parallel Training" width="400">
-  <img src="/images/training-blog/data_parallel_2.png" alt="Data Parallel Training" width="400">
+  <img src="images/data_parallel.webp" alt="Data Parallel Training" width="400">
+  <img src="images/data_parallel_2.png" alt="Data Parallel Training" width="400">
   <p><em>Data Parallel training splits the data across GPUs, with each GPU processing a different batch of data.</em></p>
 </div>
 
@@ -82,7 +84,7 @@ This strategy is more complex to implement and debug and is usually reserved for
 NOTE: INCORPORATE? You may also encounter "sharded model parallelism" (or pipeline parallelism), which are more scalable versions used in massive model training setups.
 
 <div align="center">
-  <img src="/images/training-blog/model_parallel.webp" alt="Model Parallel Training" width="400">
+  <img src="images/model_parallel.webp" alt="Model Parallel Training" width="400">
   <p><em>Model Parallel training splits the model across GPUs, with each GPU handling different layers of the network.</em></p>
 </div>
 
@@ -96,7 +98,7 @@ This is often considered a combination of data parallelism and model parallelism
 Not typically needed for standard model training — not recommended for now unless working with extremely large architectures.
 
 <div align="center">
-  <img src="/images/training-blog/pipeline_parallel.webp" alt="Pipeline Parallel Training" width="400">
+  <img src="images/pipeline_parallel.webp" alt="Pipeline Parallel Training" width="400">
   <p><em>Pipeline Parallel training processes data in stages across GPUs, similar to an assembly line.</em></p>
 </div>
 
@@ -312,7 +314,7 @@ When comparing single-GPU to multi-GPU training, several factors can cause diffe
 python lightning_train.py
 ```
 
-Great! now we can train with multiple GPUs, let's tackle working with [bigger data in the cloud](2.%20Bigger%20data%20in%20the%20cloud.md)
+Great! now we can train with multiple GPUs, let's tackle working with [bigger data in the cloud](/blogs/training-at-larger-scale/part3/)
 
 ### Appendix: Overview of advantages of Lightning over Raw PyTorch
 

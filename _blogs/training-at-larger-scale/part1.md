@@ -1,14 +1,16 @@
 ---
 layout: blog_collection
-title: "0. The Setup"
-description: "Chapter 1 of the Training at Larger Scale series"
-date: 2025-04-01
+title: "Part 1"
+description: "Part 1 of the Training at Larger Scale series"
+date: 2025-04-06
 collection_id: training-at-larger-scale
 chapter_number: 1
 toc: true
-categories: [Machine Learning, Training, PyTorch, Optimization]
+categories: [Training, ML, GPU]
 giscus_comments: true
 ---
+
+## 0. The Setup
 
 Before diving into optimizations, our starting point needs to be solid. I will walk you through some best practices and a baseline to give you a solid starting point. Note that my model and pipeline were actually a lot more complicated, but my goal is not how to recreate my complicated pipeline, it is to show you simple examples for you to optimize and improve yours.
 
@@ -51,7 +53,7 @@ My model was essentially a (Masked) Autoencoder (with some cool stuff that does 
 
 - a `pytorch_dataset`  
   I used a big, geospatial dataset for my training. For this tutorial, I created a dummy example, but feel free to swap it out for e.g. [CIFAR](https://www.cs.toronto.edu/~kriz/cifar.html) or any other dataset you like. It is important that this is wrapped into a `torch.utils.data.Dataset` object.  
-  We will come back to data stuff in more detail in [Chapter 2](2.%20Bigger%20data%20in%20the%20cloud.md).  
+  We will come back to data stuff in more detail in [Chapter 2](/blogs/training-at-larger-scale/part3/).  
   Note that I created a generator for the dataloader that has a set seed and I also used a `set_seed` function to keep everything reproducible in the `pytorch_train.py` file.
 
 ### Reproducibility
@@ -169,4 +171,4 @@ I validated my model architecture on the following datasets:
 
 ---
 
-Once my model was working, validated and tracking was set up, it was time to dive into how to make it efficient and suitable for [larger scale training with multiple GPUs](1.%20Multi-GPU%20training.md)
+Once my model was working, validated and tracking was set up, it was time to dive into how to make it efficient and suitable for [larger scale training with multiple GPUs](/blogs/training-at-larger-scale/part2/)

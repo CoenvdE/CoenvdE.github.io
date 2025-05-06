@@ -1,14 +1,16 @@
 ---
 layout: blog_collection
-title: "3. Optimizing the pipeline: Data"
-description: "Chapter 4 of the Training at Larger Scale series"
-date: 2025-04-22
+title: "Part 4"
+description: "Part 4 of the Training at Larger Scale series"
+date: 2025-04-09
 collection_id: training-at-larger-scale
 chapter_number: 4
 toc: true
-categories: [Machine Learning, Training, PyTorch, Optimization]
+categories: [Training, ML, GPU]
 giscus_comments: true
 ---
+
+## 3. Optimizing the pipeline: Data
 
 Efficient data loading can significantly reduce training time — especially when the GPU is fast but starved for data.
 
@@ -313,11 +315,11 @@ Below are example benchmark results showing the dramatic difference between an u
 
 <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
   <div style="flex: 1; margin-right: 10px;">
-    <img src="/images/training-blog/benchmark_logs_bad_baseline.png" alt="Unoptimized Baseline" style="width: 100%;">
+    <img src="images/benchmark_logs_bad_baseline.png" alt="Unoptimized Baseline" style="width: 100%;">
     <p><em>Unoptimized baseline configuration with significant data loading bottlenecks</em></p>
   </div>
   <div style="flex: 1; margin-left: 10px;">
-    <img src="/images/training-blog/benchmark_logs_good_baseline.png" alt="Optimized Configuration" style="width: 100%;">
+    <img src="images/benchmark_logs_good_baseline.png" alt="Optimized Configuration" style="width: 100%;">
     <p><em>Optimized configuration with minimal wait time</em></p>
   </div>
 </div>

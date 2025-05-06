@@ -1,14 +1,16 @@
 ---
 layout: blog_collection
-title: "5. What's Next?"
-description: "Chapter 6 of the Training at Larger Scale series"
-date: 2025-05-06
+title: "Cloud storage credentials"
+description: "Part 6 of the Training at Larger Scale series"
+date: 2025-04-11
 collection_id: training-at-larger-scale
 chapter_number: 6
 toc: true
-categories: [Machine Learning, Training, PyTorch, Optimization]
+categories: [Training, ML, GPU]
 giscus_comments: true
 ---
+
+## 5. What's Next?
 
 ```
 5. What Is Next/
