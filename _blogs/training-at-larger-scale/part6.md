@@ -21,12 +21,11 @@ giscus_comments: true
 
 Docker lets you **containerize** your environment, making sure your code runs the same everywhere—on your laptop or in the cloud.  
 Why it's nice:
+- Reproducible setups  across different machines or cloud providers (Digital Ocean, AWS, etc.)
+- Lightweight & portable  
+- Easy to test in isolated environments  
 
-- Reproducible setups across different machines or cloud providers (Digital Ocean, AWS, etc.)
-- Lightweight & portable
-- Easy to test in isolated environments
-
----
+--- 
 
 ### Precision in Training (in PyTorch Lightning)
 
@@ -34,56 +33,53 @@ TODO: keep here or move to 4. Optimizing the pipeline: Model.md?
 
 Choosing the right precision boosts training **speed** and **efficiency** without sacrificing performance—if used correctly.
 Why it's nice:
-
-- Faster training
-- Bigger batch sizes
-- Less memory usage
+- Faster training  
+- Bigger batch sizes  
+- Less memory usage  
 
 see how to add in `config/cli_config.yaml`
 
-- **`precision="32-true"` (default)**
+* **`precision="32-true"` (default)**
+  * Full `float32`  
+  * Most stable  
+  * Slowest  
+  * Max memory use  
 
-  - Full `float32`
-  - Most stable
-  - Slowest
-  - Max memory use
+* **`precision="16-mixed"`**
+  * Mixed `float16` ops, `float32` weights  
+  * Fast, low memory  
+  * Needs loss scaling  
+  * Risk of numerical instability  
 
-- **`precision="16-mixed"`**
+* **`precision="bf16-mixed"`**
+  * Mixed `bfloat16` ops  
+  * Fast and stable  
+  * No loss scaling  
+  * Requires A100+ or TPU  
 
-  - Mixed `float16` ops, `float32` weights
-  - Fast, low memory
-  - Needs loss scaling
-  - Risk of numerical instability
+* **`precision="16-true"` / `bf16-true`**
+  * Full low precision (float16 or bfloat16)  
+  * Max speed  
+  * Risky for training  
+  * Best for inference/fine-tuning  
+  * Hardware-dependent  
 
-- **`precision="bf16-mixed"`**
-
-  - Mixed `bfloat16` ops
-  - Fast and stable
-  - No loss scaling
-  - Requires A100+ or TPU
-
-- **`precision="16-true"` / `bf16-true`**
-  - Full low precision (float16 or bfloat16)
-  - Max speed
-  - Risky for training
-  - Best for inference/fine-tuning
-  - Hardware-dependent
 
 ### Summary Table
 
-| Precision    | Speed   | Stability | Loss Scaling | Hardware Requirement |
-| ------------ | ------- | --------- | ------------ | -------------------- |
-| `32-true`    | Slow    | Highest   | No           | None                 |
-| `16-mixed`   | Fast    | Medium    | Yes          | Most NVIDIA GPUs     |
-| `bf16-mixed` | Fast    | High      | No           | A100+, TPUs          |
-| `16-true`    | Fastest | Low       | Risky        | float16 GPUs         |
-| `bf16-true`  | Fastest | Medium    | No           | A100, TPUs           |
+| Precision         | Speed       | Stability     | Loss Scaling | Hardware Requirement   |
+|------------------|-------------|----------------|---------------|-------------------------|
+| `32-true`        | Slow        | Highest        | No            | None                    |
+| `16-mixed`       | Fast        | Medium         | Yes           | Most NVIDIA GPUs        |
+| `bf16-mixed`     | Fast        | High           | No            | A100+, TPUs             |
+| `16-true`        | Fastest     | Low            | Risky         | float16 GPUs            |
+| `bf16-true`      | Fastest     | Medium         | No            | A100, TPUs              |
 
 ---
 
 ## Learning Rate Schedulers
 
-Tip: (TODO: from personal experience and advice from Andy and other model (clay)): Use cosine annealing with warm restarts:
+Tip: (TODO: from personal experience and advice from Andy and other model (clay)): Use cosine annealing with warm restarts:  
 
 ```python
 torch.optim.lr_scheduler.CosineAnnealingWarmRestarts
@@ -100,15 +96,13 @@ Cosine annealing with warm restarts is effective because it:
 As a general strategy, it's hard to beat and typically performs better than fixed or step decay schedules with minimal tuning.
 
 ---
-
 ### Environment Variables — And Why They're Nice
 
 Env vars help you **manage secrets and config** without hardcoding.  
 Why it's nice:
-
-- Store keys/passwords securely
-- Change behavior across environments (dev, prod, test)
-- Fast configuration without changing code
+- Store keys/passwords securely  
+- Change behavior across environments (dev, prod, test)  
+- Fast configuration without changing code  
 
 Here's a simple `.env` file example:
 
@@ -137,14 +131,15 @@ This approach keeps your secrets secure while making configuration straightforwa
 
 Before jumping into full-scale training:
 
-- Select a baseline configuration
-- Observe the loss curves over epochs
-- Run small-scale experiments to test different settings
-- Compare outcomes to identify the best setup
+- Select a baseline configuration  
+- Observe the loss curves over epochs  
+- Run small-scale experiments to test different settings  
+- Compare outcomes to identify the best setup  
 
 This approach helps avoid wasting compute and accelerates convergence.
 
 TODO: add a picture of the loss curves and explain some examples
+
 
 ## What's After This Guide?
 

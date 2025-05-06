@@ -10,14 +10,13 @@ display_chapters: true
 
 NOTE GET IMAGES THAT ARE THERE AND QUOTE THEM IS THAT OKAY?
 WRTE WHATS NEXT BETTER
-
 ---
 
 ### Why am I writing this?
 
 At university, in online blogs, and across tutorials, training machine learning models is often well explained—especially for small-scale setups. These typically involve datasets that fit on a local hard drive, training on a single GPU, and straightforward implementations without worrying about fast dataloading, datasets that do not fit onto a local hard drive (lazy loading), or multi-GPU utilization/optimization.
 
-However, when transitioning to a larger setup —not massive SOTA-scale training across thousands of GPUs with internet-scale data, but something in between— good resources are harder to find and are scattered around. I call this the "larger-scale training" realm: working with datasets that are a few terabytes (too large for local storage but far from internet-scale) and training across multiple GPUs (around 10, not 100s or 1000s).
+However, when transitioning to a larger setup —not massive SOTA-scale training across thousands of GPUs with internet-scale data, but something in between— good resources are harder to find and are scattered around. I call this the "larger-scale training" realm: working with datasets that are a few terabytes (too large for local storage but far from internet-scale) and training across multiple GPUs (around 10, not 100s or 1000s). 
 
 For my research, I needed to scale up my training to this realm, but I struggled to find practical, well-structured guides on bridging the gap from small-scale to mid-sized, high-performance training. This larger-scale training" is where a lot of valuable research and development happens, yet optimization and implementation for this space are harder to figure out. Maximizing hardware efficiency at this level can significantly reduce training time, costs and environmental impact.
 

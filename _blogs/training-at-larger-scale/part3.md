@@ -33,15 +33,13 @@ In this part, I will provide a general overview of what streaming is and how to 
 
 **torch.utils.data.Dataset**: A PyTorch Dataset is a class that tells PyTorch how to get one data sample.
 It acts as a blueprint for reading a sample from storage (local disk or xloud storage) into active memory (RAM). It has two main functions:
+-	`__len__`: how many samples there are
+- `__getitem__`: how to get one sample (e.g., load an image, label) Note that this can be from local storage or from the cloud. 
 
-- `__len__`: how many samples there are
-- `__getitem__`: how to get one sample (e.g., load an image, label) Note that this can be from local storage or from the cloud.
-
-The dataset doesn't load anything. It's just a blueprint.
+The dataset doesn't load anything. It's just a blueprint. 
 
 Cloud data is typically stored on object storage servers like:
-
-- Amazon S3
+-	Amazon S3
 - Google Cloud Storage (GCS)
 - Azure Blob Storage
 
@@ -51,21 +49,19 @@ NOTE: more reading: [PyTorch Dataset Tutorial](https://pytorch.org/tutorials/beg
 
 Most data that you will use lives in "the cloud": servers somewhere on the planet, with all the data you will ever need. You can access data on the internet and download it to locally (like CIFAR-10, as implemented by pytorch). So what do you do when you have so much data that it does not fit on your local machine?
 
-One solution is to buy hard drive and store the data on there. This itself is quite expensive, but could be beneficial if you have the hardware (GPU) yourself. In this case, you can just keep the whole pipeline local, but this is only beneficial you to have (multiple GPU's), which is super expensive.
+One solution is to buy hard drive and store the data on there. This itself is quite expensive, but could be beneficial if you have the hardware (GPU) yourself. In this case, you can just keep the whole pipeline local, but this is only beneficial you to have (multiple GPU's), which is super expensive. 
 
 TODO (With Laurens): add a part of mounting a virtual SSD (or something like that) to the cloud compute instance. and working with that. (pros and cons)
 
 Since I don't have a lot of GPUs (or money), I chose another option: streaming/lazy-loading. Streaming or lazy-loading datasets means loading data only when needed, rather than reading everything into memory upfront. This approach is useful for large datasets that don't fit in memory or are stored in remote data sources. Instead, you load samples (or chunks of data) on-the-fly as needed, directly from cloud storage servers. This avoids filling up local storage or memory while still giving you access to massive datasets that would otherwise be impossible to work with on limited hardware.
 
 Some examples where this happens:
-
 - Hugging Face Datasets (streaming=True)
 - WebDataset format (tar files accessed remotely or locally)
 - Some torch.utils.data.Dataset implementations with lazy loading
 - Some API's provide this functionality
 
 ### Getting access to the data
-
 When you want to stream/lazy-load/get data from cloud storage, you need access to the place it is stored (commonly called buckets). This can sometimes be implemented already by API's (e.g. Huggingface, or my usecase: Copernicus, see `usecase_API_access.py`).
 
 In my case, I needed to get access to the cloud storage directly without the API. This direct access gave me more flexibility and control over how I loaded the data. I implemented this using the `fsspec` library, which provides a unified interface for working with different file systems and storage backends. This approach was particularly valuable because:
@@ -75,81 +71,71 @@ In my case, I needed to get access to the cloud storage directly without the API
 3. It gave me fine-grained control over chunking and caching strategies
 4. It integrated well with my existing PyTorch data pipeline
 
-I've created both a general example (`example_cloud_access.py`) and a use-case specific (`usecase_cloud_access.py`) implementation showing how to access data in the cloud efficiently
+I've created both a general example (`example_cloud_access.py`) and a use-case specific (`usecase_cloud_access.py`) implementation showing how to access data in the cloud efficiently 
 
 NOTE (With Laurens): COPERNICUS DIDNT WANT EVERYONE TO KNOW, IS THIS OKAY?
 
 ### Streaming/Lazy Loading
-
-Now that we have access to the data, we can stream it into memory! For my geospatial data use case, I utilized libraries like Dask and Xarray that provide optimizable, efficient lazy loading capabilities. Dask helps create a computational graph for loading data chunks from storage only when needed, while managing parallel workers to speed up the process. I'll cover optimization strategies for (streaming) data pipelines in [Chapter 3: Optimizing the Pipeline: Data](/blogs/training-at-larger-scale/part4/). To be able to work with this (lazy-loaded) data from the cloud in your training pipeline, we need to wrap everything into a PyTorch dataset. I've implemented an example in `usecase_cloud_dataset.py` that demonstrates how to create a custom Dataset class that handles cloud data access, lazy loading and converting it to a usable dataset. Note that this is still a simplified version. When working with Xarray, xbatcher is the most efficient way to use batch generation, but this is out of the scope of this guide. Feel free to ask any questions about this.
+Now that we have access to the data, we can stream it into memory!  For my geospatial data use case, I utilized libraries like Dask and Xarray that provide optimizable, efficient lazy loading capabilities. Dask helps create a computational graph for loading data chunks from storage only when needed, while managing parallel workers to speed up the process. I'll cover optimization strategies for (streaming) data pipelines in [Chapter 3: Optimizing the Pipeline: Data](/blogs/training-at-larger-scale/part4/). To be able to work with this (lazy-loaded) data from the cloud in your training pipeline, we need to wrap everything into a PyTorch dataset. I've implemented an example in `usecase_cloud_dataset.py` that demonstrates how to create a custom Dataset class that handles cloud data access, lazy loading and converting it to a usable dataset. Note that this is still a simplified version. When working with Xarray, xbatcher is the most efficient way to use batch generation, but this is out of the scope of this guide. Feel free to ask any questions about this.
 
 ### Quick Recap:
 
-**torch.utils.data.Dataloader**: A PyTorch DataLoader defines how to load (many) samples (efficiently) (batching, multiprocessing, shuffling, etc.). Basically the DataLoader keeps asking the Dataset (blueprint) for samples, and handles the rest. It:
-
+**torch.utils.data.Dataloader**:  A PyTorch DataLoader defines how to load (many) samples (efficiently) (batching, multiprocessing, shuffling, etc.). Basically the DataLoader keeps asking the Dataset (blueprint) for samples, and handles the rest. It:
 - Wraps a Dataset
 - Loads batches of data (samples) (in parallel using multiple workers)
 - Handles shuffling, batching, prefetching, etc.
 - Dataloader has been used to parallelize the data loading as this boosts up the speed and saves memory.
 
-The Dataloader calls the **getitem**() from the Dataset to get the needed samples. The Dataset (blueprint) defines "what" a sample is and how to get it, the DataLoader defines how to load them efficiently.
+The Dataloader calls the __getitem__() from the Dataset to get the needed samples. The Dataset (blueprint) defines "what" a sample is and how to get it, the DataLoader defines how to load them efficiently.
 
 ### DataLoader Parameters for Efficient Data Loading (from the cloud)
 
 **Number of Workers (`num_workers`)**:
-
 - Specifies how many subprocesses should be used to load data. Each of these subprocesses retrieves a batch of data from your dataset and sends it to the main training process. This is not necessarily equal to the number of cores/threads the dataloader uses. Each worker operates independently, loading data in parallel. The loaded data is then sent to the main process(es) for use in training, creating an overlap between training and data loading that reduces idle GPU time. Under the hood, the dataset object is replicated in each worker.
 - `num_workers=0`: Data is loaded in the main process. No parallelism.
 - `num_workers=N`: Spawns N worker processes to load data in parallel.
   - Note: This is **not the number of CPU cores**, but the number of subprocesses that utilize CPU resources.
-- each worker might maintain its own HTTP connection or file handle. This can increase throughput (multiple parallel reads) but also load (e.g., more network connections). Ensure your data source can handle concurrent access.
+-  each worker might maintain its own HTTP connection or file handle. This can increase throughput (multiple parallel reads) but also load (e.g., more network connections). Ensure your data source can handle concurrent access.
 
 I will show how to optimize this in the next chapter [Optimizing the Pipeline: Data](/blogs/training-at-larger-scale/part4/)
 
 **Persistent Workers (`persistent_workers`)**:
-
-- If `True`, keeps worker processes alive across epochs and thus reduces worker startup overhead.
-- Especially useful when using slower file systems or large datasets as opening/closing files is time expensive.
-- While persistent workers reduce startup overhead, they can lead to increased memory usage over time as workers may accumulate cached data or experience memory leaks. If you notice growing memory consumption during training. In this case you should reduce the number of workers.
+  - If `True`, keeps worker processes alive across epochs and thus reduces worker startup overhead.
+  - Especially useful when using slower file systems or large datasets as opening/closing files is time expensive.
+  - While persistent workers reduce startup overhead, they can lead to increased memory usage over time as workers may accumulate cached data or experience memory leaks.  If you notice growing memory consumption during training. In this case you should reduce the number of workers.
 
 **Pin Memory (`pin_memory`)**:
-
-- If `True`, enables automatic allocation of fetched tensors into page-locked (pinned) memory. This can significantly speed up host (CPU) to device (GPU) memory transfer.
-  - Normal memory -> GPU: Requires copy to temporary pageable buffer first
-  - Pinned memory -> GPU: Direct transfer without intermediate copies
-- Requires that your dataset's `__getitem__` returns `torch.Tensor` objects.
+  - If `True`, enables automatic allocation of fetched tensors into page-locked (pinned) memory. This can significantly speed up host (CPU) to device (GPU) memory transfer.
+    - Normal memory -> GPU: Requires copy to temporary pageable buffer first
+    - Pinned memory -> GPU: Direct transfer without intermediate copies
+  - Requires that your dataset's `__getitem__` returns `torch.Tensor` objects.
 
 **Prefetch Factor (`prefetch_factor`)**:
-
-- Number of batches loaded in advance by each worker.
-- Total prefetched batches = `num_workers * prefetch_factor`. This needs to taken into account for memory consumption
-- Higher values increase memory usage, but can improve throughput by reducing I/O bottlenecks.
-- If using streaming datasets (WebDataset tar files, tf.data pipelines, etc.), ensure you take advantage of their features like prefetching and parallel reads
+  - Number of batches loaded in advance by each worker.
+  - Total prefetched batches = `num_workers * prefetch_factor`. This needs to taken into account for memory consumption
+  - Higher values increase memory usage, but can improve throughput by reducing I/O bottlenecks.
+  - If using streaming datasets (WebDataset tar files, tf.data pipelines, etc.), ensure you take advantage of their features like prefetching and parallel reads
 
 I will show how to optimize this in the next chapter [Optimizing the Pipeline: Data](/blogs/training-at-larger-scale/part4/)
 
 **Multiprocessing Context**: Controls how worker processes are created in the DataLoader (usable with multiple workers):
-
-- Use `multiprocessing_context='forkserver'` (or `'spawn'`) for compatibility with CUDA and complex I/O or filesystem interactions.
-- `'spawn'` is the most compatible and is default on Windows and MacOS. Creates entirely new Python processes from scratch, with clean memory space. Safest but slowest method since it needs to re-import modules in each worker.
-- `'forkserver'` can also be safer than `'fork'` (default on Linux) when using CUDA. Creates a server process that handles forking child processes on demand. Offers a good balance between safety and performance.
-- `'fork'` is fast but can lead to subtle bugs with CUDA or file handles. Default on Linux. Creates workers by duplicating the entire parent process memory, including all open resources. Fast but dangerous with complex resources like CUDA contexts or file handles.
+  -  Use `multiprocessing_context='forkserver'` (or `'spawn'`) for compatibility with CUDA and complex I/O or filesystem interactions.
+  - `'spawn'` is the most compatible and is default on Windows and MacOS. Creates entirely new Python processes from scratch, with clean memory space. Safest but slowest method since it needs to re-import modules in each worker.
+  - `'forkserver'` can also be safer than `'fork'` (default on Linux) when using CUDA. Creates a server process that handles forking child processes on demand. Offers a good balance between safety and performance.
+  - `'fork'` is fast but can lead to subtle bugs with CUDA or file handles. Default on Linux. Creates workers by duplicating the entire parent process memory, including all open resources. Fast but dangerous with complex resources like CUDA contexts or file handles.
 
 When this is not set correctly, you can run into gridlock. This is when worker processes become deadlocked or severely bottlenecked, preventing efficient data flow. Common scenarios include:
-
 - CUDA errors when using `'fork'` with GPU operations
 - Corrupted file handles when using `'fork'` with complex I/O
 - Memory leaks from improper resource sharing
 - Deadlocks from competing access to shared resources
 
 **Worker Initialization (`worker_init_fn`)**:
-
-- Optional function to initialize each worker after it's spawned.
-- For cloud use: configure filesystem-specific settings and avoid duplication randomness across workers. An example is shown in `utils.py`
-- NOTE: Initialization functions are called once per worker process, not once per batch.
+  - Optional function to initialize each worker after it's spawned.
+  - For cloud use: configure filesystem-specific settings and avoid duplication randomness across workers. An example is shown in `utils.py`
+  - NOTE: Initialization functions are called once per worker process, not once per batch.
 
 **Additional Resources:**
-
 - [PyTorch DataLoader Documentation](https://pytorch.org/docs/stable/data.html) - Complete reference for DataLoader parameters and best practices
 - [Python Multiprocessing Start Methods](https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods) - Details on fork, spawn, and forkserver methods and their implications
 

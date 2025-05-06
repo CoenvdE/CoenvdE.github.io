@@ -100,8 +100,48 @@ def fix_links(content):
                 if 0 <= num < len(md_files):  # Check if valid chapter number
                     content = content.replace(match.group(0), f"[{text}](/blogs/training-at-larger-scale/part{num+1}/)")
     
-    # Fix image references
-    content = re.sub(r'!\[([^\]]*)\]\(images/([^)]+)\)', r'![\1](/images/training-blog/\2)', content)
+    # First, replace any already fixed paths to avoid double-fixing
+    # This handles cases where "/images/training-blog/" might already be in the content
+    content = content.replace("/images/training-blog/images/", "/images/training-blog/")
+    
+    # Fix all image references with absolute paths
+    # Handle different image patterns for standard markdown images
+    image_patterns = [
+        # Standard markdown image: ![alt](images/file.png)
+        (r'!\[([^\]]*)\]\(images/([^)]+)\)', r'![\1](/images/training-blog/\2)'),
+        # Images with ./ prefix: ![alt](./images/file.png)
+        (r'!\[([^\]]*)\]\(\./images/([^)]+)\)', r'![\1](/images/training-blog/\2)'),
+        # Relative image path in subdirectory: ![alt](../images/file.png)
+        (r'!\[([^\]]*)\]\(\.\./images/([^)]+)\)', r'![\1](/images/training-blog/\2)'),
+        # Direct image path in markdown links: [text](images/file.png)
+        (r'(?<!\!)\[([^\]]*)\]\(images/([^)]+)\)', r'[\1](/images/training-blog/\2)')
+    ]
+    
+    for pattern, replacement in image_patterns:
+        content = re.sub(pattern, replacement, content)
+    
+    # Fix HTML img tags
+    # Replace src="images/..." with src="/images/training-blog/..."
+    content = re.sub(
+        r'(<img[^>]+src=")images/([^"]+)(")',
+        r'\1/images/training-blog/\2\3',
+        content
+    )
+    
+    # Also catch single-quoted attributes
+    content = re.sub(
+        r"(<img[^>]+src=')images/([^']+)(')",
+        r"\1/images/training-blog/\2\3",
+        content
+    )
+    
+    # Fix any remaining HTML attributes with unquoted image references
+    content = re.sub(r'(src|href)=(["\']?)images/', r'\1=\2/images/training-blog/', content)
+    
+    # Final check to ensure we don't have doubled paths
+    content = content.replace("/images/training-blog/images/", "/images/training-blog/")
+    content = content.replace("src=\"/images/training-blog/images/", "src=\"/images/training-blog/")
+    content = content.replace("src='/images/training-blog/images/", "src='/images/training-blog/")
     
     return content
 

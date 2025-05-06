@@ -13,16 +13,14 @@ giscus_comments: true
 ## 3. Optimizing the pipeline: Data
 
 Efficient data loading can significantly reduce training time — especially when the GPU is fast but starved for data.
-
 - The GPU (or TPU/HPU etc.) is **the most expensive and performance-critical component** in a training pipeline.
 - If the data pipeline (i.e., loading, preprocessing, transferring) is slow, the GPU will sit idle, waiting for the next batch.
-- The goal is to **saturate the GPU** — keep it busy with minimal idle time.
+- The goal is to **saturate the GPU** — keep it busy with minimal idle time.   
 
 ### What You Want
 
 - A data pipeline **that saturates the GPU as much as possible** without introducing to much memory pressure or overdemanding CPU's.
 - Each DataLoader worker is effectively a producer that loads data in parallel, while your training loop (running on the main process/GPU) is the consumer. The goal is to maximize overlap: while one batch is being processed on the GPU, the next batch (or several batches) are being loaded by the CPU workers in the background
-
 ```
 3. Optimizing the pipeline: Data/
 ├── benchmark_datapipeline_configurations.py  # Main benchmark script
@@ -34,56 +32,51 @@ Efficient data loading can significantly reduce training time — especially whe
 ```
 
 ### Key Concepts and Metrics
-
 ---
 
 - **CPU (CPU)**:
-
   - Used by the **main process and workers** to (lazy) load, transform, and prepare data for training.
   - Ideally, you want high CPU usage (to indicate workers are busy) but not so high that the OS or other processes starve. If your CPU utilization is peaking at 100% on all cores and the system becomes unresponsive or the throughput plateaus, you may have too many workers or threads.
   - You can check available CPUs using:
 
   ```python
-  import os
+  import os  
   print(os.cpu_count())
   ```
 
 - **RAM (System Memory / CPU RAM)**:
-
   - Used by workers to load batches into memory.
   - Important when working with large datasets, large batch sizes, or complex transforms.
   - Too many workers without enough RAM can lead to crashes or swapping, which hurts performance.
 
 - **GPU Saturation**:
-
   - The key performance target.
   - If GPU is underutilized, bottleneck is likely in data loading.
 
 - **I/O Considerations**
 
-  - **Bandwidth**: The maximum rate of data transfer between components in your system:
+   - **Bandwidth**: The maximum rate of data transfer between components in your system:
+      - Disk/cloud storage to RAM
+      - CPU memory to GPU memory
+      - Network transfers (e.g., from cloud storage to your instance)
 
-    - Disk/cloud storage to RAM
-    - CPU memory to GPU memory
-    - Network transfers (e.g., from cloud storage to your instance)
+       Measured in MB/s or Gbps. High bandwidth allows more data to flow per second, while low bandwidth creates bottlenecks that can leave your GPU waiting for data. When working with cloud data, network bandwidth often becomes the primary constraint. Cloud servers typically have significantly higher bandwidth (often 10-100x faster) than consumer (wifi) internet connections, which can dramatically improve data transfer speeds when training in cloud environments compared to local setups.
 
-    Measured in MB/s or Gbps. High bandwidth allows more data to flow per second, while low bandwidth creates bottlenecks that can leave your GPU waiting for data. When working with cloud data, network bandwidth often becomes the primary constraint. Cloud servers typically have significantly higher bandwidth (often 10-100x faster) than consumer (wifi) internet connections, which can dramatically improve data transfer speeds when training in cloud environments compared to local setups.
+   - **Chunking**: Use optimal chunk sizes to balance I/O overhead and memory usage
+   - **Optimizations**:
+      - Memory mapping for large files
+      - Prefetching to hide latency
+      - Caching frequently used data
+      - Sequential access over random reads
+      - Compression to reduce I/O
+   - **File Formats**: Choose ML-optimized formats (Parquet, TFRecord, WebDataset, Zarr)
 
-  - **Chunking**: Use optimal chunk sizes to balance I/O overhead and memory usage
-  - **Optimizations**:
-    - Memory mapping for large files
-    - Prefetching to hide latency
-    - Caching frequently used data
-    - Sequential access over random reads
-    - Compression to reduce I/O
-  - **File Formats**: Choose ML-optimized formats (Parquet, TFRecord, WebDataset, Zarr)
 
 **Streaming Workers (Dask) vs DataLoader Workers (PyTorch)**
 
 PyTorch DataLoader and streaming frameworks like Dask can be combined effectively to stream cloud data into your training pipeline, but it's crucial to understand they operate at different layers of the data process:
 
 - **Dask (or other streaming frameworks)** handles the low-level data access by:
-
   - Building a computational graph (DAG) for lazy evaluation
   - Managing how data chunks are read from storage
   - Orchestrating parallel fetching of data from cloud/disk
@@ -100,10 +93,9 @@ These systems don't automatically coordinate with each other. The connection poi
 1. Configure optimal data reading (e.g. chunk sizes, thread count, worker count)
 2. Configure DataLoader for optimal batch preparation (e.g. num_workers, prefetch_factor)
 
-It's important to avoid conflicting parallelism between these systems because too many concurrent processes and threads can lead to resource contention and degraded performance.
+It's important to avoid conflicting parallelism between these systems because too many concurrent processes and threads can lead to resource contention and degraded performance. 
 
 ### Practical guidelines, background and setup
-
 ---
 
 **Understanding DataLoader Workers and Process Distribution**
@@ -119,7 +111,6 @@ Reserve 1-2 CPU cores per GPU for the main training process and system overhead.
 To avoid CPU contention, ensure the total number of worker processes doesn't exceed your available CPU cores minus the cores needed for main processes and system overhead. When workers compete for CPU resources, data loading becomes inefficient and can slow down training.
 
 **CPU allocation examples**:
-
 - 20 CPUs, 1 GPU: Reserve 2 CPUs for main process and overhead, use up to 18 workers
 - 60 CPUs, 3 GPUs: Reserve 6 CPUs (2 per GPU) for main processes and overhead, use up to 18 workers per GPU (54 total)
 
@@ -129,15 +120,14 @@ Again, note that num_workers is not about CPU's but processes, and a process may
 The ideal batch size depends on your dataset characteristics, model complexity, and available GPU memory. You want a size that's stable but still provides stochastic gradient descent benefits. For my use case, 32 worked well, but you may need to adjust based on your specific requirements. This batch size is needed because it is used in my optimization benchmark script later.
 
 **Optional: measure time for 1 batch to train**
-Measuring the time it takes to (load a minibatch and) complete a single training step. This information is useful for properly configuring the benchmark script parameters to accurately reflect your real-world training conditions. For this, you can run the `timing_benchmark.py` script that is in the folder of [chapter 4](/blogs/training-at-larger-scale/part5/).
+Measuring the time it takes to (load a minibatch and) complete a single training step. This information is useful for properly configuring the benchmark script parameters to accurately reflect your real-world training conditions. For this, you can run the `timing_benchmark.py` script that is in the folder of [chapter 4](/blogs/training-at-larger-scale/part5/). 
 
-**No need Over-optimize the DataLoader**:
+**No need Over-optimize the DataLoader**: 
 If your model is small or the GPU is not very powerful, there's no point in using 16+ workers or heavy parallel jobs when the GPU is already saturated.
 I have spend quite some time doing research on this, and it is imporatant to think about this step as it can drastically increase your performance, but no need to do "gridsuch-like stuff for this.
 Follow my guide and your speed should already improve a lot. Experimenting endlessly with this also costs money and potential experimentation time. Ill tell you more on how to do it in a sec.
 
 ### When optimizing data loading, identify the bottleneck using the benchmark script I created. Look for these key indicators:
-
 ---
 
 • **GPU Under-utilization**: If your GPU is frequently idle, your data pipeline isn't keeping up. The benchmark will show print long waits between training steps and white spaces in the "train row" of the visualization.
@@ -147,24 +137,23 @@ Follow my guide and your speed should already improve a lot. Experimenting endle
 • **All CPU cores busy but GPU still waiting**: This suggests an I/O bottleneck (slow disk, network, etc.). Adding more workers won't help. Instead, optimize at the dataset level with faster storage, caching, or better chunking strategies.
 
 ### what can be optimized
-
 ---
 
-**_dataset_**
+***dataset***
 
 This part is not always needed. If there are no parameters to be optimized, chunking to be optimized or file format to be optimized, focus on optimizing the dataloader. (when streaming from machine's disk memory, ssd or when streaming is all handled automatically)
 
 **what to optimize**
 
-1. **Efficient Storage Formats**:
+1. **Efficient Storage Formats**: 
 
-Initially, my data was stored in NetCDF files, which are common for scientific data but can be inefficient when working with streaming from cloud storage. The default chunking in these files was not optimized for machine learning, causing unnecessary data to be loaded into memory during training. To address this, I converted everything to [Zarr format](https://zarr.readthedocs.io/). Zarr is specifically designed for cloud-based data access. I will not include the migration in this blog, as it is out of scope, I just want to show that it is important to think about the dataformats used.
+Initially, my data was stored in NetCDF files, which are common for scientific data but can be inefficient when working with streaming from cloud storage. The default chunking in these files was not optimized for machine learning, causing unnecessary data to be loaded into memory during training. To address this, I converted everything to  [Zarr format](https://zarr.readthedocs.io/). Zarr is specifically designed for cloud-based data access. I will not include the migration in this blog, as it is out of scope, I just want to show that it is important to think about the dataformats used.
 
 TODO: zarr threading fast
 
-2. **Optimal Chunking**:
+2. **Optimal Chunking**: 
 
-**_How to calculate (handwavy) how big your chunks should be_**
+***How to calculate (handwavy) how big your chunks should be***
 
 TODO: LAURENS CALCULATIONS
 When migrating to Zarr, I defined chunk sizes ...
@@ -175,8 +164,7 @@ Some libraries, like Dask, can parallelize reading within a dataset, providing t
 
 When working with lazy-loading/streaming data into GPU memory, there are several parameters you might need to optimize:
 
-1. **Parallel Reading Parameters**:
-
+1. **Parallel Reading Parameters**: 
    - Number of concurrent readers/workers
    - Memory limits per worker
    - TODO: zarr threading fast
@@ -187,7 +175,6 @@ When working with lazy-loading/streaming data into GPU memory, there are several
    - Persistent vs. in-memory caching
 
 In my specific case with geospatial data using Dask, I needed to optimize:
-
 - Number of Dask workers (processes that execute computations)
 - Memory limit per Dask worker (to prevent OOM errors)
 - Thread pool size per worker (for parallel execution within a worker)
@@ -198,7 +185,6 @@ In my specific case with geospatial data using Dask, I needed to optimize:
 Dask offers three execution modes, each with different trade-offs:
 
 1. **Single-Threaded Scheduler**
-
    - Uses `dask.config.set(scheduler="single-threaded")`
    - All tasks run sequentially in the main thread
    - No parallelism but minimal overhead
@@ -206,7 +192,6 @@ Dask offers three execution modes, each with different trade-offs:
    - In multi-GPU setups, each process runs its own sequential scheduler
 
 2. **Threaded Scheduler**
-
    - Uses `dask.config.set(scheduler="threads", num_workers=dask_threads)`
    - Tasks run in parallel using a thread pool within a single process
    - Good for I/O-bound operations (like reading data chunks)
@@ -222,12 +207,10 @@ Dask offers three execution modes, each with different trade-offs:
    - Higher overhead but better isolation and monitoring capabilities
 
 For a single GPU with limited CPUs (e.g., 20 cores):
-
 - A threaded scheduler with 4-8 threads is often sufficient
 - A small distributed cluster (1-2 workers, 4 threads each) offers better monitoring
 
 For multi-GPU setups (e.g., 8 GPUs with 20 cores):
-
 - Be careful not to oversubscribe your CPU resources
 - If each GPU process uses its own Dask cluster, limit to 1 worker with 2 threads per process
 - Consider using a single shared Dask cluster for all GPU processes
@@ -238,13 +221,14 @@ TODO: needed?
 
 TODO: zarr threading fast
 
+
 4. **Caching and Locality**: For remote data, implement caching strategies to avoid repeatedly downloading the same data. Consistent access patterns help leverage OS-level caching.
 
 If your data pipeline doesn't use these specialized libraries, you can focus solely on DataLoader optimization.
 
 In summary, dataset-level optimization is about making data access as efficient as possible. By storing data smartly (chunked, compressed appropriately, possibly colocated with training if remote), and by only doing minimal necessary work for each access, you ensure that the raw data supply is fast. Once that is in place, DataLoader-level tuning can further amplify the throughput.å
 
-**_dataloader_**
+***dataloader***
 
 **what to optimize**
 **Parameters to Optimize in the DataLoader**
@@ -252,24 +236,20 @@ In summary, dataset-level optimization is about making data access as efficient 
 The DataLoader is critical for training performance. Key parameters to optimize:
 
 1. **`num_workers`**: Controls parallel data loading subprocesses
-
    - Too few: GPU waits for data
    - Too many: Resource contention, diminishing returns
 
 2. **`prefetch_factor`**: Batches loaded in advance per worker
-
    - Default is 2, which works for most cases
    - Adjust based on sample size and memory requirements
    - Total prefetched = `num_workers * prefetch_factor`
 
 3. **`pin_memory`**: Enables faster CPU to GPU transfers
-
    - Set to `True` when using GPU
    - Creates page-locked memory for direct transfers
    - Slightly increases CPU memory usage
 
 4. **`persistent_workers`**: Keeps workers alive between epochs
-
    - Reduces worker initialization overhead
    - Useful for large datasets and complex initialization
    - Significantly reduces epoch transition time
@@ -278,7 +258,7 @@ The DataLoader is critical for training performance. Key parameters to optimize:
    - Options: 'fork', 'spawn', 'forkserver'
    - Use 'forkserver' (or 'spawn') for better CUDA compatibility
 
-Even with an efficient dataset, proper DataLoader settings are crucial.
+Even with an efficient dataset, proper DataLoader settings are crucial. 
 
 ### Optimizing: Benchmarking Tools for DataLoader Optimization
 
@@ -287,7 +267,6 @@ TODO: discuss with laurens if I should add andy's script here as well.
 I've created two files to help you optimize your data pipeline:
 
 1. **`benchmark_configurations.py`**
-
    - suitable for any pytorch Dataset object
    - Runs and logs different DataLoader configurations
    - Measures performance metrics for each configuration
@@ -303,7 +282,6 @@ I've created two files to help you optimize your data pipeline:
    - Helps identify the optimal setup for your specific hardware
 
 If you're using Dask, you can also leverage the Dask dashboard to monitor:
-
 - Worker memory usage
 - CPU utilization
 - Task execution
@@ -315,11 +293,11 @@ Below are example benchmark results showing the dramatic difference between an u
 
 <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
   <div style="flex: 1; margin-right: 10px;">
-    <img src="images/benchmark_logs_bad_baseline.png" alt="Unoptimized Baseline" style="width: 100%;">
+    <img src="/images/training-blog/benchmark_logs_bad_baseline.png" alt="Unoptimized Baseline" style="width: 100%;">
     <p><em>Unoptimized baseline configuration with significant data loading bottlenecks</em></p>
   </div>
   <div style="flex: 1; margin-left: 10px;">
-    <img src="images/benchmark_logs_good_baseline.png" alt="Optimized Configuration" style="width: 100%;">
+    <img src="/images/training-blog/benchmark_logs_good_baseline.png" alt="Optimized Configuration" style="width: 100%;">
     <p><em>Optimized configuration with minimal wait time</em></p>
   </div>
 </div>
@@ -327,20 +305,16 @@ Below are example benchmark results showing the dramatic difference between an u
 With these simple optimizations, my dataloader became 5 times faster than the baseline, the company that made the first version of this benchmark script was able to run 15x faster. This performance improvement is transformative for training - where others might only complete 50 epochs in a given timeframe, I was able to run 250 epochs. This acceleration dramatically reduces overall training time and allows for more experimentation and model iterations.
 
 ### Practical Optimization Approach
-
 ---
 
 0. **Import your own dataset at the start**
-
 - Follow these steps to systematically optimize your data pipeline:
-  change the line on top of `benchmark_configurations.py`.
-
-```python
+change the line on top of `benchmark_configurations.py`.
+``` python
 from dummydataset import DummyDataset as YourDataset # replace with your dataset
 ```
 
 1. **Establish a baseline**
-
    - Start with minimal configuration:
      - `num_workers = 0` (single-process loading)
      - `prefetch_factor = None` (default behavior)
@@ -349,7 +323,6 @@ from dummydataset import DummyDataset as YourDataset # replace with your dataset
    - This provides a reference point for measuring improvements
 
 2. **Implement a sensible default configuration**
-
    - For a system with 10 CPU cores and 1 GPU:
      - Reserve 1-2 cores for the main training process
      - Allocate remaining cores between DataLoader workers and streaming processes
@@ -361,7 +334,6 @@ from dummydataset import DummyDataset as YourDataset # replace with your dataset
        - This can increase overall throughput by reducing idle time
 
 3. **Experiment with different configurations**
-
    - Test variations systematically:
      - More streaming workers, fewer DataLoader workers
      - More DataLoader workers, fewer streaming workers
@@ -390,3 +362,4 @@ Note that network bandwidth varies dramatically between environments. When movin
 For more insights on optimizing cloud data loading, see [Earthmover's guide to cloud-native dataloaders](https://earthmover.io/blog/cloud-native-dataloader/) covering streaming techniques, I/O optimization, and resource balancing.
 
 Now that we have the data-part of the pipeline optimized, lets focus on the [Model](/blogs/training-at-larger-scale/part5/)
+

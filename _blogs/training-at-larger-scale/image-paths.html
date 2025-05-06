@@ -1,0 +1,20 @@
+---
+layout: none
+---
+
+<style>
+  /* Ensure images from the blog can be referenced relatively or absolutely */
+  img[src^="images/"] {
+    content: url(/images/training-blog/placeholder.png);
+  }
+</style>
+
+<script>
+  // Fix image paths in the DOM after page load
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('img[src^="images/"]').forEach(function(img) {
+      var src = img.getAttribute('src');
+      img.setAttribute('src', '/images/training-blog/' + src.replace('images/', ''));
+    });
+  });
+</script> 
