@@ -41,19 +41,10 @@ on:
 jobs:
   link-checker:
     runs-on: ubuntu-latest
-    # run on the main repo or your own repo
-    if: github.repository == 'alshedivat/al-folio' || github.repository == 'CoenvdE/CoenvdE.github.io'
+    # only run on the main repo
+    if: github.repository == 'alshedivat/al-folio'
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Python 🐍
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-
-      - name: Import Training Blog 📚
-        run: |
-          python import_training_blog.py
 
       - name: Link Checker 🔗
         uses: lycheeverse/lychee-action@v2.1.0
