@@ -1,7 +1,7 @@
 ---
 layout: blog_collection
-title: "Import your model and data classes here"
-description: "Part 5 of the Training at Larger Scale series"
+title: "Optimizing the pipeline: Model"
+description: "Chapter 5 of the Training at Larger Scale series"
 date: 2025-04-10
 collection_id: training-at-larger-scale
 chapter_number: 5

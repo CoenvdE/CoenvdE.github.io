@@ -1,7 +1,7 @@
 ---
 layout: blog_collection
-title: "Part 1"
-description: "Part 1 of the Training at Larger Scale series"
+title: "The Setup"
+description: "Chapter 1 of the Training at Larger Scale series"
 date: 2025-04-06
 collection_id: training-at-larger-scale
 chapter_number: 1
@@ -63,7 +63,7 @@ My model was essentially a (Masked) Autoencoder (with some cool stuff that does 
 Reproducibility is very important, it allows you and others to reliably verify and compare results. In research, it ensures findings are valid and consistent. For practitioners, it makes debugging and iterative experimentation much easier. Seeding is very important for reproducibility.  
 you need to seed everything (torch, numpy, python, etc.). Look at the `pytorch_train.py` file for an example.  
 Seed not properly propagated to data-generators, so I created a generator for the dataloader that has a set seed and I also used a `set_seed` function to keep everything reproducible in the `pytorch_train.py` file.
-Pytorch dataloader workers (I will properly explain everything this in [Chapter 3](3.%20Optimizing%20the%20pipeline%20-%20Data.md)) need to be seeded, because each worker runs in its own process, and without explicit seeding, they will use random seeds, leading to non-deterministic data loading and augmentations. look at the `worker_init_fn` in the `pytorch_train.py` file for an example.
+Pytorch dataloader workers (I will properly explain everything this in [Chapter 3](/blogs/training-at-larger-scale/part4/)) need to be seeded, because each worker runs in its own process, and without explicit seeding, they will use random seeds, leading to non-deterministic data loading and augmentations. look at the `worker_init_fn` in the `pytorch_train.py` file for an example.
 
 For full reproducibility (usefull for debugging and testing), you should also set the following: - `torch.backends.cudnn.deterministic = True` # slows down training but makes results reproducible (default is False) - `torch.backends.cudnn.benchmark = False` # slows down training but makes results reproducible (default is True)
 These settings control how CUDA kernels are selected and run. Setting deterministic = True ensures the same operations produce the same outputs every run, at the cost of performance. Disabling benchmark prevents the selection of non-deterministic, optimized algorithms that could vary between runs.
@@ -85,7 +85,7 @@ A key part of reproducibility is proper seeding. You need to seed **everything**
 
 See the `set_seed` function in `pytorch_train.py` for an example.
 
-By default, PyTorch `DataLoader` workers (A full explanation is provided in [Chapter 3](3.%20Optimizing%20the%20pipeline%20-%20Data.md)) are not seeded properly — each worker runs in its own process, and without explicit seeding, they will each get a random seed. This can lead to **non-deterministic data loading and augmentations**.
+By default, PyTorch `DataLoader` workers (A full explanation is provided in [Chapter 3](/blogs/training-at-larger-scale/part4/)) are not seeded properly — each worker runs in its own process, and without explicit seeding, they will each get a random seed. This can lead to **non-deterministic data loading and augmentations**.
 
 To fix this, create a generator for the `DataLoader` with a fixed seed and use a `worker_init_fn`.  
 Check out the examples in `pytorch_train.py`.

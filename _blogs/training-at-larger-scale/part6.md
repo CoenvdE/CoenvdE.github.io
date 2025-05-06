@@ -1,7 +1,7 @@
 ---
 layout: blog_collection
-title: "Cloud storage credentials"
-description: "Part 6 of the Training at Larger Scale series"
+title: "What Is Next"
+description: "Chapter 6 of the Training at Larger Scale series"
 date: 2025-04-11
 collection_id: training-at-larger-scale
 chapter_number: 6

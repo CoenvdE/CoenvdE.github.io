@@ -1,6 +1,6 @@
 ---
 layout: blog_collection
-title: "Training at larger scale"
+title: "Introduction"
 description: "A comprehensive guide to scaling machine learning from small to larger training setups."
 collection_id: training-at-larger-scale
 display_chapters: true

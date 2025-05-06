@@ -1,7 +1,7 @@
 ---
 layout: blog_collection
-title: "Part 4"
-description: "Part 4 of the Training at Larger Scale series"
+title: "Optimizing the pipeline: Data"
+description: "Chapter 4 of the Training at Larger Scale series"
 date: 2025-04-09
 collection_id: training-at-larger-scale
 chapter_number: 4
@@ -129,7 +129,7 @@ Again, note that num_workers is not about CPU's but processes, and a process may
 The ideal batch size depends on your dataset characteristics, model complexity, and available GPU memory. You want a size that's stable but still provides stochastic gradient descent benefits. For my use case, 32 worked well, but you may need to adjust based on your specific requirements. This batch size is needed because it is used in my optimization benchmark script later.
 
 **Optional: measure time for 1 batch to train**
-Measuring the time it takes to (load a minibatch and) complete a single training step. This information is useful for properly configuring the benchmark script parameters to accurately reflect your real-world training conditions. For this, you can run the `timing_benchmark.py` script that is in the folder of [chapter 4](4.%20Optimizing%20the%20pipeline%3A%20Model.md).
+Measuring the time it takes to (load a minibatch and) complete a single training step. This information is useful for properly configuring the benchmark script parameters to accurately reflect your real-world training conditions. For this, you can run the `timing_benchmark.py` script that is in the folder of [chapter 4](/blogs/training-at-larger-scale/part5/).
 
 **No need Over-optimize the DataLoader**:
 If your model is small or the GPU is not very powerful, there's no point in using 16+ workers or heavy parallel jobs when the GPU is already saturated.
@@ -389,4 +389,4 @@ Note that network bandwidth varies dramatically between environments. When movin
 
 For more insights on optimizing cloud data loading, see [Earthmover's guide to cloud-native dataloaders](https://earthmover.io/blog/cloud-native-dataloader/) covering streaming techniques, I/O optimization, and resource balancing.
 
-Now that we have the data-part of the pipeline optimized, lets focus on the [Model](4.%20Optimizing%20the%20pipeline%3A%20Model.md)
+Now that we have the data-part of the pipeline optimized, lets focus on the [Model](/blogs/training-at-larger-scale/part5/)

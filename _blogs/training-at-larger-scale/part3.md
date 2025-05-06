@@ -1,7 +1,7 @@
 ---
 layout: blog_collection
-title: "Part 3"
-description: "Part 3 of the Training at Larger Scale series"
+title: "Bigger data in the cloud"
+description: "Chapter 3 of the Training at Larger Scale series"
 date: 2025-04-08
 collection_id: training-at-larger-scale
 chapter_number: 3
@@ -81,7 +81,7 @@ NOTE (With Laurens): COPERNICUS DIDNT WANT EVERYONE TO KNOW, IS THIS OKAY?
 
 ### Streaming/Lazy Loading
 
-Now that we have access to the data, we can stream it into memory! For my geospatial data use case, I utilized libraries like Dask and Xarray that provide optimizable, efficient lazy loading capabilities. Dask helps create a computational graph for loading data chunks from storage only when needed, while managing parallel workers to speed up the process. I'll cover optimization strategies for (streaming) data pipelines in [Chapter 3: Optimizing the Pipeline: Data](3.%20Optimizing%20the%20pipeline%3A%20Data.md). To be able to work with this (lazy-loaded) data from the cloud in your training pipeline, we need to wrap everything into a PyTorch dataset. I've implemented an example in `usecase_cloud_dataset.py` that demonstrates how to create a custom Dataset class that handles cloud data access, lazy loading and converting it to a usable dataset. Note that this is still a simplified version. When working with Xarray, xbatcher is the most efficient way to use batch generation, but this is out of the scope of this guide. Feel free to ask any questions about this.
+Now that we have access to the data, we can stream it into memory! For my geospatial data use case, I utilized libraries like Dask and Xarray that provide optimizable, efficient lazy loading capabilities. Dask helps create a computational graph for loading data chunks from storage only when needed, while managing parallel workers to speed up the process. I'll cover optimization strategies for (streaming) data pipelines in [Chapter 3: Optimizing the Pipeline: Data](/blogs/training-at-larger-scale/part4/). To be able to work with this (lazy-loaded) data from the cloud in your training pipeline, we need to wrap everything into a PyTorch dataset. I've implemented an example in `usecase_cloud_dataset.py` that demonstrates how to create a custom Dataset class that handles cloud data access, lazy loading and converting it to a usable dataset. Note that this is still a simplified version. When working with Xarray, xbatcher is the most efficient way to use batch generation, but this is out of the scope of this guide. Feel free to ask any questions about this.
 
 ### Quick Recap:
 
@@ -104,7 +104,7 @@ The Dataloader calls the **getitem**() from the Dataset to get the needed sample
   - Note: This is **not the number of CPU cores**, but the number of subprocesses that utilize CPU resources.
 - each worker might maintain its own HTTP connection or file handle. This can increase throughput (multiple parallel reads) but also load (e.g., more network connections). Ensure your data source can handle concurrent access.
 
-I will show how to optimize this in the next chapter [Optimizing the Pipeline: Data](3.%20Optimizing%20the%20pipeline%3A%20Data.md)
+I will show how to optimize this in the next chapter [Optimizing the Pipeline: Data](/blogs/training-at-larger-scale/part4/)
 
 **Persistent Workers (`persistent_workers`)**:
 
@@ -126,7 +126,7 @@ I will show how to optimize this in the next chapter [Optimizing the Pipeline: D
 - Higher values increase memory usage, but can improve throughput by reducing I/O bottlenecks.
 - If using streaming datasets (WebDataset tar files, tf.data pipelines, etc.), ensure you take advantage of their features like prefetching and parallel reads
 
-I will show how to optimize this in the next chapter [Optimizing the Pipeline: Data](3.%20Optimizing%20the%20pipeline%3A%20Data.md)
+I will show how to optimize this in the next chapter [Optimizing the Pipeline: Data](/blogs/training-at-larger-scale/part4/)
 
 **Multiprocessing Context**: Controls how worker processes are created in the DataLoader (usable with multiple workers):
 
@@ -153,4 +153,4 @@ When this is not set correctly, you can run into gridlock. This is when worker p
 - [PyTorch DataLoader Documentation](https://pytorch.org/docs/stable/data.html) - Complete reference for DataLoader parameters and best practices
 - [Python Multiprocessing Start Methods](https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods) - Details on fork, spawn, and forkserver methods and their implications
 
-Now we have a clean architecture setup that is validated and set up for multi-GPU training. We've learned how to access and stream data from the cloud, and configured our DataLoader with the appropriate parameters for efficient data loading. With these foundations in place, it's time to optimize the components of our pipeline for better performance. Let's start by focusing [optimizing the data part of the pipeline](3.%20Optimizing%20the%20pipeline%3A%20Data.md)
+Now we have a clean architecture setup that is validated and set up for multi-GPU training. We've learned how to access and stream data from the cloud, and configured our DataLoader with the appropriate parameters for efficient data loading. With these foundations in place, it's time to optimize the components of our pipeline for better performance. Let's start by focusing [optimizing the data part of the pipeline](/blogs/training-at-larger-scale/part4/)
