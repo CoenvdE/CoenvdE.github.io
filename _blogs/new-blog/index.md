@@ -1,0 +1,13 @@
+---
+layout: blog_collection
+title: "New Blog: A Series"
+description: "An example blog series showing the folder-based structure with a landing page."
+# Collection Info (used by main /blogs page and internal navigation):
+collection_id: new-blog # Changed from example-collection
+# img: /assets/img/placeholder.jpg # Optional Thumbnail
+display_chapters: true # Tells the layout to list chapters using chapters_list.liquid
+---
+
+This is the landing page for the **New Blog Collection**.
+
+From here, you can navigate to the different parts of this series:
