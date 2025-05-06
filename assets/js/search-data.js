@@ -11,7 +11,7 @@ ninja.data = [{
     },
   },{id: "nav-cv",
           title: "CV",
-          description: "TO FIX - references, volunteer, skills, work.",
+          description: "TO FIX - references, volunteer, skills, work:oceanos when done. and extra stats like grades?",
           section: "Navigation",
           handler: () => {
             window.location.href = "/cv/";
