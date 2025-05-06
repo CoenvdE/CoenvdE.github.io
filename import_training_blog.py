@@ -47,12 +47,6 @@ readme_path = os.path.join(source_dir, "README.md")
 with open(readme_path, "r") as f:
     readme_content = f.read()
 
-# Extract title from the README
-title_match = re.search(r'^# (.+)', readme_content, re.MULTILINE)
-title = "Training at Larger Scale"
-if title_match:
-    title = title_match.group(1)
-
 # Function to fix links in markdown content
 def fix_links(content):
     # First, fix regular markdown links [text](file.md)
@@ -83,6 +77,29 @@ def fix_links(content):
         for pattern in patterns:
             content = re.sub(pattern, r'[\1](' + new_url + r')', content)
     
+    # Additional fix for remaining chapter references that have a specific pattern
+    # Like [Chapter 3](3. Optimizing the pipeline: Data.md)
+    for i, md_file in enumerate(md_files):
+        chapter_num = i + 1
+        chapter_name = os.path.splitext(md_file)[0]
+        chapter_name = re.sub(r'^\d+\.\s*', '', chapter_name)
+        new_url = f"/blogs/training-at-larger-scale/part{chapter_num}/"
+        
+        # This regex catches chapter references like "[Chapter X](...)" or references to numbered markdown files
+        chapter_pattern = r'\[(Chapter\s+\d+|[^\]]+)\]\((\d+\.[^)]+)\)'
+        
+        # Check each chapter reference
+        for match in re.finditer(chapter_pattern, content):
+            text = match.group(1)
+            filename = match.group(2)
+            
+            # Try to find which file it corresponds to by checking beginning numbers
+            file_num = re.match(r'^(\d+)', filename)
+            if file_num:
+                num = int(file_num.group(1))
+                if 0 <= num < len(md_files):  # Check if valid chapter number
+                    content = content.replace(match.group(0), f"[{text}](/blogs/training-at-larger-scale/part{num+1}/)")
+    
     # Fix image references
     content = re.sub(r'!\[([^\]]*)\]\(images/([^)]+)\)', r'![\1](/images/training-blog/\2)', content)
     
@@ -95,12 +112,12 @@ index_content = fix_links(readme_content)
 index_content = re.sub(r'## TODO[\s\S]*?(?=##|$)', '', index_content)
 index_content = re.sub(r'> Author.*?\n', '', index_content)
 
-# Write the index.md file
+# Write the index.md file with "Introduction" as the title
 index_file_path = os.path.join(destination_dir, "index.md")
 with open(index_file_path, "w") as f:
     f.write("---\n")
-    f.write(f"layout: blog_collection\n")
-    f.write(f"title: \"{title}\"\n")
+    f.write("layout: blog_collection\n")
+    f.write("title: \"Introduction\"\n")
     f.write("description: \"A comprehensive guide to scaling machine learning from small to larger training setups.\"\n")
     f.write("collection_id: training-at-larger-scale\n")
     f.write("display_chapters: true\n")
@@ -119,11 +136,18 @@ for i, md_file in enumerate(md_files):
     with open(source_file_path, "r") as f:
         content = f.read()
 
-    # Extract title from the first heading
+    # Extract chapter name from the filename - remove numbers and file extension
+    chapter_name = os.path.splitext(md_file)[0]
+    # Remove any leading numbers and dots/spaces from the filename (like "0. " or "1. ")
+    chapter_name = re.sub(r'^\d+\.\s*', '', chapter_name)
+    
+    # Also extract the first heading as a fallback
     title_match = re.search(r'^# (.+)', content, re.MULTILINE)
-    title = f"Part {chapter_num}"
     if title_match:
-        title = title_match.group(1)
+        title_from_content = title_match.group(1)
+        # Use the heading if the filename is too generic
+        if chapter_name.lower() in ['readme', 'index', 'chapter']:
+            chapter_name = title_from_content
 
     # Fix links in the content
     content = fix_links(content)
@@ -145,9 +169,9 @@ for i, md_file in enumerate(md_files):
     # Write the processed content to the destination file
     with open(destination_file_path, "w") as f:
         f.write("---\n")
-        f.write(f"layout: blog_collection\n")
-        f.write(f"title: \"{title}\"\n")
-        f.write(f"description: \"Part {chapter_num} of the Training at Larger Scale series\"\n")
+        f.write("layout: blog_collection\n")
+        f.write(f"title: \"{chapter_name}\"\n")
+        f.write(f"description: \"Chapter {chapter_num} of the Training at Larger Scale series\"\n")
         f.write(f"date: {post_date}\n")
         f.write("collection_id: training-at-larger-scale\n")
         f.write(f"chapter_number: {chapter_num}\n")
@@ -157,7 +181,7 @@ for i, md_file in enumerate(md_files):
         f.write("---\n\n")
         f.write(content)
 
-    print(f"Created blog post {chapter_num}: {destination_file_path}")
+    print(f"Created blog post {chapter_num}: {destination_file_path} with title '{chapter_name}'")
 
 # Step 3: Clean up - remove the cloned repository
 print("Cleaning up...")
