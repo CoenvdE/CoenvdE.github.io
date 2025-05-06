@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 repo_url = "https://github.com/CoenvdE/Training-at-larger-scale-blog.git"
 source_dir = "Training-at-larger-scale-blog"
 destination_dir = "_blogs/training-at-larger-scale"
+image_dir = "images/training-blog"
 
 # Step 1: Clone the repository
 print(f"Cloning repository from {repo_url}...")
@@ -16,128 +17,149 @@ print("Repository cloned successfully.")
 
 # Ensure destination directory exists
 os.makedirs(destination_dir, exist_ok=True)
+os.makedirs(image_dir, exist_ok=True)
+
+# Get a list of all markdown files
+md_files = [f for f in os.listdir(source_dir) if f.endswith('.md') and f != 'README.md']
+md_files.sort(key=lambda x: x.split('.')[0] if x.split('.')[0].isdigit() else '999')
+
+# Create mapping of original md files to their Jekyll URLs
+link_mapping = {}
+for i, md_file in enumerate(md_files):
+    chapter_num = i + 1
+    page_url = f"/blogs/training-at-larger-scale/part{chapter_num}/"
+    link_mapping[md_file] = page_url
+    
+    # Also add variants with URL encoding to handle different link formats
+    encoded_file = md_file.replace(' ', '%20')
+    link_mapping[encoded_file] = page_url
+    
+    # Add variant without the .md extension
+    filename_without_ext = os.path.splitext(md_file)[0]
+    link_mapping[filename_without_ext] = page_url
+    
+    # Add URL-encoded variant without extension
+    encoded_without_ext = filename_without_ext.replace(' ', '%20')
+    link_mapping[encoded_without_ext] = page_url
 
 # Read the README.md from the source directory to use as index content
 readme_path = os.path.join(source_dir, "README.md")
 with open(readme_path, "r") as f:
     readme_content = f.read()
 
-# Extract title and description from the README
+# Extract title from the README
 title_match = re.search(r'^# (.+)', readme_content, re.MULTILINE)
-title = "Training at Larger Scale: A Blog Series"
+title = "Training at Larger Scale"
 if title_match:
     title = title_match.group(1)
 
-# Remove the title and the "TODO" section from the README
-readme_content = re.sub(r'^# .+\n', '', readme_content, 1, re.MULTILINE)
-readme_content = re.sub(r'```\nTODO:.+?```\n', '', readme_content, flags=re.DOTALL)
+# Function to fix links in markdown content
+def fix_links(content):
+    # First, fix regular markdown links [text](file.md)
+    for old_link, new_url in link_mapping.items():
+        # Pattern to match markdown links with the old link
+        pattern = r'\[([^\]]+)\]\(({0})\)'.format(re.escape(old_link))
+        # Replace with new URL
+        content = re.sub(pattern, r'[\1](' + new_url + r')', content)
+    
+    # Fix any remaining links that might have different formats
+    for md_file in md_files:
+        base_name = os.path.splitext(md_file)[0]
+        chapter_num = md_files.index(md_file) + 1
+        new_url = f"/blogs/training-at-larger-scale/part{chapter_num}/"
+        
+        # Replace any variant of the filename in links
+        patterns = [
+            # Original filename with .md
+            r'\[([^\]]+)\]\(' + re.escape(md_file) + r'\)',
+            # Filename with spaces replaced by %20 with .md
+            r'\[([^\]]+)\]\(' + re.escape(md_file.replace(' ', '%20')) + r'\)',
+            # Just the base name without .md
+            r'\[([^\]]+)\]\(' + re.escape(base_name) + r'\)',
+            # Base name with spaces replaced by %20
+            r'\[([^\]]+)\]\(' + re.escape(base_name.replace(' ', '%20')) + r'\)'
+        ]
+        
+        for pattern in patterns:
+            content = re.sub(pattern, r'[\1](' + new_url + r')', content)
+    
+    # Fix image references
+    content = re.sub(r'!\[([^\]]*)\]\(images/([^)]+)\)', r'![\1](/images/training-blog/\2)', content)
+    
+    return content
 
-# Create index.md file for the blog collection
-index_content = f"""---
-layout: blog_collection
-title: "{title}"
-description: "A comprehensive guide to scaling machine learning from small to larger training setups."
-collection_id: training-at-larger-scale
-display_chapters: true
----
+# Apply link fixing to README content for the index page
+index_content = fix_links(readme_content)
 
-{readme_content.strip()}
-"""
+# Remove any "TODO" sections and author notes
+index_content = re.sub(r'## TODO[\s\S]*?(?=##|$)', '', index_content)
+index_content = re.sub(r'> Author.*?\n', '', index_content)
 
-with open(os.path.join(destination_dir, "index.md"), "w") as f:
+# Write the index.md file
+index_file_path = os.path.join(destination_dir, "index.md")
+with open(index_file_path, "w") as f:
+    f.write("---\n")
+    f.write(f"layout: blog_collection\n")
+    f.write(f"title: \"{title}\"\n")
+    f.write("description: \"A comprehensive guide to scaling machine learning from small to larger training setups.\"\n")
+    f.write("collection_id: training-at-larger-scale\n")
+    f.write("display_chapters: true\n")
+    f.write("---\n\n")
     f.write(index_content)
 
-# Chapters to process (in order)
-chapters = [
-    {"file": "0. The Setup.md", "num": 1},
-    {"file": "1. Multi-GPU training.md", "num": 2},
-    {"file": "2. Bigger data in the cloud.md", "num": 3},
-    {"file": "3. Optimizing the pipeline: Data.md", "num": 4},
-    {"file": "4. Optimizing the pipeline: Model.md", "num": 5},
-    {"file": "5. What Is Next.md", "num": 6}
-]
+print(f"Created index.md at {index_file_path}")
 
-# Start date for the series (one week apart)
-start_date = datetime.now() - timedelta(days=len(chapters) * 7)
+# Process each markdown file in the blog repo
+for i, md_file in enumerate(md_files):
+    source_file_path = os.path.join(source_dir, md_file)
+    chapter_num = i + 1
+    destination_file_path = os.path.join(destination_dir, f"part{chapter_num}.md")
 
-for chapter in chapters:
-    source_file = os.path.join(source_dir, chapter["file"])
-    chapter_num = chapter["num"]
-    
-    # Calculate publication date
-    pub_date = start_date + timedelta(days=chapter_num * 7)
-    date_str = pub_date.strftime("%Y-%m-%d")
-    
-    # Read the source file
-    with open(source_file, "r") as f:
+    # Read the content of the source file
+    with open(source_file_path, "r") as f:
         content = f.read()
-    
+
     # Extract title from the first heading
-    title_match = re.search(r'^#+\s+(.+)$', content, re.MULTILINE)
+    title_match = re.search(r'^# (.+)', content, re.MULTILINE)
+    title = f"Part {chapter_num}"
     if title_match:
-        title = title_match.group(1).strip()
-    else:
-        title = f"Chapter {chapter_num}"
-    
-    # Create front matter
-    front_matter = f"""---
-layout: blog_collection
-title: "{title}"
-description: "Chapter {chapter_num} of the Training at Larger Scale series"
-date: {date_str}
-collection_id: training-at-larger-scale
-chapter_number: {chapter_num}
-toc: true
-categories: [Machine Learning, Training, PyTorch, Optimization]
-giscus_comments: true
----
+        title = title_match.group(1)
 
-"""
-    
-    # Update image paths in content
-    content = content.replace("images/", "/images/training-blog/")
-    
-    # Fix internal links
-    for ch in chapters:
-        old_link = f"[Chapter {ch['num']}]({ch['file']})"
-        new_link = f"[Chapter {ch['num']}](/blogs/training-at-larger-scale/part{ch['num']})"
-        content = content.replace(old_link, new_link)
-    
-    # Remove the first heading as it's already in the front matter
-    if title_match:
-        content = content.replace(title_match.group(0), "", 1)
-    
-    # Create the final content
-    final_content = front_matter + content.strip()
-    
-    # Write to destination
-    dest_file = os.path.join(destination_dir, f"part{chapter_num}.md")
-    with open(dest_file, "w") as f:
-        f.write(final_content)
-    
-    print(f"Processed: {chapter['file']} -> {dest_file}")
+    # Fix links in the content
+    content = fix_links(content)
 
-# Create images directory and copy images
-source_images = os.path.join(source_dir, "images")
-dest_images = "images/training-blog"
+    # Copy images if they exist
+    images_dir_source = os.path.join(source_dir, "images")
+    if os.path.exists(images_dir_source):
+        # Copy all images to the destination
+        for img_file in os.listdir(images_dir_source):
+            source_img_path = os.path.join(images_dir_source, img_file)
+            dest_img_path = os.path.join(image_dir, img_file)
+            if os.path.isfile(source_img_path):
+                shutil.copy2(source_img_path, dest_img_path)
+                print(f"Copied image: {img_file}")
 
-if os.path.exists(source_images):
-    os.makedirs(dest_images, exist_ok=True)
-    
-    # Copy all images
-    for img in os.listdir(source_images):
-        src_path = os.path.join(source_images, img)
-        dst_path = os.path.join(dest_images, img)
-        
-        if os.path.isfile(src_path):
-            shutil.copy2(src_path, dst_path)
-            print(f"Copied image: {img}")
+    # Calculate post date (use a date that orders the posts correctly)
+    post_date = (datetime.now() - timedelta(days=30-i)).strftime("%Y-%m-%d")
+
+    # Write the processed content to the destination file
+    with open(destination_file_path, "w") as f:
+        f.write("---\n")
+        f.write(f"layout: blog_collection\n")
+        f.write(f"title: \"{title}\"\n")
+        f.write(f"description: \"Part {chapter_num} of the Training at Larger Scale series\"\n")
+        f.write(f"date: {post_date}\n")
+        f.write("collection_id: training-at-larger-scale\n")
+        f.write(f"chapter_number: {chapter_num}\n")
+        f.write("toc: true\n")
+        f.write("categories: [Training, ML, GPU]\n")
+        f.write("giscus_comments: true\n")
+        f.write("---\n\n")
+        f.write(content)
+
+    print(f"Created blog post {chapter_num}: {destination_file_path}")
 
 # Step 3: Clean up - remove the cloned repository
-print(f"\nCleaning up: removing cloned repository at {source_dir}...")
+print("Cleaning up...")
 shutil.rmtree(source_dir)
-print("Cleanup completed.")
-
-print("\nImport completed successfully!")
-print(f"Blog collection created at: {destination_dir}")
-print("Don't forget to check and manually adjust the content if needed.") 
+print("Script completed successfully!") 

@@ -89,34 +89,34 @@ ninja.data = [{
           description: "A comprehensive guide to scaling machine learning from small to larger training setups.",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/training-at-larger-scale/index/";
-            },},{id: "blogs-0-the-setup",
-          title: '0. The Setup',
-          description: "Chapter 1 of the Training at Larger Scale series",
+            },},{id: "blogs-part-1",
+          title: 'Part 1',
+          description: "Part 1 of the Training at Larger Scale series",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/training-at-larger-scale/part1/";
-            },},{id: "blogs-1-single-to-multi-gpu-training",
-          title: '1. Single- to Multi-GPU training',
-          description: "Chapter 2 of the Training at Larger Scale series",
+            },},{id: "blogs-part-2",
+          title: 'Part 2',
+          description: "Part 2 of the Training at Larger Scale series",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/training-at-larger-scale/part2/";
-            },},{id: "blogs-2-bigger-data-in-the-cloud",
-          title: '2. Bigger Data In The Cloud',
-          description: "Chapter 3 of the Training at Larger Scale series",
+            },},{id: "blogs-part-3",
+          title: 'Part 3',
+          description: "Part 3 of the Training at Larger Scale series",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/training-at-larger-scale/part3/";
-            },},{id: "blogs-3-optimizing-the-pipeline-data",
-          title: '3. Optimizing the pipeline: Data',
-          description: "Chapter 4 of the Training at Larger Scale series",
+            },},{id: "blogs-part-4",
+          title: 'Part 4',
+          description: "Part 4 of the Training at Larger Scale series",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/training-at-larger-scale/part4/";
-            },},{id: "blogs-4-optimizing-the-pipeline-model",
-          title: '4. Optimizing the pipeline: Model',
-          description: "Chapter 5 of the Training at Larger Scale series",
+            },},{id: "blogs-import-your-model-and-data-classes-here",
+          title: 'Import your model and data classes here',
+          description: "Part 5 of the Training at Larger Scale series",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/training-at-larger-scale/part5/";
-            },},{id: "blogs-5-what-39-s-next",
-          title: '5. What&amp;#39;s Next?',
-          description: "Chapter 6 of the Training at Larger Scale series",
+            },},{id: "blogs-cloud-storage-credentials",
+          title: 'Cloud storage credentials',
+          description: "Part 6 of the Training at Larger Scale series",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/training-at-larger-scale/part6/";
             },},{
