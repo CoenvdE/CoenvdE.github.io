@@ -59,6 +59,11 @@ ninja.data = [{
           description: "Exploring further capabilities in the second part of the series.",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/example-collection/part2/";
+            },},{id: "blogs-part-1-getting-started",
+          title: 'Part 1 - Getting Started',
+          description: "The first part of our new blog series.",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/new-blog/part1/";
             },},{id: "blogs-part-3-wrapping-up",
           title: 'Part 3 - Wrapping Up',
           description: "Concluding the example series and summarizing the collection feature.",
@@ -74,6 +79,46 @@ ninja.data = [{
           description: "An example blog series showing the folder-based structure with a landing page.",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/example-collection/index/";
+            },},{id: "blogs-new-blog-a-series",
+          title: 'New Blog: A Series',
+          description: "An example blog series showing the folder-based structure with a landing page.",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/new-blog/index/";
+            },},{id: "blogs-training-at-larger-scale",
+          title: 'Training at larger scale',
+          description: "A comprehensive guide to scaling machine learning from small to larger training setups.",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/training-at-larger-scale/index/";
+            },},{id: "blogs-0-the-setup",
+          title: '0. The Setup',
+          description: "Chapter 1 of the Training at Larger Scale series",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/training-at-larger-scale/part1/";
+            },},{id: "blogs-1-single-to-multi-gpu-training",
+          title: '1. Single- to Multi-GPU training',
+          description: "Chapter 2 of the Training at Larger Scale series",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/training-at-larger-scale/part2/";
+            },},{id: "blogs-2-bigger-data-in-the-cloud",
+          title: '2. Bigger Data In The Cloud',
+          description: "Chapter 3 of the Training at Larger Scale series",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/training-at-larger-scale/part3/";
+            },},{id: "blogs-3-optimizing-the-pipeline-data",
+          title: '3. Optimizing the pipeline: Data',
+          description: "Chapter 4 of the Training at Larger Scale series",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/training-at-larger-scale/part4/";
+            },},{id: "blogs-4-optimizing-the-pipeline-model",
+          title: '4. Optimizing the pipeline: Model',
+          description: "Chapter 5 of the Training at Larger Scale series",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/training-at-larger-scale/part5/";
+            },},{id: "blogs-5-what-39-s-next",
+          title: '5. What&amp;#39;s Next?',
+          description: "Chapter 6 of the Training at Larger Scale series",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/training-at-larger-scale/part6/";
             },},{
       id: 'light-theme',
       title: 'Change theme to light',
