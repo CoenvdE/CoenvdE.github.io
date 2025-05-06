@@ -49,21 +49,11 @@ ninja.data = [{
           description: "A placeholder collection to demonstrate multiple blog series.",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/dummy/index/";
-            },},{id: "blogs-part-1-getting-started",
-          title: 'Part 1 - Getting Started',
-          description: "The first part of our example blog series, laying the groundwork.",
-          section: "Blogs",handler: () => {
-              window.location.href = "/blogs/example-collection/part1/";
             },},{id: "blogs-part-2-more-features",
           title: 'Part 2 - More Features',
           description: "Exploring further capabilities in the second part of the series.",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/example-collection/part2/";
-            },},{id: "blogs-part-1-getting-started",
-          title: 'Part 1 - Getting Started',
-          description: "The first part of our new blog series.",
-          section: "Blogs",handler: () => {
-              window.location.href = "/blogs/new-blog/part1/";
             },},{id: "blogs-part-3-wrapping-up",
           title: 'Part 3 - Wrapping Up',
           description: "Concluding the example series and summarizing the collection feature.",
@@ -79,11 +69,26 @@ ninja.data = [{
           description: "An example blog series showing the folder-based structure with a landing page.",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/example-collection/index/";
+            },},{id: "blogs-part-1-getting-started",
+          title: 'Part 1 - Getting Started',
+          description: "The first part of our example blog series, laying the groundwork.",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/example-collection/part1/";
             },},{id: "blogs-new-blog-a-series",
           title: 'New Blog: A Series',
           description: "An example blog series showing the folder-based structure with a landing page.",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/new-blog/index/";
+            },},{id: "blogs-part-1-getting-started",
+          title: 'Part 1 - Getting Started',
+          description: "The first part of our new blog series.",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/new-blog/part1/";
+            },},{id: "blogs-image-paths",
+          title: 'Image Paths',
+          description: "",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/training-at-larger-scale/image-paths/";
             },},{id: "blogs-introduction",
           title: 'Introduction',
           description: "A comprehensive guide to scaling machine learning from small to larger training setups.",
