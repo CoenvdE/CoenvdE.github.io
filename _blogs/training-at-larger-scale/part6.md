@@ -12,7 +12,7 @@ giscus_comments: true
 
 ## 5. What's Next?
 
-The last part before we get to the training. 
+The last part before we get to the training.
 Here I'll cover my last tips and tricks, one more failsafe and some final experiments to run before we get to the training.
 
 ```
@@ -21,7 +21,7 @@ Here I'll cover my last tips and tricks, one more failsafe and some final experi
 │   └── cli_config.yaml
 ├── src/
 │   ├── callbacks.py
-│   ├── data/ 
+│   ├── data/
 │   └── model/
 ├── lightning_trainer.py
 └── lightning_train.py
@@ -31,16 +31,16 @@ Here I'll cover my last tips and tricks, one more failsafe and some final experi
 
 Before jumping into full-scale training, it's important to run some experiments first. (How big should a patch be? What would be a good optimizer configuration starting point? etc.). The idea is not to test this on the full training run, but test it for e.g. 200 (instead of 3000) epochs, and observe the loss curves over epochs.
 
-- Select a baseline configuration  
+- Select a baseline configuration
 - Observe the loss curves and training speed
-- Run small-scale experiments to test different settings  
-- Compare outcomes to identify the best setup  
+- Run small-scale experiments to test different settings
+- Compare outcomes to identify the best setup
 
 This approach helps avoid wasting compute and accelerates convergence.
 
 ### Failsafe: uploading to the cloud intermittently
 
-If you are training for a longer time, it's a good idea to upload to the cloud intermittently. 
+If you are training for a longer time, it's a good idea to upload to the cloud intermittently.
 Training pipelines sometimes crash due to various reasons, and it's always good to have a failsafe.
 For this reason I have uploaded a `CloudUploadCallback` in [callbacks.py](/blogs/training-at-larger-scale/part6/).
 This callback uploads the model checkpoints to the cloud storage at specified intervals and/or when the training is finished.
@@ -48,30 +48,31 @@ This callback uploads the model checkpoints to the cloud storage at specified in
 You can add this callback to your training loop by adding the following to your `cli_config.yaml` file:
 
 ```yaml
-  callbacks:
-    - class_path: src.callbacks.CloudUploadCallback
-      init_args:
-        local_dir: output/test/checkpoints
-        cloud_storage_path: s3://your-bucket/autoencoder-checkpoints
-        upload_interval: 10
-        upload_during_training: true
-        upload_on_fit_end: true
-        filesystem: s3
+callbacks:
+  - class_path: src.callbacks.CloudUploadCallback
+    init_args:
+      local_dir: output/test/checkpoints
+      cloud_storage_path: s3://your-bucket/autoencoder-checkpoints
+      upload_interval: 10
+      upload_during_training: true
+      upload_on_fit_end: true
+      filesystem: s3
 ```
 
 ### Docker — And Why It's Nice
 
 Docker lets you **containerize** your environment, making sure your code runs the same everywhere—on your laptop or in the cloud.  
 Why it's nice:
-- Reproducible setups  across different machines or cloud providers (Digital Ocean, AWS, etc.)
-- Lightweight & portable  
+
+- Reproducible setups across different machines or cloud providers (Digital Ocean, AWS, etc.)
+- Lightweight & portable
 - Dependency management
-- Easy to test in isolated environments  
+- Easy to test in isolated environments
 
 This personally helped me a lot as switching between different machines and cloud providers went almost seamless.
 Get started with docker with this [guide](https://dev.to/docker/getting-started-with-docker-for-aiml-a-beginners-guide-4k6j), watch some videos and discuss with a nice LLM.
 
---- 
+---
 
 ### Precision in Training (in PyTorch Lightning)
 
@@ -79,9 +80,10 @@ Choosing the right precision can significantly impact training **speed** and **e
 I changed from `float32` to `16-mixed` and saw a 2x speedup.
 
 Why it's nice:
-- Less memory usage  
-- Faster training  
-- Bigger batch sizes  
+
+- Less memory usage
+- Faster training
+- Bigger batch sizes
 
 you can change this by adding the following to your [`cli_config.yaml`](/blogs/training-at-larger-scale/part6/) file:
 
@@ -112,13 +114,15 @@ torch.optim.lr_scheduler.CosineAnnealingWarmRestarts
 I experienced a very stable training process with this. (It was recommended to me by someone from the Allan turing institute) and other foundational model builders used it in their training as well. It is recommended to set the restart frequency to a value that is around 2-3 times the number of epochs it takes for the loss to be at the same level as just before the restart. This way the model learns stable and is able to escape local minima.
 
 ---
+
 ### Environment Variables — And Why They're Nice
 
 Env vars help you **manage secrets and config** without hardcoding.  
 Why it's nice:
-- Store keys/passwords securely  
-- Change behavior across environments (dev, prod, test)  
-- Fast configuration without changing code  
+
+- Store keys/passwords securely
+- Change behavior across environments (dev, prod, test)
+- Fast configuration without changing code
 
 Here's a simple `.env example` file example:
 
@@ -146,4 +150,3 @@ This approach keeps your secrets secure while making configuration straightforwa
 Thank you for reading!
 
 I hope this guide was helpful. If you have any questions or feedback, feel very welcome to contact me.
-

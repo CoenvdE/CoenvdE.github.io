@@ -11,10 +11,10 @@ layout: none
 
 <script>
   // Fix image paths in the DOM after page load
-  document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('img[src^="images/"]').forEach(function(img) {
-      var src = img.getAttribute('src');
-      img.setAttribute('src', '/images/training-blog/' + src.replace('images/', ''));
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('img[src^="images/"]').forEach(function (img) {
+      var src = img.getAttribute("src");
+      img.setAttribute("src", "/images/training-blog/" + src.replace("images/", ""));
     });
   });
-</script> 
+</script>

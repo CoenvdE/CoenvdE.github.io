@@ -8,7 +8,6 @@ display_chapters: true
 
 # Training at larger scale
 
-
 <div align="center">
   <img src="/images/training-blog/intro_image_larger_scale.png" alt="Scaling up training" width="400"/>
   <br>
@@ -23,14 +22,13 @@ display_chapters: true
 
 At university, in online blogs, and across tutorials, training machine learning models is often well explained—especially for small-scale setups. These typically involve datasets that fit on a local hard drive, training on a single GPU, and straightforward implementations without worrying about fast data loading, datasets that do not fit onto a local hard drive (lazy loading), or multi-GPU utilization/optimization.
 
-However, when transitioning to a larger setup —not massive SOTA-scale training across thousands of GPUs with internet-scale data, but something in between— good resources are harder to find and are scattered around. I call this the "larger-scale training" realm: working with datasets that are a few terabytes (too large for local storage but far from internet-scale) and training across multiple GPUs (around 10, not 100s or 1000s). 
+However, when transitioning to a larger setup —not massive SOTA-scale training across thousands of GPUs with internet-scale data, but something in between— good resources are harder to find and are scattered around. I call this the "larger-scale training" realm: working with datasets that are a few terabytes (too large for local storage but far from internet-scale) and training across multiple GPUs (around 10, not 100s or 1000s).
 
 For my research, I need to scale up my training to this realm, but I struggle to find practical, well-structured guides on bridging the gap from small-scale to mid-sized, high-performance training. This larger-scale training" is where a lot of valuable research and development happens, yet optimization and implementation for this space are harder to figure out. Maximizing hardware efficiency at this level can significantly reduce training time, costs and environmental impact.
 
 This guide is for those stepping into this space —researchers and practitioners who want to scale their training beyond a single GPU while making the most of the resources they have. My experience comes from working with geospatial data, so some examples may be domain-specific, but the core principles apply broadly across all machine learning applications that make use of pytorch.
 
 I want to note that this is not a definitive guide on how everything should be done. Instead, it's a collection of challenges I faced and the solutions I found along the way. I encourage you to ask questions, share feedback, and suggest improvements — the goal is to learn from each other and train more efficiently every day :)
-
 
 This blog is available on [GitHub](https://github.com/coenvde/training-at-larger-scale-blog) as well as my [website](https://coenvde.github.io/blogs/training-at-larger-scale/index/). For every chapter, I created a folder on GitHub with all full code. The markdown files are available on both platforms, containing text and code examples.
 
@@ -50,23 +48,27 @@ I'll walk you through my process of implementing and optimizing everything. Each
 ## Installation
 
 1.  **Clone the repository:**
+
     ```bash
     git clone https://github.com/CoenvdE/Training-at-larger-scale-blog.git
     cd Training-at-larger-scale-blog
     ```
 
 2.  **Install uv (if you haven't already):**
+
     ```bash
     pip install uv
     ```
+
     Or, for other installation methods, see the [uv documentation](https://astral.sh/uv/install.sh).
 
 3.  **Create a virtual environment and install dependencies:**
+
     ```bash
     uv venv
     uv sync
     ```
- 
+
     This will create a virtual environment in `.venv` and install all necessary packages.
 
 4.  **Run the code:**

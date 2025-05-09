@@ -51,7 +51,9 @@ By default, pytorch deep learning models only utilize a single GPU for training,
 </div>
 
 ### Strategies
+
 ---
+
 For multi-GPU training, there are a few strategies that can be used to train models.
 I will list a few below:
 
@@ -91,61 +93,67 @@ This strategy is more complex to implement and debug and is usually reserved for
 Another strategy is to use a combination of data parallelism and model parallelism: pipeline parallelism. This is _not_ typically needed for standard model training — not recommended for now unless working with extremely large architectures.
 
 ### (Pytorch) Lightning
+
 ---
+
 In short: (Pytorch) Lightning is a wrapper around pytorch that can automatically handle multi-gpu communication along with a lot more nice stuff. The key benefit is that Lightning handles all the complexity while still allowing you to customize any part if needed. You get production-ready features without writing boilerplate code, and your code remains clean and focused on the model architecture and training logic. I deeply encourage you to start using this as it will save you a lot of time and effort down the line (At the end of this chapter, I'll state the advantages of this Lightning so you understand why it is so nice), I will now walk you through how to use lightning:
 
 **How to go from pytorch to (pytorch) lightning**
 
-This is actually quite easy. Note that in the [previous chapter](/blogs/training-at-larger-scale/part1/) I named all of my components files `pytorch_*.py`. This was chosen deliberately, because now I can show you that you just have to add some `lightning_*.py` files to make full use of lightning's benefits. Examples of these can be found in the [`src`](/blogs/training-at-larger-scale/part2/)  folder.
+This is actually quite easy. Note that in the [previous chapter](/blogs/training-at-larger-scale/part1/) I named all of my components files `pytorch_*.py`. This was chosen deliberately, because now I can show you that you just have to add some `lightning_*.py` files to make full use of lightning's benefits. Examples of these can be found in the [`src`](/blogs/training-at-larger-scale/part2/) folder.
 
+**_[`model/lightning_module.py`](/blogs/training-at-larger-scale/part2/)_**
 
-***[`model/lightning_module.py`](/blogs/training-at-larger-scale/part2/)***
 - NOTE: the class AutoencoderModule(L.LightningModule) inherits from the L.LightningModule
 - self.save_hyperparameters() saves all the init arguments as hyperparameters
 - imports your (custom) model
 - logs everything automatically with self.log
-- wraps all of this nicely for Lightning use. 
+- wraps all of this nicely for Lightning use.
 - Lightning needs the following functions implemented here:
   - forward()
   - training_step()
   - validation_step()
-  -  configure_optimizers()
+  - configure_optimizers()
 
-***[`data/lightning_datamodule.py`](/blogs/training-at-larger-scale/part2/)***
+**_[`data/lightning_datamodule.py`](/blogs/training-at-larger-scale/part2/)_**
+
 - NOTE: the class DummyDataModule(L.LightningDataModule) inherits from the L.LightningDatamodule
 - self.save_hyperparameters() saves all the init arguments as hyperparameters
 - imports your (custom) Dataset
 - creates Dataloader objects
-- wraps all of this nicely for Lightning use. 
+- wraps all of this nicely for Lightning use.
 - Lightning needs the following things:
-    - setup()
-    - train_loader()
-    - val_loader()
-    - test_loader()
+  - setup()
+  - train_loader()
+  - val_loader()
+  - test_loader()
 
-***[`lightning_train.py`](/blogs/training-at-larger-scale/part2/)***
+**_[`lightning_train.py`](/blogs/training-at-larger-scale/part2/)_**
+
 - NOTE: look how much less code this is! pytorch_train.py had almost 200 lines of code, we now have 74.
-- go through the code and see how everything is initiated. 
+- go through the code and see how everything is initiated.
 - especially important here is the L.trainer() with the following parameters that make multi-GPU implementation super easy
-    - **accelerator**: Specifies the hardware to use (e.g. "auto", "gpu", "cpu", "tpu"). It directs Lightning to use the appropriate backend for accelerated computing. 
-    - **device**: Indicates which (or the number) device(s) to run on. For example, it could be an integer (like 1 or 4) or a specific device string (e.g., "cuda:0") or "auto" to choose one or multiple GPUs. If you have 8 GPU's, use 8.
-    - **strategy**: Defines the parallelization approach. Options include "dp" (data parallel), "ddp" (distributed data parallel), "auto", among others, which determine how training is distributed across GPUs.
-    - **num_nodes**: Specifies the number of nodes (or machines) to use for training. (this is relevant when you have multiple clusters)
+  - **accelerator**: Specifies the hardware to use (e.g. "auto", "gpu", "cpu", "tpu"). It directs Lightning to use the appropriate backend for accelerated computing.
+  - **device**: Indicates which (or the number) device(s) to run on. For example, it could be an integer (like 1 or 4) or a specific device string (e.g., "cuda:0") or "auto" to choose one or multiple GPUs. If you have 8 GPU's, use 8.
+  - **strategy**: Defines the parallelization approach. Options include "dp" (data parallel), "ddp" (distributed data parallel), "auto", among others, which determine how training is distributed across GPUs.
+  - **num_nodes**: Specifies the number of nodes (or machines) to use for training. (this is relevant when you have multiple clusters)
 
 ```bash
 uv run python -m unittest tests/test_lightning_parameters.py
 ```
+
 ```bash
 uv run python lightning_train.py
 ```
 
-***[`lightning_trainer.py`](/blogs/training-at-larger-scale/part2/)***
+**_[`lightning_trainer.py`](/blogs/training-at-larger-scale/part2/)_**
+
 - NOTE: even less code and a CLI (very useful because now you can use the --help flag to see everything that can be initiated and how)
 - go through the code and see how everything is initiated. It is important to note that CLI requires a specific format for the `config.yaml` (example in `cli_config.yaml`) with specific config sections:
-  - model 
-  - data 
-  - trainer 
- 
+  - model
+  - data
+  - trainer
+
 Run the following commands to see the benefits: (note that you can switch between fit, validate, test, predict)
 
 ```bash
@@ -163,28 +171,34 @@ uv run python -m lightning_trainer fit -c config/cli_config.yaml
 NOTE: Additional information on how to use the Lightning CLI is available in the [Lightning CLI Documentation](https://lightning.ai/docs/pytorch/2.1.0/cli/lightning_cli.html)
 
 ### Managing Multiple Processes in Distributed Training
+
 ---
+
 When transitioning from single-GPU to multi-GPU training, you need to carefully consider how processes interact with shared resources. This is a critical aspect that can cause subtle bugs if not handled properly.
 
 #### Single Process vs. Multiple Processes
 
 **Single-GPU Training:**
+
 - One main process controls everything
 - This process manages the GPU, spawns dataloader workers
 - Handles all file operations (downloads, checkpoints, logs)
 
 **Multi-GPU Training:**
+
 - Multiple processes are spawned (one per GPU)
 - Initially, all processes think they're the "main" process
 - No hierarchy exists until PyTorch Lightning initializes it
 - Multiple processes might try to access the same files or resources simultaneously, causing conflicts or corrupted data
 
 ### Handling Common Operations
+
 ---
 
 ### Handling File Downloads in Distributed Training
 
 When training with multiple GPUs, proper coordination of file operations is critical. In [`pytorch_dataset.py`](/blogs/training-at-larger-scale/part2/) you can see how to implement distributed file downloads correctly:
+
 - Only main process (rank 0) downloads data
 - `dist.barrier()` synchronizes all processes (meaning the other processes have to wait before the main process finishes)
 - Works in both distributed and non-distributed setups
@@ -200,22 +214,23 @@ def is_main_process():
 def download_dummy_data():
     """Download the dummy data, only on the main process."""
     should_download = is_main_process()
-    
+
     if should_download:
         # Only process with rank 0 performs the download
         print("Main process downloading data...")
         # Actual download code here
-    
-    # Synchronization point - all processes must wait here 
+
+    # Synchronization point - all processes must wait here
     # Until the main process has finished downloading.
     if dist.is_available() and dist.is_initialized():
         dist.barrier()
-        
+
 ```
 
 ### Handling File Uploads in Distributed Training
 
 When training is complete, uploading checkpoints and logs requires similar coordination to prevent conflicts. In [`lightning_trainer.py`](/blogs/training-at-larger-scale/part2/) and [`lightning_train.py`](/blogs/training-at-larger-scale/part2/) you can see how to implement distributed file uploads correctly:
+
 - Single Process Uploads: Only rank 0 process handles uploads
 - Prevents Conflicts: Eliminates race conditions and redundant operations
 - Efficient: Reduces network traffic and ensures clean termination
@@ -233,7 +248,7 @@ def upload_checkpoints_to_cloud(checkpoint_dir, log_dir):
     # Only process with rank 0 performs the upload
     if is_main_process():
         # Upload files
-        
+
         print("Upload complete!")
 ```
 
@@ -260,13 +275,13 @@ When training with multiple GPUs, it's essential to verify that the learning beh
 
 When comparing single-GPU to multi-GPU training, several factors can cause differences in results:
 
-1. **Effective Batch Size**: In data parallel training, the batch size is effectively multiplied by the number of GPUs in your node (or number of GPU's per node * number of nodes). With 4 GPUs and a batch size of 32, your effective batch size becomes 128, which affects:
+1. **Effective Batch Size**: In data parallel training, the batch size is effectively multiplied by the number of GPUs in your node (or number of GPU's per node \* number of nodes). With 4 GPUs and a batch size of 32, your effective batch size becomes 128, which affects:
 
    - **Learning Rate Scaling**: You typically need to scale the learning rate linearly with the batch size (the "linear scaling rule"). For example, when moving from 1 to 4 GPUs, consider increasing your learning rate by 4x.
-   
    - **Batch Normalization Statistics**: Larger effective batch sizes produce different batch statistics, affecting model convergence.
 
 2. **Learning Rate Schedulers**: With fewer steps per epoch in multi-GPU training, schedulers need adjustment:
+
    - Recalculate `total_steps` for step-based schedulers
    - Consider epoch-based schedulers for more consistent behavior
    - Adjust warm up periods proportionally to the effective batch size
@@ -281,18 +296,19 @@ python lightning_train.py
 
 Great! now we can train with multiple GPUs, let's tackle working with [bigger data in the cloud](/blogs/training-at-larger-scale/part3/)
 
-### Appendix: Overview of advantages of Lightning over Raw PyTorch 
+### Appendix: Overview of advantages of Lightning over Raw PyTorch
+
 ---
 
-| Feature                       | PyTorch                                                                 | Lightning                                                                                                                               |
-|-------------------------------|-------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|
-| **Device/GPU Handling**       | Manual device placement (`.to(device)`), manual multi-GPU management     | `accelerator="auto"`, `devices="auto"` handles single GPU, multi-GPU (DDP), TPU, CPU fallback                                         |
-| **Training Loop**             | Manual train/eval mode, gradient zeroing, loss, backward, optimizer steps | Handled in `training_step`, `validation_step`                                                                                           |
-| **Logging**                   | Manual `print` or custom logging                                        | Built-in TensorBoard, WandB, MLflow, auto metric aggregation, progress bars                                                              |
-| **Callbacks**                 | Manual implementation                                                   | Built-in model checkpointing, early stopping, learning rate monitoring                                                                  |
-| **Multi-GPU Strategies**      | Manual data parallelism, distributed training, gradient synchronization   | Specify `strategy` parameter in Trainer                                                                                                 |
-| **Profiling & Debugging**     | Manual profiling setup                                                  | Built-in profilers and debugging tools                                                                                                  |
-| **Reproducibility**           | Manual seed setting everywhere                                          | `seed_everything()` (Note: manual seed for data loader/workers still needed)                                                            |
-| **Mixed Precision Training**  | Manual AMP implementation                                               | `precision="16-mixed"` in Trainer                                                                                                       |
-| **Automatic Sanity Checks**   | No built-in pre-training validation                                     | Sanity validation batch (model forward pass, shape compatibility, loss calculation). Disable with `num_sanity_val_steps=0`.         |
-| **Cloud Storage Integration** | Manual cloud storage uploads                                            | Easy integration via custom callbacks for checkpoint uploads (e.g., AWS S3, GCS). Prevents data loss, customizable backup strategies. |
+| Feature                       | PyTorch                                                                   | Lightning                                                                                                                             |
+| ----------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **Device/GPU Handling**       | Manual device placement (`.to(device)`), manual multi-GPU management      | `accelerator="auto"`, `devices="auto"` handles single GPU, multi-GPU (DDP), TPU, CPU fallback                                         |
+| **Training Loop**             | Manual train/eval mode, gradient zeroing, loss, backward, optimizer steps | Handled in `training_step`, `validation_step`                                                                                         |
+| **Logging**                   | Manual `print` or custom logging                                          | Built-in TensorBoard, WandB, MLflow, auto metric aggregation, progress bars                                                           |
+| **Callbacks**                 | Manual implementation                                                     | Built-in model checkpointing, early stopping, learning rate monitoring                                                                |
+| **Multi-GPU Strategies**      | Manual data parallelism, distributed training, gradient synchronization   | Specify `strategy` parameter in Trainer                                                                                               |
+| **Profiling & Debugging**     | Manual profiling setup                                                    | Built-in profilers and debugging tools                                                                                                |
+| **Reproducibility**           | Manual seed setting everywhere                                            | `seed_everything()` (Note: manual seed for data loader/workers still needed)                                                          |
+| **Mixed Precision Training**  | Manual AMP implementation                                                 | `precision="16-mixed"` in Trainer                                                                                                     |
+| **Automatic Sanity Checks**   | No built-in pre-training validation                                       | Sanity validation batch (model forward pass, shape compatibility, loss calculation). Disable with `num_sanity_val_steps=0`.           |
+| **Cloud Storage Integration** | Manual cloud storage uploads                                              | Easy integration via custom callbacks for checkpoint uploads (e.g., AWS S3, GCS). Prevents data loss, customizable backup strategies. |
