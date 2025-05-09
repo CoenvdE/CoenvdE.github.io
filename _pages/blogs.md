@@ -2,7 +2,7 @@
 layout: page
 permalink: /blogs/
 title: Blogs
-description: Explore my different blog collections
+description: I hope you find something useful here!
 nav: true
 nav_order: 3
 ---
