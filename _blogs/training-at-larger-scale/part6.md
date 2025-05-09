@@ -42,7 +42,7 @@ This approach helps avoid wasting compute and accelerates convergence.
 
 If you are training for a longer time, it's a good idea to upload to the cloud intermittently.
 Training pipelines sometimes crash due to various reasons, and it's always good to have a failsafe.
-For this reason I have uploaded a `CloudUploadCallback` in [callbacks.py](/blogs/training-at-larger-scale/part6/).
+For this reason I have uploaded a `CloudUploadCallback` in [callbacks.py](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/5.%20What%20Is%20Next/src/callbacks.py).
 This callback uploads the model checkpoints to the cloud storage at specified intervals and/or when the training is finished.
 
 You can add this callback to your training loop by adding the following to your `cli_config.yaml` file:
@@ -85,7 +85,7 @@ Why it's nice:
 - Faster training
 - Bigger batch sizes
 
-you can change this by adding the following to your [`cli_config.yaml`](/blogs/training-at-larger-scale/part6/) file:
+you can change this by adding the following to your [`cli_config.yaml`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/5.%20What%20Is%20Next/config/cli_config.yaml) file:
 
 ```yaml
 precision: 16-mixed # Precision parameter added, default is 32-true (float32)
@@ -138,7 +138,7 @@ EXPERIMENT_NAME=transformer_v2
 
 **Important**: Never commit your `.env`file to your repository. It often contains sensitive information like API keys and credentials. Instead:
 
-1. Add `.env` to your [`.gitignore`](/blogs/training-at-larger-scale/part6/)
+1. Add `.env` to your [`.gitignore`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/5.%20What%20Is%20Next/config/.gitignore)
 2. Provide a `.env example` template with dummy values in the repo
 3. Document the required environment variables in your README
 4. For cloud deployments, use the platform's secrets management (AWS Secrets Manager, GitHub Secrets, etc.)

@@ -132,14 +132,14 @@ Again, note that num_workers is not about CPU's but processes, and a process may
 The ideal batch size depends on your dataset characteristics, model complexity, and available GPU memory. You want a size that's stable but still provides stochastic gradient descent benefits. For my use case, 32 worked well, but you may need to adjust based on your specific requirements. This batch size is needed because it is used in my optimization benchmark script later.
 
 **Optional: measure time for 1 batch to train**
-Measuring the time it takes to (load a mini batch and) complete a single training step. This information is useful for properly configuring the benchmark script parameters to accurately reflect your real-world training conditions. For this, you can run the [`timing_benchmark.py`](/blogs/training-at-larger-scale/part4/) script that is in the folder of [chapter 4](/blogs/training-at-larger-scale/part5/).
+Measuring the time it takes to (load a mini batch and) complete a single training step. This information is useful for properly configuring the benchmark script parameters to accurately reflect your real-world training conditions. For this, you can run the [`timing_benchmark.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Optimizing%20the%20pipeline%3A%20Data/timing_benchmark.py) script that is in the folder of [chapter 4](/blogs/training-at-larger-scale/part5/).
 
 **No need to over-optimize the DataLoader**:
 If your model is small or the GPU is not very powerful, there's no point in using 16+ workers or heavy parallel jobs when the GPU is already saturated.
 I have spent quite some time doing research on this, and it is important to think about this step as it can drastically increase your performance, but there is no need to do "grid search" such-like stuff for this.
 Follow my guide and your speed should already improve a lot. Experimenting endlessly with this also costs money and potential experimentation time. I'll tell you more on how to do it in a sec.
 
-### When optimizing data loading, identify the bottleneck using the [benchmark script](/blogs/training-at-larger-scale/part4/) I created. Look for these key indicators:
+### When optimizing data loading, identify the bottleneck using the [benchmark script](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py) I created. Look for these key indicators:
 
 ---
 
@@ -277,7 +277,7 @@ Even with an efficient dataset, proper DataLoader settings are crucial.
 
 I created two files to help you optimize your data pipeline:
 
-1. **[`benchmark_configurations.py`](/blogs/training-at-larger-scale/part4/)**
+1. **[`benchmark_configurations.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py)**
 
    - suitable for any pytorch Dataset object
    - Runs and logs different DataLoader configurations
@@ -288,7 +288,7 @@ I created two files to help you optimize your data pipeline:
      - You can set this to match your actual model's training time per batch
      - The goal remains the same: minimize data loading wait times
 
-2. **[`plot_benchmark_runs.ipynb`](/blogs/training-at-larger-scale/part4/)**
+2. **[`plot_benchmark_runs.ipynb`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Optimizing%20the%20pipeline%3A%20Data/plot_benchmark_runs.ipynb)**
    - Jupyter notebook for visualizing benchmark results
    - Creates charts comparing different configurations
    - Helps identify the optimal setup for your specific hardware
@@ -327,7 +327,7 @@ With these simple optimizations, my dataloader became 5 times faster than the ba
 0. **Import your own dataset at the start**
 
 - Follow these steps to systematically optimize your data pipeline:
-  change the line on top of [`benchmark_configurations.py`](/blogs/training-at-larger-scale/part4/).
+  change the line on top of [`benchmark_configurations.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py).
 
 ```python
 from dummydataset import DummyDataset as YourDataset # replace with your dataset
@@ -365,12 +365,12 @@ from dummydataset import DummyDataset as YourDataset # replace with your dataset
      - Different `prefetch_factor` values
 
 4. **Run benchmarks and analyze results**
-   - Use [`benchmark_configurations.py`](/blogs/training-at-larger-scale/part4/) to test all configurations
+   - Use [`benchmark_configurations.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py) to test all configurations
    - Can be run locally or in the cloud
-   - (Download and) analyze the files with [`plot_benchmark_runs.ipynb`](/blogs/training-at-larger-scale/part4/) (use the `.log` files, not the `_workers.log` files)
+   - (Download and) analyze the files with [`plot_benchmark_runs.ipynb`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Optimizing%20the%20pipeline%3A%20Data/plot_benchmark_runs.ipynb) (use the `.log` files, not the `_workers.log` files)
    - Compare performance metrics across configurations
 
-Use the [plotting notebook](/blogs/training-at-larger-scale/part4/) to visualize differences between runs and identify which configuration has the lowest wait/batch fetching time. While I don't explicitly measure vRAM/CPU utilization in these tools (as it's complex and time-consuming to implement), the primary goal is to significantly improve training time with reasonable effort. Having that said, watch for these warning signs:
+Use the [plotting notebook](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Optimizing%20the%20pipeline%3A%20Data/plot_benchmark_runs.ipynb) to visualize differences between runs and identify which configuration has the lowest wait/batch fetching time. While I don't explicitly measure vRAM/CPU utilization in these tools (as it's complex and time-consuming to implement), the primary goal is to significantly improve training time with reasonable effort. Having that said, watch for these warning signs:
 
 - **Memory issues**: If memory usage spikes, reduce workers, prefetch factor, or caching.
 
@@ -382,4 +382,4 @@ Use the [plotting notebook](/blogs/training-at-larger-scale/part4/) to visualize
 
 Note that network bandwidth varies dramatically between environments. When moving from local development (WiFi) to cloud training, you may see orders of magnitude improvement in data loading speed. In my case, I observed a 100x decrease in wait time when moving to the cloud. Always benchmark in the same environment where you'll be training, as the optimal configuration can differ significantly between local and cloud setups.
 
-Now that we have the data-part of the pipeline optimized, lets focus on the [Model](/blogs/training-at-larger-scale/part5/)
+Now that we have the data-part of the pipeline optimized, lets focus on the [Model](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Model.md)

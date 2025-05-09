@@ -100,9 +100,9 @@ In short: (Pytorch) Lightning is a wrapper around pytorch that can automatically
 
 **How to go from pytorch to (pytorch) lightning**
 
-This is actually quite easy. Note that in the [previous chapter](/blogs/training-at-larger-scale/part1/) I named all of my components files `pytorch_*.py`. This was chosen deliberately, because now I can show you that you just have to add some `lightning_*.py` files to make full use of lightning's benefits. Examples of these can be found in the [`src`](/blogs/training-at-larger-scale/part2/) folder.
+This is actually quite easy. Note that in the [previous chapter](/blogs/training-at-larger-scale/part1/) I named all of my components files `pytorch_*.py`. This was chosen deliberately, because now I can show you that you just have to add some `lightning_*.py` files to make full use of lightning's benefits. Examples of these can be found in the [`src`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20Multi-GPU%20training/src/) folder.
 
-**_[`model/lightning_module.py`](/blogs/training-at-larger-scale/part2/)_**
+**_[`model/lightning_module.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20Multi-GPU%20training/src/model/lightning_module.py)_**
 
 - NOTE: the class AutoencoderModule(L.LightningModule) inherits from the L.LightningModule
 - self.save_hyperparameters() saves all the init arguments as hyperparameters
@@ -115,7 +115,7 @@ This is actually quite easy. Note that in the [previous chapter](/blogs/training
   - validation_step()
   - configure_optimizers()
 
-**_[`data/lightning_datamodule.py`](/blogs/training-at-larger-scale/part2/)_**
+**_[`data/lightning_datamodule.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20Multi-GPU%20training/src/data/lightning_datamodule.py)_**
 
 - NOTE: the class DummyDataModule(L.LightningDataModule) inherits from the L.LightningDatamodule
 - self.save_hyperparameters() saves all the init arguments as hyperparameters
@@ -128,9 +128,9 @@ This is actually quite easy. Note that in the [previous chapter](/blogs/training
   - val_loader()
   - test_loader()
 
-**_[`lightning_train.py`](/blogs/training-at-larger-scale/part2/)_**
+**_[`lightning_train.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20Multi-GPU%20training/lightning_train.py)_**
 
-- NOTE: look how much less code this is! pytorch_train.py had almost 200 lines of code, we now have 74.
+- NOTE: look how much less code this is! [pytorch_train.py](1.%20Multi-GPU%20training/src/model/pytorch_train.py) had almost 200 lines of code, we now have 74.
 - go through the code and see how everything is initiated.
 - especially important here is the L.trainer() with the following parameters that make multi-GPU implementation super easy
   - **accelerator**: Specifies the hardware to use (e.g. "auto", "gpu", "cpu", "tpu"). It directs Lightning to use the appropriate backend for accelerated computing.
@@ -146,7 +146,7 @@ uv run python -m unittest tests/test_lightning_parameters.py
 uv run python lightning_train.py
 ```
 
-**_[`lightning_trainer.py`](/blogs/training-at-larger-scale/part2/)_**
+**_[`lightning_trainer.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20Multi-GPU%20training/lightning_trainer.py)_**
 
 - NOTE: even less code and a CLI (very useful because now you can use the --help flag to see everything that can be initiated and how)
 - go through the code and see how everything is initiated. It is important to note that CLI requires a specific format for the `config.yaml` (example in `cli_config.yaml`) with specific config sections:
@@ -197,7 +197,7 @@ When transitioning from single-GPU to multi-GPU training, you need to carefully 
 
 ### Handling File Downloads in Distributed Training
 
-When training with multiple GPUs, proper coordination of file operations is critical. In [`pytorch_dataset.py`](/blogs/training-at-larger-scale/part2/) you can see how to implement distributed file downloads correctly:
+When training with multiple GPUs, proper coordination of file operations is critical. In [`pytorch_dataset.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20Multi-GPU%20training/src/data/pytorch_dataset.py) you can see how to implement distributed file downloads correctly:
 
 - Only main process (rank 0) downloads data
 - `dist.barrier()` synchronizes all processes (meaning the other processes have to wait before the main process finishes)
@@ -229,7 +229,7 @@ def download_dummy_data():
 
 ### Handling File Uploads in Distributed Training
 
-When training is complete, uploading checkpoints and logs requires similar coordination to prevent conflicts. In [`lightning_trainer.py`](/blogs/training-at-larger-scale/part2/) and [`lightning_train.py`](/blogs/training-at-larger-scale/part2/) you can see how to implement distributed file uploads correctly:
+When training is complete, uploading checkpoints and logs requires similar coordination to prevent conflicts. In [`lightning_trainer.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20Multi-GPU%20training/lightning_trainer.py) and [`lightning_train.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20Multi-GPU%20training/lightning_train.py) you can see how to implement distributed file uploads correctly:
 
 - Single Process Uploads: Only rank 0 process handles uploads
 - Prevents Conflicts: Eliminates race conditions and redundant operations
@@ -253,7 +253,7 @@ def upload_checkpoints_to_cloud(checkpoint_dir, log_dir):
 ```
 
 **Seeding in Pytorch Lightning**
-When using PyTorch Lightning's `seed_everything()`, it's important to note that by default, the seed is (as far as I have tested) not automatically propagated to worker processes or DataLoader generators. Setting `workers=True` in `seed_everything()` ensures the seed is properly propagated to worker processes, but you still need to explicitly set seeds for DataLoader generators. As far as I have tested (please correct me if I am wrong), in the CLI config you cannot specify workers=True, which is why I also made a custom `worker_init_fn` as an example. All of this can be seen in [`lightning_datamodule.py`](/blogs/training-at-larger-scale/part2/). It ensures reproducibility across all components of your Lightning pipeline.
+When using PyTorch Lightning's `seed_everything()`, it's important to note that by default, the seed is (as far as I have tested) not automatically propagated to worker processes or DataLoader generators. Setting `workers=True` in `seed_everything()` ensures the seed is properly propagated to worker processes, but you still need to explicitly set seeds for DataLoader generators. As far as I have tested (please correct me if I am wrong), in the CLI config you cannot specify workers=True, which is why I also made a custom `worker_init_fn` as an example. All of this can be seen in [`lightning_datamodule.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20Multi-GPU%20training/src/data/lightning_datamodule.py). It ensures reproducibility across all components of your Lightning pipeline.
 
 **Monitoring Multi-GPU Training**
 
@@ -263,7 +263,7 @@ When training with multiple GPUs, it's essential to verify that the learning beh
 
 2. **Run Controlled Experiments**: Compare identical configurations between single-GPU and multi-GPU runs for a fixed number of epochs to identify any discrepancies.
 
-3. **Hardware Configuration Verification**: My implementation includes a configuration check in [`lightning_trainer.py`](/blogs/training-at-larger-scale/part2/) that prints the actual hardware setup being used:
+3. **Hardware Configuration Verification**: My implementation includes a configuration check in [`lightning_trainer.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20Multi-GPU%20training/lightning_trainer.py) that prints the actual hardware setup being used:
    ```python
    print(f"\nTraining Configuration Check:")
    print(f"- Accelerator: {trainer.accelerator}")
@@ -290,8 +290,8 @@ When comparing single-GPU to multi-GPU training, several factors can cause diffe
 
 4. **Hardware Configuration**: Always explicitly set `strategy`, `accelerator`, and `devices` parameters rather than relying on "auto" settings to ensure consistent behavior across environments.
 
-```
-python lightning_train.py
+```bash
+uv run python lightning_train.py
 ```
 
 Great! now we can train with multiple GPUs, let's tackle working with [bigger data in the cloud](/blogs/training-at-larger-scale/part3/)

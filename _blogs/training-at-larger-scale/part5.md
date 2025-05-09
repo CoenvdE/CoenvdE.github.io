@@ -46,7 +46,7 @@ In my experiments, a single training step took around 0.4 seconds for moderate-s
 └── output/
 ```
 
-### [Easy timing benchmark](/blogs/training-at-larger-scale/part5/)
+### [Easy timing benchmark](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Model/timing_benchmark.py)
 
 This is a tool I made to benchmark a pipeline. It is designed to work with **any** PyTorch Lightning model module and data module, so you can also use it to benchmark your own model pipeline. It measures detailed timing information for each step of the training process:
 

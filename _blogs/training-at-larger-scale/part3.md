@@ -66,7 +66,7 @@ Some examples where this happens:
 
 ### Getting access to the data
 
-When you want to stream/lazy-load/get data from cloud storage, you need access to the place it is stored (commonly called buckets). This can sometimes be implemented already by APIs (e.g. Huggingface, or my usecase: Copernicus, see [`usecase_API_access.py`](/blogs/training-at-larger-scale/part3/)).
+When you want to stream/lazy-load/get data from cloud storage, you need access to the place it is stored (commonly called buckets). This can sometimes be implemented already by APIs (e.g. Huggingface, or my usecase: Copernicus, see [`usecase_API_access.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/2.%20Bigger%20data%20in%20the%20cloud/data/usecase_API_access.py)).
 
 In my case, I needed to get access to the cloud storage directly without the API. This direct access gave me more flexibility and control over how I loaded the data. I implemented this using the `fsspec` library, which provides a unified interface for working with different file systems and storage backends. This approach was particularly valuable because:
 
@@ -76,13 +76,13 @@ In my case, I needed to get access to the cloud storage directly without the API
 4. It integrated well with my existing PyTorch data pipeline
 5. It has automatic failsafes for data loading, like retrying.
 
-I've created both a general example ([`example_cloud_access.py`](/blogs/training-at-larger-scale/part3/)) and a use-case specific ([`usecase_cloud_access.py`](/blogs/training-at-larger-scale/part3/)) implementation showing how to access data in the cloud efficiently
+I've created both a general example ([`example_cloud_access.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/2.%20Bigger%20data%20in%20the%20cloud/data/example_cloud_access.py)) and a use-case specific ([`usecase_cloud_access.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/2.%20Bigger%20data%20in%20the%20cloud/data/usecase_cloud_access.py)) implementation showing how to access data in the cloud efficiently
 
 TODO: (With Laurens): COPERNICUS DIDNT WANT EVERYONE TO KNOW, IS THIS OKAY?
 
 ### Streaming/Lazy Loading
 
-Now that we have access to the data, we can stream it into memory! For my geospatial data use case, I utilize libraries like Zarr, Dask and Xarray that provide optimizable, efficient lazy loading capabilities. Zarr/Dask creates a computational graph for loading data chunks from storage only when needed, while managing parallel workers to speed up the process. I'll cover optimization strategies for (streaming) data pipelines in the [next chapter](/blogs/training-at-larger-scale/part4/). To be able to work with this (lazy-loaded) data from the cloud in your training pipeline, we need to wrap everything into a PyTorch dataset. I've implemented an example in [`usecase_cloud_dataset.py`](/blogs/training-at-larger-scale/part3/) that demonstrates how to create a custom Dataset class that handles cloud data access, lazy loading and converting it to a usable dataset. Note that this is still a simplified version. When working with Xarray, xbatcher is the most efficient way to use batch generation, but this is out of the scope of this guide. Feel free to ask any questions about this.
+Now that we have access to the data, we can stream it into memory! For my geospatial data use case, I utilize libraries like Zarr, Dask and Xarray that provide optimizable, efficient lazy loading capabilities. Zarr/Dask creates a computational graph for loading data chunks from storage only when needed, while managing parallel workers to speed up the process. I'll cover optimization strategies for (streaming) data pipelines in the [next chapter](/blogs/training-at-larger-scale/part4/). To be able to work with this (lazy-loaded) data from the cloud in your training pipeline, we need to wrap everything into a PyTorch dataset. I've implemented an example in [`usecase_cloud_dataset.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/2.%20Bigger%20data%20in%20the%20cloud/data/usecase_cloud_dataset.py) that demonstrates how to create a custom Dataset class that handles cloud data access, lazy loading and converting it to a usable dataset. Note that this is still a simplified version. When working with Xarray, xbatcher is the most efficient way to use batch generation, but this is out of the scope of this guide. Feel free to ask any questions about this.
 
 ### Quick Recap:
 
@@ -150,6 +150,6 @@ When this is not set correctly, you can run into gridlock. This is when worker p
 - For cloud use: configure filesystem-specific settings and avoid duplication randomness across workers. An example is shown in `utils.py`
 - NOTE: Initialization functions are called once per worker process, not once per batch.
 
-Note: additional information can be found in the [PyTorch Documentation](https://pytorch.org/docs/stable/data.html)
+Additional information can be found in the [PyTorch Documentation](https://pytorch.org/docs/stable/data.html)
 
 Now we have a clean architecture setup that is validated and set up for multi-GPU training. We've learned how to access and stream data from the cloud, and configured our DataLoader with the appropriate parameters for efficient data loading. With these foundations in place, it's time to optimize the components of our pipeline for better performance. Let's start by focusing [optimizing the data part of the pipeline](/blogs/training-at-larger-scale/part4/)
