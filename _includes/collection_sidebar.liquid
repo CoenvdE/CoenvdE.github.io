@@ -12,7 +12,7 @@
     {% for blog in sorted_blogs %}
       <li class="blog-nav-item{% if page.url == blog.url %} active{% endif %}">
         <a href="{{ blog.url | relative_url }}">
-          {% if blog.chapter_number %}Ch {{ blog.chapter_number }}:{% endif %}
+          {% if blog.chapter_number %}{{ blog.chapter_number }}.{% endif %}
           {{ blog.title }}
         </a>
       </li>

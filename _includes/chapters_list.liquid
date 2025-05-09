@@ -5,7 +5,7 @@
     {% if blog.url != page.url %}
       <div class="chapter-card">
         <div class="chapter-number">
-          {% if blog.chapter_number %}Chapter {{ blog.chapter_number }}{% endif %}
+          {% if blog.chapter_number %}{{ blog.chapter_number }}{% endif %}
         </div>
         <h3 class="chapter-title">
           <a href="{{ blog.url | relative_url }}">{{ blog.title }}</a>
