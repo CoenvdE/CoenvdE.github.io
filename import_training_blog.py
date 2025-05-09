@@ -3,6 +3,7 @@ import re
 import shutil
 import subprocess
 from datetime import datetime, timedelta
+import urllib.parse
 
 # Repository URL and destination directories
 repo_url = "https://github.com/CoenvdE/Training-at-larger-scale-blog.git"
@@ -48,12 +49,86 @@ with open(readme_path, "r") as f:
     readme_content = f.read()
 
 # Function to fix links in markdown content
-def fix_links(content):
+def fix_links(content, md_file_original_name):
+    github_base_url = "https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/"
+    
+    # --- BEGIN New GitHub link conversion ---
+    def github_link_replacer_closure(match):
+        original_link_md = match.group(0)
+        link_text = match.group(1)
+        link_target = match.group(2)
+
+        # 0. Normalize link_target for lookups (remove ./, decode)
+        normalized_target_for_map = link_target
+        if normalized_target_for_map.startswith('./'):
+            normalized_target_for_map = normalized_target_for_map[2:]
+        decoded_target_for_map = urllib.parse.unquote(normalized_target_for_map)
+        
+        # 1. Check link_mapping (global) first for known chapter links
+        if normalized_target_for_map in link_mapping:
+            return f"[{link_text}]({link_mapping[normalized_target_for_map]})"
+        if decoded_target_for_map in link_mapping:
+            return f"[{link_text}]({link_mapping[decoded_target_for_map]})"
+
+        # 2. Skip absolute, mailto, or anchor links
+        if link_target.startswith(('http://', 'https://', '#', '/', 'mailto:')):
+            return original_link_md
+
+        # 3. Check for .md extension (potential chapter link not in mapping - should be rare)
+        # Remove query params/fragments before checking extension
+        cleaned_link_target_for_ext_check = link_target.split('?')[0].split('#')[0]
+        if urllib.parse.unquote(cleaned_link_target_for_ext_check).lower().endswith('.md'):
+            return original_link_md # Let subsequent Jekyll .md link logic handle it
+
+        # 4. Check for image links (path or common extensions)
+        image_extensions = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp']
+        if any(cleaned_link_target_for_ext_check.lower().endswith(ext) for ext in image_extensions):
+             return original_link_md 
+        if link_target.startswith("images/") or link_target.startswith("./images/") or link_target.startswith("../images/"):
+            return original_link_md
+
+        # 5. If none of the above, it's a candidate for a GitHub raw file link.
+        # Resolve path relative to the current md file's original location in the repo.
+        abs_md_file_path = os.path.abspath(os.path.join(source_dir, md_file_original_name))
+        abs_target_path = os.path.abspath(os.path.join(os.path.dirname(abs_md_file_path), link_target))
+        
+        abs_repo_root = os.path.abspath(source_dir)
+
+        if not abs_target_path.startswith(abs_repo_root + os.sep) and abs_target_path != abs_repo_root : # Check if within repo boundaries
+            # print(f"DEBUG: Link '{link_target}' in '{md_file_original_name}' resolves outside repo: {abs_target_path}. Keeping original.")
+            return original_link_md
+
+        path_for_url = os.path.relpath(abs_target_path, abs_repo_root)
+        
+        if path_for_url.startswith(".."): # Should be caught by above, but as a safeguard
+             # print(f"DEBUG: Link '{link_target}' in '{md_file_original_name}' resolved to problematic path '{path_for_url}'. Keeping original.")
+             return original_link_md
+
+        # Check if the file actually exists at the resolved path within the cloned source_dir
+        # abs_target_path is the fully resolved path on disk
+        if not os.path.exists(abs_target_path):
+            # print(f"DEBUG: Linked target '{link_target}' in '{md_file_original_name}' (resolved to '{abs_target_path}') does not exist. Keeping original link.")
+            return original_link_md
+
+        final_github_url = github_base_url + path_for_url.replace(os.sep, '/')
+        return f"[{link_text}]({final_github_url})"
+
+    # Apply the replacer function to the content for general markdown links [text](url)
+    # Use non-greedy `([^)]+?)` for the URL part to handle potential nested parentheses better, though rare.
+    content = re.sub(r'\[([^\]]+)\]\(([^)]+?)\)', github_link_replacer_closure, content)
+    # --- END New GitHub link conversion ---
+
     # First, fix regular markdown links [text](file.md)
+    # This loop is now mainly for .md files that might not have been caught by link_mapping in the new section,
+    # or if the new section returned original_link_md for an .md file.
+    # The `link_mapping` check in `github_link_replacer_closure` should handle most chapter links.
     for old_link, new_url in link_mapping.items():
-        # Pattern to match markdown links with the old link
+        # Pattern to match markdown links with the old link (ensure it's specific to the old_link string)
+        # The old_link itself might contain special regex characters, so escape it.
+        # And ensure we match the whole link target, not just a part of it.
+        # Using lookarounds to ensure the matched group is exactly old_link
+        # (?<=\() and (?=\)) ensure we are inside link parentheses
         pattern = r'\[([^\]]+)\]\(({0})\)'.format(re.escape(old_link))
-        # Replace with new URL
         content = re.sub(pattern, r'[\1](' + new_url + r')', content)
     
     # Fix any remaining links that might have different formats
@@ -79,14 +154,15 @@ def fix_links(content):
     
     # Additional fix for remaining chapter references that have a specific pattern
     # Like [Chapter 3](3. Optimizing the pipeline: Data.md)
-    for i, md_file in enumerate(md_files):
-        chapter_num = i + 1
-        chapter_name = os.path.splitext(md_file)[0]
-        chapter_name = re.sub(r'^\d+\.\s*', '', chapter_name)
-        new_url = f"/blogs/training-at-larger-scale/part{chapter_num}/"
+    for i, md_file_loop_var in enumerate(md_files): # Renamed md_file to avoid clash with outer scope if any future nesting
+        chapter_num_loop = i + 1 # Renamed chapter_num
+        # chapter_name_loop = os.path.splitext(md_file_loop_var)[0] # Renamed chapter_name
+        # chapter_name_loop = re.sub(r'^\d+\.\s*\', '', chapter_name_loop)
+        new_url_loop = f"/blogs/training-at-larger-scale/part{chapter_num_loop}/" # Renamed new_url
         
         # This regex catches chapter references like "[Chapter X](...)" or references to numbered markdown files
-        chapter_pattern = r'\[(Chapter\s+\d+|[^\]]+)\]\((\d+\.[^)]+)\)'
+        # The target file (group 2) should be specific to an .md file.
+        chapter_pattern = r'\[(Chapter\s+\d+|[^\]]+)\]\((\d+\.[^)]+\.md)\)' # Made .md explicit
         
         # Check each chapter reference
         for match in re.finditer(chapter_pattern, content):
@@ -146,7 +222,7 @@ def fix_links(content):
     return content
 
 # Apply link fixing to README content for the index page
-index_content = fix_links(readme_content)
+index_content = fix_links(readme_content, "README.md")
 
 # Remove any "TODO" sections and author notes
 index_content = re.sub(r'## TODO[\s\S]*?(?=##|$)', '', index_content)
@@ -190,7 +266,7 @@ for i, md_file in enumerate(md_files):
             chapter_name = title_from_content
 
     # Fix links in the content
-    content = fix_links(content)
+    content = fix_links(content, md_file)
 
     # Copy images if they exist
     images_dir_source = os.path.join(source_dir, "images")
