@@ -1,9 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd"> <html><head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <style>img[src^="images/"]{content:url(/images/training-blog/placeholder.png)}</style> <script>
   // Fix image paths in the DOM after page load
-  document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('img[src^="images/"]').forEach(function(img) {
-      var src = img.getAttribute('src');
-      img.setAttribute('src', '/images/training-blog/' + src.replace('images/', ''));
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('img[src^="images/"]').forEach(function (img) {
+      var src = img.getAttribute("src");
+      img.setAttribute("src", "/images/training-blog/" + src.replace("images/", ""));
     });
   });
 </script> </head></html>
