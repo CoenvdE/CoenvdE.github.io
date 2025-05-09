@@ -49,9 +49,9 @@ ninja.data = [{
           description: "",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/training-at-larger-scale/image-paths/";
-            },},{id: "blogs-introduction",
-          title: 'Introduction',
-          description: "A comprehensive guide to scaling machine learning from small to larger training setups.",
+            },},{id: "blogs-training-at-larger-scale",
+          title: 'Training at larger scale',
+          description: "A guide on scaling machine learning from small to larger training setups.",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/training-at-larger-scale/index/";
             },},{id: "blogs-the-setup",

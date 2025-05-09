@@ -75,10 +75,9 @@ def fix_links(content, md_file_original_name):
             return original_link_md
 
         # 3. Check for .md extension (potential chapter link not in mapping - should be rare)
-        # Remove query params/fragments before checking extension
         cleaned_link_target_for_ext_check = link_target.split('?')[0].split('#')[0]
         if urllib.parse.unquote(cleaned_link_target_for_ext_check).lower().endswith('.md'):
-            return original_link_md # Let subsequent Jekyll .md link logic handle it
+            return original_link_md
 
         # 4. Check for image links (path or common extensions)
         image_extensions = ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp']
@@ -88,29 +87,40 @@ def fix_links(content, md_file_original_name):
             return original_link_md
 
         # 5. If none of the above, it's a candidate for a GitHub raw file link.
-        # Resolve path relative to the current md file's original location in the repo.
+        # For file system operations, use a URL-decoded version of the link target.
+        decoded_target_for_fs = urllib.parse.unquote(link_target)
+
         abs_md_file_path = os.path.abspath(os.path.join(source_dir, md_file_original_name))
-        abs_target_path = os.path.abspath(os.path.join(os.path.dirname(abs_md_file_path), link_target))
+        # Use decoded_target_for_fs for constructing the file system path to check
+        abs_target_path_for_fs_check = os.path.abspath(os.path.join(os.path.dirname(abs_md_file_path), decoded_target_for_fs))
         
         abs_repo_root = os.path.abspath(source_dir)
 
-        if not abs_target_path.startswith(abs_repo_root + os.sep) and abs_target_path != abs_repo_root : # Check if within repo boundaries
-            # print(f"DEBUG: Link '{link_target}' in '{md_file_original_name}' resolves outside repo: {abs_target_path}. Keeping original.")
+        # Check if resolved path is within the repo boundaries
+        if not abs_target_path_for_fs_check.startswith(abs_repo_root + os.sep) and abs_target_path_for_fs_check != abs_repo_root:
+            # print(f"DEBUG: Link '{link_target}' (decoded: '{decoded_target_for_fs}') in '{md_file_original_name}' resolves outside repo: {abs_target_path_for_fs_check}. Keeping original.")
             return original_link_md
 
-        path_for_url = os.path.relpath(abs_target_path, abs_repo_root)
+        # Check existence using the file system-friendly path
+        if not os.path.exists(abs_target_path_for_fs_check):
+            # print(f"DEBUG: Linked target '{link_target}' (decoded: '{decoded_target_for_fs}') in '{md_file_original_name}' (resolved to '{abs_target_path_for_fs_check}') does not exist. Keeping original link.")
+            return original_link_md
+
+        # If the file exists, construct the GitHub URL.
+        # The path for the URL should be relative to the repo root.
+        path_relative_to_repo_for_url = os.path.relpath(abs_target_path_for_fs_check, abs_repo_root)
         
-        if path_for_url.startswith(".."): # Should be caught by above, but as a safeguard
-             # print(f"DEBUG: Link '{link_target}' in '{md_file_original_name}' resolved to problematic path '{path_for_url}'. Keeping original.")
+        # Safeguard, though the boundary check above should handle this.
+        if path_relative_to_repo_for_url.startswith(".."):
+             # print(f"DEBUG: Link '{link_target}' in '{md_file_original_name}' resolved to problematic relative path '{path_relative_to_repo_for_url}'. Keeping original.")
              return original_link_md
 
-        # Check if the file actually exists at the resolved path within the cloned source_dir
-        # abs_target_path is the fully resolved path on disk
-        if not os.path.exists(abs_target_path):
-            # print(f"DEBUG: Linked target '{link_target}' in '{md_file_original_name}' (resolved to '{abs_target_path}') does not exist. Keeping original link.")
-            return original_link_md
-
-        final_github_url = github_base_url + path_for_url.replace(os.sep, '/')
+        # Convert OS-specific path separators to forward slashes for the URL
+        url_path_segment = path_relative_to_repo_for_url.replace(os.sep, '/')
+        # URL-encode the path segment to handle spaces and other special characters
+        encoded_url_path_segment = urllib.parse.quote(url_path_segment)
+        
+        final_github_url = github_base_url + encoded_url_path_segment
         return f"[{link_text}]({final_github_url})"
 
     # Apply the replacer function to the content for general markdown links [text](url)
@@ -233,8 +243,8 @@ index_file_path = os.path.join(destination_dir, "index.md")
 with open(index_file_path, "w") as f:
     f.write("---\n")
     f.write("layout: blog_collection\n")
-    f.write("title: \"Introduction\"\n")
-    f.write("description: \"A comprehensive guide to scaling machine learning from small to larger training setups.\"\n")
+    f.write("title: \"Training at larger scale\"\n")
+    f.write("description: \"A guide on scaling machine learning from small to larger training setups.\"\n")
     f.write("collection_id: training-at-larger-scale\n")
     f.write("display_chapters: true\n")
     f.write("---\n\n")
