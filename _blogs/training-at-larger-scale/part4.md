@@ -80,7 +80,8 @@ Efficient data loading can significantly reduce training time — especially whe
 
 **Streaming Workers (Dask) vs DataLoader Workers (PyTorch)**
 
-TODO: add image
+<!-- TODO: add image -->
+
 PyTorch DataLoader and streaming frameworks like Dask can be combined effectively to stream cloud data into your training pipeline, but it's crucial to understand they operate at different layers of the data process:
 
 - **Dask (or other streaming frameworks)** handles the low-level data access by:
@@ -163,12 +164,15 @@ Initially, my data was stored in NetCDF files, which are common for scientific d
 
 **_How to calculate (handwavy) how big your chunks should be_**
 
-TODO: LAURENS CALCULATIONS
-When migrating to Zarr, I defined chunk sizes ...
+<!-- TODO: LAURENS CALCULATIONS -->
+
+NOTE SKIP THIS FOR FEEDBACK: properly write later, but basically chunks small enough so that in worst case scenario, the time it loads the least chunks possible and best case it loads exactly one batch of data (or something like this)
 
 3. **Parallelize I/O: Loading Efficiently**
 
-TODO: DOES IT GO IN TO MUCH DETAIL AS WE USE ZARR FOR THIS IN THE END? IS IT USEFUL FOR READERS?
+<!-- TODO -->
+
+TO READER: DOES IT GO IN TO MUCH DETAIL AS WE USE ZARR FOR THIS IN THE END? IS IT USEFUL FOR READERS?
 
 Some libraries, like Dask, can parallelize reading within a dataset, providing their own optimization parameters. However, be careful when combining these with PyTorch DataLoader workers, as this can lead to resource contention and diminishing returns.
 
@@ -303,7 +307,8 @@ If you're using Dask, you can also leverage the Dask dashboard to monitor:
 ### Example Benchmark Results
 
 Below are example benchmark results showing the dramatic difference between an unoptimized baseline configuration and an optimized one:
-#TODO: update images so that it shows the 1400 vs 40 seconds
+
+<!-- #TODO: update images so that it shows the 1400 vs 40 seconds -->
 
 <div align="center">
   <img src="/images/training-blog/benchmark_logs_bad_baseline.png" alt="Unoptimized Baseline"  width="400">

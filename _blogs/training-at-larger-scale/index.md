@@ -76,3 +76,5 @@ I'll walk you through my process of implementing and optimizing everything. Each
     uv run python your_script.py
     ```
     This will run your Python script in the virtual environment with all dependencies available.
+
+<!-- TODO THANK LAURENS ANDY JOE SOMEWHERE (BUT WHERE?) -->

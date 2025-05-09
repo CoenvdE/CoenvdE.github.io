@@ -115,7 +115,8 @@ The benchmark tool will create several files in the specified output directory:
 
 3. **Optimizer**:
    - Experiment with different optimizers and their settings
-   - TODO: This is a big topic in just one bullet point! More detail here? Or a link to more information?
+   - TO READER: TODO: This is a big topic in just one bullet point! More detail here? Or a link to more information? or is it fine?
+   <!-- TODO: add more detail -->
 
 ## Analyzing Results
 

@@ -78,7 +78,7 @@ In my case, I needed to get access to the cloud storage directly without the API
 
 I've created both a general example ([`example_cloud_access.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/2.%20Bigger%20data%20in%20the%20cloud/data/example_cloud_access.py)) and a use-case specific ([`usecase_cloud_access.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/2.%20Bigger%20data%20in%20the%20cloud/data/usecase_cloud_access.py)) implementation showing how to access data in the cloud efficiently
 
-TODO: (With Laurens): COPERNICUS DIDNT WANT EVERYONE TO KNOW, IS THIS OKAY?
+<!-- TODO: (With Laurens): COPERNICUS DIDNT WANT EVERYONE TO KNOW, IS THIS OKAY? -->
 
 ### Streaming/Lazy Loading
 

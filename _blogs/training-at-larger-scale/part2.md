@@ -130,7 +130,7 @@ This is actually quite easy. Note that in the [previous chapter](/blogs/training
 
 **_[`lightning_train.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20Multi-GPU%20training/lightning_train.py)_**
 
-- NOTE: look how much less code this is! [pytorch_train.py](1.%20Multi-GPU%20training/src/pytorch_train.py) had almost 200 lines of code, we now have 74.
+- NOTE: look how much less code this is! [pytorch_train.py](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/0.%20The%20Setup/pytorch_train.py) had almost 200 lines of code, we now have 74.
 - go through the code and see how everything is initiated.
 - especially important here is the L.trainer() with the following parameters that make multi-GPU implementation super easy
   - **accelerator**: Specifies the hardware to use (e.g. "auto", "gpu", "cpu", "tpu"). It directs Lightning to use the appropriate backend for accelerated computing.
