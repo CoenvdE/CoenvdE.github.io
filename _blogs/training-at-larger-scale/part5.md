@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "Optimizing the pipeline: Model"
 description: "Chapter 5 of the Training at Larger Scale series"
-date: 2025-04-10
+date: 2025-04-13
 collection_id: training-at-larger-scale
 chapter_number: 5
 toc: true
@@ -14,7 +14,7 @@ giscus_comments: true
 
 After optimizing the data pipeline, the next step is profiling the model pipeline to catch bottlenecks like slow ops or CPU–GPU data transfers.
 This is an optional step that, if the code is implemented correctly, will probably not have a big impact on the training time.
-if you don't want to do it, you can skip this section and look at [What Is Next](/blogs/training-at-larger-scale/part6/).
+If you don't want to do it, you can skip this section and look at the [next chapter](/blogs/training-at-larger-scale/part6/).
 Note that I give a few nice tools to help you analyse the model pipeline performance. I do suggest you to run the benchmark (and a pytorch profiler) and let ChatGPT or another good LLM analyse the results for you and help you figure out if you need to change something. This part is mainly about getting the time it takes for a batch to pass through your model pipeline down.
 
 The time it takes for a batch to pass through your model depends on several factors:
@@ -25,7 +25,7 @@ The time it takes for a batch to pass through your model depends on several fact
 
 - **Hardware**: The specs of your GPU/TPU significantly impact processing time.
 
-TODO (rewrite when discussed with laurens and andy): check if this is correct. In my experiments, a single training step took around 0.4 seconds for moderate-sized models with a batch size of 32. This can vary widely - from milliseconds for small models to several seconds for large transformer architectures. I have seen 0.1 seconds as well with other models.
+ In my experiments, a single training step took around 0.4 seconds for moderate-sized models with a batch size of 32. This can vary widely - from milliseconds for small models to several seconds for larger architectures. I have seen 0.1 seconds as well with other models. For my model, the time it took to complete 1 step scaled around linearly with the batch size, which makes sense given that most operations scale linearly with the batch size (e.g. a dot product). 
 
 ```
 4. Optimizing the pipeline: Model/
@@ -46,9 +46,9 @@ TODO (rewrite when discussed with laurens and andy): check if this is correct. I
 │   └── test_lightning_parameters.py
 └── output/
 ```
-### easy timing benchmark
+### [Easy timing benchmark](/blogs/training-at-larger-scale/part5/)
 
-This is a tool I made to benchmark the any pipeline. It is designed to work with any PyTorch Lightning module and data module, so you can use it to benchmark your model pipeline. It measures detailed timing information for each step of the training process:
+This is a tool I made to benchmark a pipeline. It is designed to work with **any** PyTorch Lightning model module and data module, so you can also use it to benchmark your own model pipeline. It measures detailed timing information for each step of the training process:
   - Data loading time
   - Forward pass time
   - Backward pass time
@@ -61,20 +61,20 @@ I find the timing summary at the end of the script to be very useful. It gives y
 
 ## Usage
 
-```bash
-python timing_benchmark.py -c config/config.yaml --epochs 1 --save-dir results/benchmark/my_model
-```
-
 Replace the model and data classes with your own.
 ```python
 # Import your model and data classes here
 from src.model.lightning_module import AutoencoderModule as ModelClass
 from src.data.lightning_datamodule import DummyDataModule as DataModuleClass
-```
 
 # Default model and data classes to use if not overridden by command line arguments
 DEFAULT_MODEL_CLASS = ModelClass
 DEFAULT_DATA_CLASS = DataModuleClass
+```
+
+```bash
+uv run python timing_benchmark.py -c config/config.yaml --epochs 1 --save-dir results/benchmark/my_model
+```
 
 
 ### Required Arguments
@@ -104,23 +104,23 @@ The benchmark tool will create several files in the specified output directory:
 ## Tips for Optimization
 
 1. **Data Loading**:
-   - If data loading takes >30% of batch time, check the data pipeline and the dataloader again.
+   - If data loading takes >30% of batch time, check the data pipeline and the data loader again.
 
 2. **Forward/Backward Pass**:
-   - Try mixed precision training with `--precision 16-mixed` for faster computation (discussed in [5. What Is Next](/blogs/training-at-larger-scale/part6/))
+   - Try mixed precision training with `--precision 16-mixed` for faster computation (discussed in the [next chapter](/blogs/training-at-larger-scale/part6/))
    - Consider model architecture changes to reduce computation
 
 3. **Optimizer**:
    - Experiment with different optimizers and their settings
+   - TODO: This is a big topic in just one bullet point! More detail here? Or a link to more information?
 
 ## Analyzing Results
 
 The benchmark results will help you identify bottlenecks in your training pipeline:
 
-- If **data loading** is the bottleneck, optimize data loading pipeline, increase workers, use caching
-- If **forward pass** is the bottleneck, consider model architecture changes or mixed precision
-- If **backward pass** is the bottleneck, try gradient accumulation or mixed precision
-- If **other ops** is the bottleneck, TODO: check with laurens andy
+- If **data loading** is a big bottleneck, optimize data loading pipeline, increase workers, use caching
+- If **forward pass** is a big bottleneck, consider model architecture changes or mixed precision
+- If **backward pass** is a big bottleneck, try gradient accumulation or mixed precision
 
 
 ## Profiling: Check Your Pipeline
@@ -128,17 +128,12 @@ The benchmark results will help you identify bottlenecks in your training pipeli
 ### What Is It?
 
 Profiling helps you understand where time and resources are spent in your training pipeline. It guides optimization by identifying bottlenecks. 
-The profiler also looks at data part of the pipeline, so it is a good idea to run it after the data part is done.
+The profiler also looks at the data part of the pipeline, so it is a good idea to run it after the data part is done.
 
 ### How Does It Work?
 
-Look at the provided script to profile your training loop:
-
-```bash
-profiler.py
-```
-
-Import your `dataloader` and `model` modules, then run the script 3 times with the three profilers:
+Look at the provided script to profile your training loop. Import your `dataloader` and `model` modules, 
+then run the script 3 times with the three profilers:
 
 - **Simple Profiler**
 - **Advanced Profiler**
@@ -146,6 +141,10 @@ Import your `dataloader` and `model` modules, then run the script 3 times with t
 
 it stores the output in the `output/profiler/{config_name}/profiler_logs` folder.
 
+
+```bash
+uv run python profiler.py
+```
 
 ###  Interpreting Profiler Outputs – A Quick Guide
 
@@ -212,6 +211,4 @@ Congratulations on optimizing your entire training pipeline! Explore what's next
 [5. What Is Next](/blogs/training-at-larger-scale/part6/)
 
 
-TODO read and review
-- [PyTorch Lightning: `compile` for speed](https://lightning.ai/docs/pytorch/stable/advanced/compile.html)    + sharding and stuff, not sure if needed RN
-- [PyTorch Lightning: General speed-up tips](https://lightning.ai/docs/pytorch/stable/advanced/speed.html)
+Additional information can be found in [PyTorch Lightning: `compile` for speed](https://lightning.ai/docs/pytorch/stable/advanced/compile.html) and [PyTorch Lightning: General speed-up tips](https://lightning.ai/docs/pytorch/stable/advanced/speed.html)
