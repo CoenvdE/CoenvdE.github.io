@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "The Setup"
 description: "Chapter 1 of the Training at Larger Scale series"
-date: 2025-04-09
+date: 2025-04-11
 collection_id: training-at-larger-scale
 chapter_number: 1
 toc: true
@@ -10,7 +10,7 @@ categories: [Training, ML, GPU]
 giscus_comments: true
 ---
 
-## 0. Setup
+## Setup
 
 Before diving into optimizations, I will walk you through some best practices and a baseline to give you a solid starting point. Note that my model and pipeline were actually a lot more complicated, but my goal is not how to recreate my complicated pipeline, it is to show you simple examples for you to optimize and improve your own.
 
@@ -71,8 +71,8 @@ def set_seed(seed: int = 13):
     random.seed(seed)
 ```
 
-Note that I use a `set_seed` function to keep everything reproducible in the `pytorch_train.py` file. By default, this seed does _not_ propagate to the Dataloader. This is why I create a `generator` for the data loader that has a set seed, for which I use the seed from the `set_seed` function.
-Pytorch dataloader workers need to be seeded, because each worker runs in its own process. Without explicit seeding, they will use random seeds, leading to **non-deterministic data loading and augmentations**. Look at the `worker_init_fn` in the `pytorch_train.py` file for an example.
+Note that I use a `set_seed` function to keep everything reproducible in the [`pytorch_train.py` file](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/0.%20The%20Setup/pytorch_train.py). By default, this seed does _not_ propagate to the Dataloader. This is why I create a `generator` for the data loader that has a set seed, for which I use the seed from the `set_seed` function.
+Pytorch dataloader workers need to be seeded, because each worker runs in its own process. Without explicit seeding, they will use random seeds, leading to **non-deterministic data loading and augmentations**. Look at the `worker_init_fn` in the [`pytorch_train.py` file](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/0.%20The%20Setup/pytorch_train.py) for an example.
 
 For **reproducibility during debugging and testing**, set the following:
 
@@ -105,7 +105,7 @@ Before moving forward, ensure your model actually works. It is important to writ
 - Shape consistency
 - Correct device allocation
 
-This first one is very important and can save you a lot of trouble debugging, I made an example test for this in my [`.tests` folder](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/0.%20The%20Setup/tests/test_parameters.py)
+This first one is very important and can save you a lot of trouble debugging, I made an example test for this in my [`.tests`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/0.%20The%20Setup/tests/test_parameters.py) folder.
 
 ```bash
 uv run python -m unittest tests/test_parameters.py

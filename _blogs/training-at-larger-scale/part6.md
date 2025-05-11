@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "What Is Next"
 description: "Chapter 6 of the Training at Larger Scale series"
-date: 2025-04-14
+date: 2025-04-16
 collection_id: training-at-larger-scale
 chapter_number: 6
 toc: true
@@ -10,7 +10,7 @@ categories: [Training, ML, GPU]
 giscus_comments: true
 ---
 
-## 5. What's Next?
+## What's Next?
 
 The last part before we get to the training.
 Here I'll cover my last tips and tricks, one more failsafe and some final experiments to run before we get to the training.
@@ -45,7 +45,7 @@ Training pipelines sometimes crash due to various reasons, and it's always good 
 For this reason I have uploaded a `CloudUploadCallback` in [callbacks.py](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/5.%20What%20Is%20Next/src/callbacks.py).
 This callback uploads the model checkpoints to the cloud storage at specified intervals and/or when the training is finished.
 
-You can add this callback to your training loop by adding the following to your `cli_config.yaml` file:
+You can add this callback to your training loop by adding the following to your [`cli_config.yaml`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/5.%20What%20Is%20Next/config/cli_config.yaml) file:
 
 ```yaml
 callbacks:

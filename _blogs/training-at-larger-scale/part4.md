@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "Optimizing the pipeline: Data"
 description: "Chapter 4 of the Training at Larger Scale series"
-date: 2025-04-12
+date: 2025-04-14
 collection_id: training-at-larger-scale
 chapter_number: 4
 toc: true
@@ -10,7 +10,7 @@ categories: [Training, ML, GPU]
 giscus_comments: true
 ---
 
-## 3. Optimizing the pipeline: Data
+## Optimizing the pipeline: Data
 
 Efficient data loading can significantly reduce training time — especially when the GPU is fast but starved for data.
 
@@ -150,7 +150,7 @@ Follow my guide and your speed should already improve a lot. Experimenting endle
 
 • **All CPU cores busy but GPU still waiting**: This suggests an I/O bottleneck (slow disk, network, etc.). Adding more workers won't help. Instead, optimize at the dataset level with faster storage, caching, or better chunking strategies.
 
-### what can be optimized: **_dataset_**
+### what can be optimized: **dataset**
 
 ---
 
@@ -166,7 +166,7 @@ Initially, my data was stored in NetCDF files, which are common for scientific d
 
 <!-- TODO: LAURENS CALCULATIONS -->
 
-NOTE SKIP THIS FOR FEEDBACK: properly write later, but basically chunks small enough so that in worst case scenario, the time it loads the least chunks possible and best case it loads exactly one batch of data (or something like this)
+NOTE: SKIP THIS FOR FEEDBACK: properly write later, but basically chunks small enough so that in worst case scenario, the time it loads the least chunks possible and best case it loads exactly one batch of data (or something like this)
 
 3. **Parallelize I/O: Loading Efficiently**
 
@@ -241,7 +241,7 @@ In summary, dataset-level optimization is about making data access as efficient 
 
 For more insights on optimizing cloud data loading, see [Earthmover's guide to cloud-native dataloaders](https://earthmover.io/blog/cloud-native-dataloader/) covering streaming techniques, I/O optimization, and resource balancing.
 
-### what can be optimized: **_dataloader_**
+### what can be optimized: **dataloader**
 
 ---
 
@@ -372,7 +372,7 @@ from dummydataset import DummyDataset as YourDataset # replace with your dataset
 4. **Run benchmarks and analyze results**
    - Use [`benchmark_configurations.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py) to test all configurations
    - Can be run locally or in the cloud
-   - (Download and) analyze the files with [`plot_benchmark_runs.ipynb`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Optimizing%20the%20pipeline%3A%20Data/plot_benchmark_runs.ipynb) (use the `.log` files, not the `_workers.log` files)
+   - (Download and) analyze the files with [`plot_benchmark_runs.ipynb`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Optimizing%20the%20pipeline%3A%20Data/plot_benchmark_runs.ipynb) (use the `*.log` files, not the `*_workers.log` files. They make sure the `*.log` files are correct)
    - Compare performance metrics across configurations
 
 Use the [plotting notebook](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Optimizing%20the%20pipeline%3A%20Data/plot_benchmark_runs.ipynb) to visualize differences between runs and identify which configuration has the lowest wait/batch fetching time. While I don't explicitly measure vRAM/CPU utilization in these tools (as it's complex and time-consuming to implement), the primary goal is to significantly improve training time with reasonable effort. Having that said, watch for these warning signs:
@@ -387,4 +387,4 @@ Use the [plotting notebook](https://github.com/CoenvdE/Training-at-larger-scale-
 
 Note that network bandwidth varies dramatically between environments. When moving from local development (WiFi) to cloud training, you may see orders of magnitude improvement in data loading speed. In my case, I observed a 100x decrease in wait time when moving to the cloud. Always benchmark in the same environment where you'll be training, as the optimal configuration can differ significantly between local and cloud setups.
 
-Now that we have the data-part of the pipeline optimized, lets focus on the [Model](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Model.md)
+Now that we have the data-part of the pipeline optimized, lets focus on [optimizing the Model](/blogs/training-at-larger-scale/part5/)

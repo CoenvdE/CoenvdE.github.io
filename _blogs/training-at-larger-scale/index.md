@@ -34,7 +34,7 @@ This blog is available on [GitHub](https://github.com/coenvde/training-at-larger
 
 ## What's next
 
-I'll walk you through my process of implementing and optimizing everything. Each chapter folder contains code examples that demonstrate the concepts discussed in the corresponding markdown file. To run the examples, navigate to the specific chapter folder on GitHub and follow the instructions as specified in the markdown files. I strongly advise to run through them in order, as they build on top of each other and I expect previous chapters as background knowledge for the following one. I especially encourage you to get familiar with pytorch lightning ([1. Multi-GPU training](/blogs/training-at-larger-scale/part2/)) as it will streamline, improve and speed up your workflow a lot.
+I'll walk you through my process of implementing and optimizing everything. Each chapter folder contains code examples that demonstrate the concepts discussed in the corresponding markdown file. To run the examples, navigate to the specific chapter folder on GitHub and follow the instructions as specified in the markdown files. I strongly advise to run through them in order, as they build on top of each other and I expect previous chapters as background knowledge for the following one. I especially encourage you to get familiar with pytorch lightning ([0. The Setup](/blogs/training-at-larger-scale/part1/)) as it will streamline, improve and speed up your workflow a lot.
 
 ## Chapters
 

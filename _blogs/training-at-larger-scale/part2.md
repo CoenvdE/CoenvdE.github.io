@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "Multi-GPU training"
 description: "Chapter 2 of the Training at Larger Scale series"
-date: 2025-04-10
+date: 2025-04-12
 collection_id: training-at-larger-scale
 chapter_number: 2
 toc: true
@@ -10,7 +10,7 @@ categories: [Training, ML, GPU]
 giscus_comments: true
 ---
 
-## 1. Single- to Multi-GPU training
+## Single- to Multi-GPU training
 
 Multi-GPU training provides accelerated computing power, meaning faster training once set up correctly. This is necessary when having bigger datasets and larger models.
 
@@ -149,7 +149,7 @@ uv run python lightning_train.py
 **_[`lightning_trainer.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20Multi-GPU%20training/lightning_trainer.py)_**
 
 - NOTE: even less code and a CLI (very useful because now you can use the --help flag to see everything that can be initiated and how)
-- go through the code and see how everything is initiated. It is important to note that CLI requires a specific format for the `config.yaml` (example in `cli_config.yaml`) with specific config sections:
+- go through the code and see how everything is initiated. It is important to note that CLI requires a specific format for the [`config.yaml`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20Multi-GPU%20training/config/config.yaml) (example in [`cli_config.yaml`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20Multi-GPU%20training/config/cli_config.yaml)) with specific config sections:
   - model
   - data
   - trainer
@@ -168,7 +168,7 @@ uv run python -m lightning_trainer fit --help
 uv run python -m lightning_trainer fit -c config/cli_config.yaml
 ```
 
-NOTE: Additional information on how to use the Lightning CLI is available in the [Lightning CLI Documentation](https://lightning.ai/docs/pytorch/2.1.0/cli/lightning_cli.html)
+Additional information on how to use the Lightning CLI is available in the [Lightning CLI Documentation](https://lightning.ai/docs/pytorch/2.1.0/cli/lightning_cli.html)
 
 ### Managing Multiple Processes in Distributed Training
 

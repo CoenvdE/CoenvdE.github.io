@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "Optimizing the pipeline: Model"
 description: "Chapter 5 of the Training at Larger Scale series"
-date: 2025-04-13
+date: 2025-04-15
 collection_id: training-at-larger-scale
 chapter_number: 5
 toc: true
@@ -10,7 +10,7 @@ categories: [Training, ML, GPU]
 giscus_comments: true
 ---
 
-## 4. Optimizing the pipeline: Model
+## Optimizing the pipeline: Model
 
 After optimizing the data pipeline, the next step is profiling the model pipeline to catch bottlenecks like slow ops or CPU–GPU data transfers.
 This is an optional step that, if the code is implemented correctly, will probably not have a big impact on the training time.
@@ -48,7 +48,7 @@ In my experiments, a single training step took around 0.4 seconds for moderate-s
 
 ### [Easy timing benchmark](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Model/timing_benchmark.py)
 
-This is a tool I made to benchmark a pipeline. It is designed to work with **any** PyTorch Lightning model module and data module, so you can also use it to benchmark your own model pipeline. It measures detailed timing information for each step of the training process:
+[This](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Model/timing_benchmark.py) is a tool I made to benchmark a pipeline. It is designed to work with **any** PyTorch Lightning model module and data module, so you can also use it to benchmark your own model pipeline. It measures detailed timing information for each step of the training process:
 
 - Data loading time
 - Forward pass time
@@ -128,12 +128,12 @@ The benchmark results will help you identify bottlenecks in your training pipeli
 
 ## Profiling: Check Your Pipeline
 
-### What Is It?
+### What is it?
 
 Profiling helps you understand where time and resources are spent in your training pipeline. It guides optimization by identifying bottlenecks.
 The profiler also looks at the data part of the pipeline, so it is a good idea to run it after the data part is done.
 
-### How Does It Work?
+### How does it work?
 
 Look at the provided script to profile your training loop. Import your `dataloader` and `model` modules,
 then run the script 3 times with the three profilers:
@@ -155,56 +155,56 @@ Here’s what to look for in each profiler and how to make sense of the data.
 
 ### 1. `fit-simple_profiler_output.txt` – Summary View (Simple Profiler)
 
-### What It Shows:
+### What it shows:
 
 - High-level summary of function calls
 - Average time per operation
 - Relative contribution of each function to total runtime
 
-### How to Read It:
+### How to read it:
 
 - Look at the top-consuming operations — these are usually bottlenecks.
 - Pay attention to data loading functions (`*_dataloader_next`, `__next__`) — these often take more time than expected.
 - Training loops like `run_training_epoch` will typically be a large portion; the key is to ensure they're not dwarfed by overheads.
 
-### When to Take Action (example):
+### When to take action (example):
 
 - If data loading takes a large share of total time (e.g., >40%), your pipeline is I/O-bound.
 - If your model training steps are taking less time than preprocessing, you're likely under-utilizing the GPU.
 
 ### 2. `fit-advanced_profiler_output.txt` – Line-Level View
 
-### What It Shows:
+### What it shows:
 
 - Function-level granularity (per-call stats)
 - Total calls, total time, average time per call
 - Stack trace to locate the exact code path
 
-### How to Read It:
+### How to read it:
 
 - Sort by total time and identify high-call-count, low-time ops — these may be optimized or batched.
 - Use stack traces to pinpoint performance sinks inside your own code or framework code.
 - Investigate setup or utility functions being called excessively (e.g., synthetic data generation, logging, checkpointing).
 
-### When to Take Action (example):
+### When to take action (example):
 
 - If any function is causing a lot of time, (where you expect it to be fast) check if it is necessary.
 
 ### 3. `pt.trace.json` – Chrome Trace Viewer (PyTorch Profiler)
 
-### What It Shows:
+### What it shows:
 
 - Frame-by-frame execution timeline
 - Operator-level breakdown (CPU and GPU)
 - Optional memory usage tracking
 
-### How to Read It:
+### How to read it:
 
 1. Open Chrome and go to `chrome://tracing`.
 2. Drop in the `.json` file.
 3. Hover over timeline blocks to see operator names, start/end times, and device usage.
 
-### What to Look For:
+### What to look for:
 
 - Long horizontal bars → slow operations (usually backward passes, large convolutions)
 - Gaps between ops → potential I/O waits or CPU/GPU syncs
@@ -218,8 +218,6 @@ Here’s what to look for in each profiler and how to make sense of the data.
 
 ## Next Steps
 
-Congratulations on optimizing your entire training pipeline! Explore what's next:
-
-[5. What Is Next](/blogs/training-at-larger-scale/part6/)
+Before moving on to actual training, I wrote a last chapter on [5. What Is Next](/blogs/training-at-larger-scale/part6/). These are some final considerations, tips and tricks that I think are important to consider before actually training your model.
 
 Additional information can be found in [PyTorch Lightning: `compile` for speed](https://lightning.ai/docs/pytorch/stable/advanced/compile.html) and [PyTorch Lightning: General speed-up tips](https://lightning.ai/docs/pytorch/stable/advanced/speed.html)
