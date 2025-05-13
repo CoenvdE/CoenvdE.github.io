@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "Bigger data in the cloud"
 description: "Chapter 3 of the Training at Larger Scale series"
-date: 2025-04-13
+date: 2025-04-15
 collection_id: training-at-larger-scale
 chapter_number: 3
 toc: true

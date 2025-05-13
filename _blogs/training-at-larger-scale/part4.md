@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "Optimizing the pipeline: Data"
 description: "Chapter 4 of the Training at Larger Scale series"
-date: 2025-04-14
+date: 2025-04-16
 collection_id: training-at-larger-scale
 chapter_number: 4
 toc: true

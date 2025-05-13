@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "The Setup"
 description: "Chapter 1 of the Training at Larger Scale series"
-date: 2025-04-11
+date: 2025-04-13
 collection_id: training-at-larger-scale
 chapter_number: 1
 toc: true
