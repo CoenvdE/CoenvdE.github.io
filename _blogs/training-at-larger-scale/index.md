@@ -93,4 +93,4 @@ I'll walk you through my process of implementing and optimizing everything. Each
 
 ## Acknowledgements
 
-I would like to thank [Laurens Geffert](https://github.com/JanLauGe), [Andrew Corbett](https://github.com/andycolbert) and [Joe Hamman](https://github.com/jhamman) for their helpful feedback and suggestions.
+I would like to thank [Laurens Geffert](https://github.com/JanLauGe), [Andrew Corbett](https://github.com/andycolbert) and [Joe Hamman](https://github.com/jhamman) for their helpful feedback and suggestions. I would like to thank [OceanOS](https://www.oceanos.earth/) for supporting me in writing this blog and enabling me to focus on research.

@@ -162,8 +162,8 @@ Initially, my data was stored in NetCDF files, which are common for scientific d
 
 When streaming data, the goal is to minimize both the amount of data loaded and the number of individual chunk requests made.
 
-1. **Too small chunks**: Results in many small I/O requests, creating overhead
-2. **Too large chunks**: Loads unnecessary data, wasting bandwidth and memory
+- **Too small chunks**: Results in many small I/O requests, creating overhead
+- **Too large chunks**: Loads unnecessary data, wasting bandwidth and memory
 
 I created a [script](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Optimizing%20the%20pipeline%3A%20Data/chunk_size_calculator.ipynb) to (handwavy) calculate the optimal chunk size by analyzing how different chunk dimensions affect data access patterns. For an image of 64x64 pixels:
 
