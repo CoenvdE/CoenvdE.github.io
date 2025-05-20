@@ -72,9 +72,25 @@ I'll walk you through my process of implementing and optimizing everything. Each
     This will create a virtual environment in `.venv` and install all necessary packages.
 
 4.  **Run the code:**
+
     ```bash
     uv run python your_script.py
     ```
+
     This will run your Python script in the virtual environment with all dependencies available.
 
-<!-- TODO THANK LAURENS ANDY JOE SOMEWHERE (BUT WHERE?) -->
+5.  **Optional: Set up a conda environment with Jupyter kernel:**
+
+    ```bash
+    # conda environment
+    conda create -n training-at-larger-scale python=3.12
+    conda activate training-at-larger-scale
+    pip install -r requirements.txt
+    python -m ipykernel install --user --name=training-at-larger-scale --display-name="Training at Larger Scale"
+    ```
+
+    You can now select the "Training at Larger Scale" kernel in Jupyter notebooks to use all the installed dependencies.
+
+## Acknowledgements
+
+I would like to thank [Laurens Geffert](https://github.com/JanLauGe), [Andrew Corbett](https://github.com/andycolbert) and [Joe Hamman](https://github.com/jhamman) for their helpful feedback and suggestions.

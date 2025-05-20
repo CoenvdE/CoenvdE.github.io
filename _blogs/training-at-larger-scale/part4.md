@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "Optimizing the pipeline: Data"
 description: "Chapter 4 of the Training at Larger Scale series"
-date: 2025-04-16
+date: 2025-04-23
 collection_id: training-at-larger-scale
 chapter_number: 4
 toc: true
@@ -79,8 +79,6 @@ Efficient data loading can significantly reduce training time — especially whe
   - **File Formats**: Choose ML-optimized formats (Parquet, TFRecord, WebDataset, Zarr)
 
 **Streaming Workers (Dask) vs DataLoader Workers (PyTorch)**
-
-<!-- TODO: add image -->
 
 PyTorch DataLoader and streaming frameworks like Dask can be combined effectively to stream cloud data into your training pipeline, but it's crucial to understand they operate at different layers of the data process:
 
@@ -162,17 +160,50 @@ Initially, my data was stored in NetCDF files, which are common for scientific d
 
 2. **Optimal Chunking**:
 
-**_How to calculate (handwavy) how big your chunks should be_**
+When streaming data, the goal is to minimize both the amount of data loaded and the number of individual chunk requests made.
 
-<!-- TODO: LAURENS CALCULATIONS -->
+1. **Too small chunks**: Results in many small I/O requests, creating overhead
+2. **Too large chunks**: Loads unnecessary data, wasting bandwidth and memory
 
-NOTE: SKIP THIS FOR FEEDBACK: properly write later, but basically chunks small enough so that in worst case scenario, the time it loads the least chunks possible and best case it loads exactly one batch of data (or something like this)
+I created a [script](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Optimizing%20the%20pipeline%3A%20Data/chunk_size_calculator.ipynb) to (handwavy) calculate the optimal chunk size by analyzing how different chunk dimensions affect data access patterns. For an image of 64x64 pixels:
+
+| chunk_size | minimal_chunks | maximal_chunks | minimal_bytes | maximal_bytes |
+| ---------- | -------------- | -------------- | ------------- | ------------- |
+| 8x8        | 64             | 81             | 4096          | 5184          |
+| 16x16      | 16             | 25             | 4096          | 6400          |
+| 32x32      | 4              | 9              | 4096          | 9216          |
+| 64x64      | 1              | 4              | 4096          | 16384         |
+| 128x128    | 1              | 4              | 16384         | 65536         |
+| 256x256    | 1              | 4              | 65536         | 262144        |
+| 512x512    | 1              | 4              | 262144        | 1048576       |
+| 1024x1024  | 1              | 4              | 1048576       | 4194304       |
+
+The table shows how different chunk sizes affect loading efficiency:
+
+- **Minimal chunks**: Fewest number of chunks needed to load the image data
+- **Maximal chunks**: Worst-case number of chunks needed (when image spans multiple chunks)
+- **Minimal/maximal bytes**: Corresponding data volume that must be transferred
+
+<div align="center" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+  <div>
+    <img src="/images/training-blog/bytes_chunksize.png" alt="Bytes vs Chunk Size" width="350">
+  </div>
+  <div>
+    <img src="/images/training-blog/chunks_chunksize.png" alt="Chunks vs Chunk Size" width="350">
+  </div>
+</div>
+<div align="center">
+  <p><em>Number of bytes and chunks for different chunk sizes</em></p>
+</div>
+
+The results show that a 64×64 chunk size (matching the image dimensions) provides the optimal balance:
+
+- It requires loading only 1-4 chunks per image
+- The data volume ranges from 4,096 to 16,384 bytes
+- Larger chunk sizes (128×128+) dramatically increase the bytes loaded
+- Smaller chunk sizes (8×8 to 32×32) require substantially more chunk requests
 
 3. **Parallelize I/O: Loading Efficiently**
-
-<!-- TODO -->
-
-TO READER: DOES IT GO IN TO MUCH DETAIL AS WE USE ZARR FOR THIS IN THE END? IS IT USEFUL FOR READERS?
 
 Some libraries, like Dask, can parallelize reading within a dataset, providing their own optimization parameters. However, be careful when combining these with PyTorch DataLoader workers, as this can lead to resource contention and diminishing returns.
 
@@ -189,52 +220,7 @@ When working with lazy-loading/streaming data into GPU memory, there are several
    - Cache eviction policies (to prevent OOM errors)
    - Persistent vs. in-memory caching (to prevent OOM errors)
 
-I will explain how to optimize these parameters in a little bit.
-
-**Usecase: Understanding Dask Execution Modes**
-
-Dask offers three execution modes, each with different trade-offs:
-
-1. **Single-Threaded Scheduler**
-
-   - Uses `dask.config.set(scheduler="single-threaded")`
-   - All tasks run sequentially in the main thread
-   - No parallelism but minimal overhead
-   - Useful for debugging or when relying entirely on DataLoader's parallelism
-   - In multi-GPU setups, each process runs its own sequential scheduler
-
-2. **Threaded Scheduler**
-
-   - Uses `dask.config.set(scheduler="threads", num_workers=dask_threads)`
-   - Tasks run in parallel using a thread pool within a single process
-   - Good for I/O-bound operations (like reading data chunks)
-   - Moderate parallelism with low overhead
-   - In multi-GPU setups, be careful of the total thread count (e.g., 8 processes × 4 threads = 32 threads)
-
-3. **Distributed Cluster**
-   - Uses `LocalCluster` and `Client` to create a full Dask cluster
-   - Runs multiple worker processes, each with multiple threads
-   - Provides process-level parallelism, bypassing Python's GIL
-   - Includes a dashboard for monitoring tasks and resource usage
-   - Options for per-GPU-process clusters or a single shared cluster
-   - Higher overhead but better isolation and monitoring capabilities
-
-For a single GPU with limited CPUs (e.g., 20 cores):
-
-- A threaded scheduler with 4-8 threads is often sufficient
-- A small distributed cluster (1-2 workers, 4 threads each) offers better monitoring
-
-For multi-GPU setups (e.g., 8 GPUs with 20 cores):
-
-- Be careful not to oversubscribe your CPU resources
-- If each GPU process uses its own Dask cluster, limit to 1 worker with 2 threads per process
-- Consider using a single shared Dask cluster for all GPU processes
-- Monitor CPU utilization to avoid contention
-
-The key is balancing parallelism against resource constraints. More parallelism isn't always better, especially when resources are shared across multiple GPU processes. Start conservative and scale up while monitoring performance.
-
-4. **Caching and Locality**: For remote data, implement caching strategies to avoid repeatedly downloading the same data. Consistent access patterns help leverage OS-level caching.
-
+I will explain how to optimize these (usecase) parameters in the [appendix](#appendix-optimizing-dask).
 If your data pipeline doesn't use these specialized libraries, you can focus solely on DataLoader optimization.
 
 In summary, dataset-level optimization is about making data access as efficient as possible. By storing data smartly (chunked, compressed appropriately, possibly colocated with training if remote), and by only doing minimal necessary work for each access, you ensure that the raw data supply is fast. Once that is in place, DataLoader-level tuning can further amplify the throughput.
@@ -306,16 +292,14 @@ If you're using Dask, you can also leverage the Dask dashboard to monitor:
 
 ### Example Benchmark Results
 
-Below are example benchmark results showing the dramatic difference between an unoptimized baseline configuration and an optimized one:
-
-<!-- #TODO: update images so that it shows the 1400 vs 40 seconds -->
+Below are example benchmark results showing the significant difference between an unoptimized baseline configuration and an optimized one:
 
 <div align="center">
-  <img src="/images/training-blog/benchmark_logs_bad_baseline.png" alt="Unoptimized Baseline"  width="400">
+  <img src="/images/training-blog/benchmark_bad.png" alt="Unoptimized Baseline"  width="400">
 </div>
 
 <div align="center">
-  <img src="/images/training-blog/benchmark_logs_good_baseline.png" alt="Optimized Configuration"  width="400">
+  <img src="/images/training-blog/benchmark_good.png" alt="Optimized Configuration"  width="400">
   <p><em>Unoptimized baseline vs optimized configuration performance after 3 epochs with 50 batches</em></p>
 </div>
 
@@ -323,7 +307,7 @@ Below are example benchmark results showing the dramatic difference between an u
   <small>Source: <a href="https://blog.dailydoseofds.com/p/4-strategies-for-multi-gpu-training">Daily Dose of Data Science</a></small>
 </div>
 
-With these simple optimizations, my dataloader became 5 times faster than the baseline. The people that made the first version of this benchmark script was able to run 15x faster. This performance improvement is transformative for training - where others might only complete 50 epochs in a given timeframe, I was able to run 250 epochs. This acceleration dramatically reduces overall training time and allows for more experimentation and model iterations.
+With these simple optimizations, my dataloader became 35 times faster than the baseline. The people that made the first version of this benchmark script was able to run 15x faster. This performance improvement is transformative for training - where others might only complete 4 epochs in a given timeframe, I was able to run 140. This acceleration dramatically reduces overall training time and allows for more experimentation and model iterations.
 
 ### Practical Optimization Approach
 
@@ -388,3 +372,51 @@ Use the [plotting notebook](https://github.com/CoenvdE/Training-at-larger-scale-
 Note that network bandwidth varies dramatically between environments. When moving from local development (WiFi) to cloud training, you may see orders of magnitude improvement in data loading speed. In my case, I observed a 100x decrease in wait time when moving to the cloud. Always benchmark in the same environment where you'll be training, as the optimal configuration can differ significantly between local and cloud setups.
 
 Now that we have the data-part of the pipeline optimized, lets focus on [optimizing the Model](/blogs/training-at-larger-scale/part5/)
+
+### Appendix: Optimizing Dask
+
+---
+
+**Usecase: Understanding Dask Execution Modes**
+
+Dask offers three execution modes, each with different trade-offs:
+
+1. **Single-Threaded Scheduler**
+
+   - Uses `dask.config.set(scheduler="single-threaded")`
+   - All tasks run sequentially in the main thread
+   - No parallelism but minimal overhead
+   - Useful for debugging or when relying entirely on DataLoader's parallelism
+   - In multi-GPU setups, each process runs its own sequential scheduler
+
+2. **Threaded Scheduler**
+
+   - Uses `dask.config.set(scheduler="threads", num_workers=dask_threads)`
+   - Tasks run in parallel using a thread pool within a single process
+   - Good for I/O-bound operations (like reading data chunks)
+   - Moderate parallelism with low overhead
+   - In multi-GPU setups, be careful of the total thread count (e.g., 8 processes × 4 threads = 32 threads)
+
+3. **Distributed Cluster**
+   - Uses `LocalCluster` and `Client` to create a full Dask cluster
+   - Runs multiple worker processes, each with multiple threads
+   - Provides process-level parallelism, bypassing Python's GIL
+   - Includes a dashboard for monitoring tasks and resource usage
+   - Options for per-GPU-process clusters or a single shared cluster
+   - Higher overhead but better isolation and monitoring capabilities
+
+For a single GPU with limited CPUs (e.g., 20 cores):
+
+- A threaded scheduler with 4-8 threads is often sufficient
+- A small distributed cluster (1-2 workers, 4 threads each) offers better monitoring
+
+For multi-GPU setups (e.g., 8 GPUs with 20 cores):
+
+- Be careful not to oversubscribe your CPU resources
+- If each GPU process uses its own Dask cluster, limit to 1 worker with 2 threads per process
+- Consider using a single shared Dask cluster for all GPU processes
+- Monitor CPU utilization to avoid contention
+
+The key is balancing parallelism against resource constraints. More parallelism isn't always better, especially when resources are shared across multiple GPU processes. Start conservative and scale up while monitoring performance.
+
+4. **Caching and Locality**: For remote data, implement caching strategies to avoid repeatedly downloading the same data. Consistent access patterns help leverage OS-level caching.

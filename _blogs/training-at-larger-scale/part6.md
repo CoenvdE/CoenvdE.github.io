@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "What Is Next"
 description: "Chapter 6 of the Training at Larger Scale series"
-date: 2025-04-18
+date: 2025-04-25
 collection_id: training-at-larger-scale
 chapter_number: 6
 toc: true

@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "Optimizing the pipeline: Model"
 description: "Chapter 5 of the Training at Larger Scale series"
-date: 2025-04-17
+date: 2025-04-24
 collection_id: training-at-larger-scale
 chapter_number: 5
 toc: true
@@ -115,8 +115,7 @@ The benchmark tool will create several files in the specified output directory:
 
 3. **Optimizer**:
    - Experiment with different optimizers and their settings
-   - TO READER: TODO: This is a big topic in just one bullet point! More detail here? Or a link to more information? or is it fine?
-   <!-- TODO: add more detail -->
+   - a good starting point is using the AdamW optimizer with hyperparameters from related literature.
 
 ## Analyzing Results
 
