@@ -44,7 +44,22 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/repositories/";
           },
-        },{id: "blogs-multi-gpu-training",
+        },{id: "blogs-image-paths",
+          title: 'Image Paths',
+          description: "",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/training-at-larger-scale/image-paths/";
+            },},{id: "blogs-training-at-larger-scale",
+          title: 'Training at larger scale',
+          description: "A guide on scaling machine learning from small to larger training setups.",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/training-at-larger-scale/index/";
+            },},{id: "blogs-the-setup",
+          title: 'The Setup',
+          description: "Chapter 1 of the Training at Larger Scale series",
+          section: "Blogs",handler: () => {
+              window.location.href = "/blogs/training-at-larger-scale/part1/";
+            },},{id: "blogs-multi-gpu-training",
           title: 'Multi-GPU training',
           description: "Chapter 2 of the Training at Larger Scale series",
           section: "Blogs",handler: () => {
@@ -71,24 +86,9 @@ ninja.data = [{
               window.location.href = "/blogs/training-at-larger-scale/part6/";
             },},{id: "blogs-appendix",
           title: 'Appendix',
-          description: "Appendix for the Training at Larger Scale series",
+          description: "Chapter 7 of the Training at Larger Scale series",
           section: "Blogs",handler: () => {
-              window.location.href = "/blogs/training-at-larger-scale/appendix/";
-            },},{id: "blogs-image-paths",
-          title: 'Image Paths',
-          description: "",
-          section: "Blogs",handler: () => {
-              window.location.href = "/blogs/training-at-larger-scale/image-paths/";
-            },},{id: "blogs-training-at-larger-scale",
-          title: 'Training at larger scale',
-          description: "A guide on scaling machine learning from small to larger training setups.",
-          section: "Blogs",handler: () => {
-              window.location.href = "/blogs/training-at-larger-scale/index/";
-            },},{id: "blogs-the-setup",
-          title: 'The Setup',
-          description: "Chapter 1 of the Training at Larger Scale series",
-          section: "Blogs",handler: () => {
-              window.location.href = "/blogs/training-at-larger-scale/part1/";
+              window.location.href = "/blogs/training-at-larger-scale/part7/";
             },},{
       id: 'light-theme',
       title: 'Change theme to light',
