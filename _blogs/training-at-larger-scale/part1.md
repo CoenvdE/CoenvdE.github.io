@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "The Setup"
 description: "Chapter 1 of the Training at Larger Scale series"
-date: 2025-04-20
+date: 2025-04-21
 collection_id: training-at-larger-scale
 chapter_number: 1
 toc: true
@@ -15,7 +15,7 @@ giscus_comments: true
 Before diving into optimizations, I will walk you through some best practices and a baseline to give you a solid starting point. Note that my model and pipeline were actually a lot more complicated, but my goal is not how to recreate my complicated pipeline, it is to show you simple examples for you to optimize and improve your own.
 
 ```
-0. The Setup/
+1. The Setup/
 ├── config/
 │   └── config.yaml
 ├── output/
@@ -43,24 +43,24 @@ Before diving into optimizations, I will walk you through some best practices an
 
 My model is a (Masked) Autoencoder (with some cool stuff that does not matter for this guide) and has the following key components:
 
-- [`pytorch_encoder`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/0.%20The%20Setup/src/model/pytorch_encoder.py)
-- [`pytorch_decoder`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/0.%20The%20Setup/src/model/pytorch_decoder.py)
-- [`pytorch_model`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/0.%20The%20Setup/src/model/pytorch_model.py) – responsible for the forward pass and loss calculation
+- [`pytorch_encoder`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/src/model/pytorch_encoder.py)
+- [`pytorch_decoder`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/src/model/pytorch_decoder.py)
+- [`pytorch_model`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/src/model/pytorch_model.py) – responsible for the forward pass and loss calculation
 
 ### My Dataset
 
 ---
 
-- a [`pytorch_dataset`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/0.%20The%20Setup/src/data/pytorch_dataset.py)
+- a [`pytorch_dataset`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/src/data/pytorch_dataset.py)
   I use a big, geospatial dataset for my training. For this tutorial, I created a dummy example, but feel free to swap it out for e.g. [CIFAR](https://www.cs.toronto.edu/~kriz/cifar.html) or any other dataset you like. It is important that this is wrapped into a `torch.utils.data.Dataset` object.  
-  We will come back to data in more detail in [Chapter 2](/blogs/training-at-larger-scale/part3/).
+  We will come back to data in more detail in [Chapter 3](/blogs/training-at-larger-scale/part3/).
 
 ### Reproducibility
 
 ---
 
 Reproducibility is very important! It allows you and others to reliably verify and compare results. In research, it ensures findings are valid and consistent. For practitioners, it makes debugging and iterative experimentation much easier. Seeding is one of the prerequisites for reproducibility. It ensures consistent pseudo random number generation. Different frameworks may use different generators.
-You need to seed everything (torch, numpy, python, etc.). See the `set_seed()` function in [pytorch_train.py](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/0.%20The%20Setup/pytorch_train.py) for an example implementation.
+You need to seed everything (torch, numpy, python, etc.). See the `set_seed()` function in [pytorch_train.py](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/pytorch_train.py) for an example implementation.
 
 ```python
 def set_seed(seed: int = 13):
@@ -71,8 +71,8 @@ def set_seed(seed: int = 13):
     random.seed(seed)
 ```
 
-Note that I use a `set_seed` function to keep everything reproducible in the [`pytorch_train.py` file](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/0.%20The%20Setup/pytorch_train.py). By default, this seed does _not_ propagate to the Dataloader. This is why I create a `generator` for the data loader that has a set seed, for which I use the seed from the `set_seed` function.
-Pytorch dataloader workers need to be seeded, because each worker runs in its own process. Without explicit seeding, they will use random seeds, leading to **non-deterministic data loading and augmentations**. Look at the `worker_init_fn` in the [`pytorch_train.py` file](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/0.%20The%20Setup/pytorch_train.py) for an example.
+Note that I use a `set_seed` function to keep everything reproducible in the [`pytorch_train.py` file](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/pytorch_train.py). By default, this seed does _not_ propagate to the Dataloader. This is why I create a `generator` for the data loader that has a set seed, for which I use the seed from the `set_seed` function.
+Pytorch dataloader workers need to be seeded, because each worker runs in its own process. Without explicit seeding, they will use random seeds, leading to **non-deterministic data loading and augmentations**. Look at the `worker_init_fn` in the [`pytorch_train.py` file](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/pytorch_train.py) for an example.
 
 For **reproducibility during debugging and testing**, set the following:
 
@@ -92,8 +92,7 @@ When both flags are set, you get consistent, reproducible behavior across all tr
 
 ---
 
-I use config files for the model, dataloader, training, optimizer, and scheduler arguments. This is best practice, allowing quick adjustments to hyperparameters without modifying the code. This makes experimentation and testing more efficient.  
-An example of a config file with a few of these parameters is given in this [config.yaml](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/0.%20The%20Setup/config/config.yaml)
+I use config files for the model, dataloader, training, optimizer, and scheduler arguments. This is best practice, allowing quick adjustments to hyperparameters without modifying the code. This makes experimentation and testing more efficient. An example of a config file with a few of these parameters is given in this [config.yaml](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/config/config.yaml)
 
 ### Unittests
 
@@ -105,21 +104,20 @@ Before moving forward, ensure your model actually works. It is important to writ
 - Shape consistency
 - Correct device allocation
 
-This first one is very important and can save you a lot of trouble debugging, I made an example test for this in my [`.tests`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/0.%20The%20Setup/tests/test_parameters.py) folder.
+This first one is very important and can save you a lot of trouble debugging, I made an example [test](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/tests/test_parameters.py) for this.
 
 ```bash
 uv run python -m unittest tests/test_parameters.py
 ```
 
-Additionally, I set up automated testing — every push to the GitHub branch runs these tests.  
-For this, look at the [`.github/workflows/test.yml`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/0.%20The%20Setup/.github/workflows/test.yml) file. While unit tests don't catch everything, they help ensure the code runs smoothly (in the cloud) and prevent accidental breakage. Automatically running them via GitHub gives you good feedback on if you break anything! This can potentially save you a lot of time and money, since it reduces the likelihood of a situation where you spin up a large GPU cluster for model training and then have to spend an hour or more fixing bugs that you failed to catch before.
+Additionally, I set up automated testing — every push to the GitHub branch runs these tests. For this, look at the [`.github/workflows/test.yml`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/.github/workflows/test.yml) file. While unit tests don't catch everything, they help ensure the code runs smoothly (in the cloud) and prevent accidental breakage. Automatically running them via GitHub gives you good feedback on if you break anything! This can potentially save you a lot of time and money, since it reduces the likelihood of a situation where you spin up a large GPU cluster for model training and then have to spend an hour or more fixing bugs that you failed to catch before.
 
 ### Tracking & Experiment Logging (WandB)
 
 ---
 
 Proper tracking is essential for monitoring model performance and debugging issues.  
-I use Weights & Biases (WandB), but alternatives like MLflow also work.
+I [use](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/pytorch_train.py#L100) Weights & Biases (WandB), but alternatives like MLflow also work.
 
 What to track?
 
@@ -153,11 +151,11 @@ This step ensured my architecture was robust, flexible, and ready for large-scal
 
 ### Environmental Impact Monitoring
 
-AI models consume significant computational resources and energy. Monitoring environmental impact helps quantify your carbon footprint, which is important for sustainability and responsible AI development. For this reason I made a [monitoring script](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/0.%20The%20Setup/monitor_training.py) to monitor the emissions of any training run. You do not need to modify anything in your training script, just run my script with your training command as shown below. My script is based on the [codecarbon](https://github.com/mlco2/codecarbon) package. You may need to fill in the password of your machine to give codecarbon access to monitoring your hardware.
+AI models consume significant computational resources and energy. Monitoring environmental impact helps quantify your carbon footprint, which is important for sustainability and responsible AI development. For this reason I made a [monitoring script](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/monitor_training.py) to monitor the emissions of any training run. You do not need to modify anything in your training script, just run my script with your training command as shown below. My script is based on the [codecarbon](https://github.com/mlco2/codecarbon) package. You may need to fill in the password of your machine to give codecarbon access to monitoring your hardware.
 
 ```bash
 # Run your training with emissions monitoring
-python monitor_training.py "python pytorch_train.py"
+uv run python monitor_training.py "python pytorch_train.py"
 ```
 
 For each run, the script creates a dedicated folder with:

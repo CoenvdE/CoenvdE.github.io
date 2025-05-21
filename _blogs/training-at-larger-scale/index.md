@@ -8,6 +8,14 @@ display_chapters: true
 
 # Training at larger scale
 
+_By [Coen van den Elsen](https://coenvde.github.io/)_
+
+At the end of this blog, you will be able to Iterate and prototype faster, Significantly reduce training times, Lower environmental and training impact, Work with data from anywhere and Be properly reproducible
+
+<!-- TODO: check if this is nice to have or should be removed -->
+
+---
+
 ### Why am I writing this?
 
 At university, in online blogs, and across tutorials, training machine learning models is often well explained—especially for small-scale setups. These typically involve datasets that fit on a local hard drive, training on a single GPU, and straightforward implementations without worrying about fast data loading, datasets that do not fit onto a local hard drive (lazy loading), or multi-GPU utilization/optimization.
@@ -34,16 +42,17 @@ This blog is available on [GitHub](https://github.com/coenvde/training-at-larger
 
 ## What's next
 
-I'll walk you through my process of implementing and optimizing everything. Each chapter folder contains code examples that demonstrate the concepts discussed in the corresponding markdown file. To run the examples, navigate to the specific chapter folder on GitHub and follow the instructions as specified in the markdown files. I strongly advise to run through them in order, as they build on top of each other and I expect previous chapters as background knowledge for the following one. I especially encourage you to get familiar with pytorch lightning ([0. The Setup](/blogs/training-at-larger-scale/part1/)) as it will streamline, improve and speed up your workflow a lot.
+I'll walk you through my process of implementing and optimizing everything. Each chapter folder contains code examples that demonstrate the concepts discussed in the corresponding markdown file. To run the examples, navigate to the specific chapter folder on GitHub and follow the instructions as specified in the markdown files. I strongly advise to run through them in order, as they build on top of each other and I expect previous chapters as background knowledge for the following one. I especially encourage you to get familiar with pytorch lightning ([1. The Setup](/blogs/training-at-larger-scale/part1/)) as it will streamline, improve and speed up your workflow a lot.
 
 ## Chapters
 
-1. [0. The Setup](/blogs/training-at-larger-scale/part1/) - Overview of the initial setup as a starting point
-2. [1. Multi-GPU training](/blogs/training-at-larger-scale/part2/) - Scaling from a single GPU to multiple GPUs and using Lightning for better code
-3. [2. Bigger data in the cloud](/blogs/training-at-larger-scale/part3/) - Working with bigger data
-4. [3. Optimizing the pipeline: Data](/blogs/training-at-larger-scale/part4/) - Optimizing: Maximizing DataLoader efficiency
-5. [4. Optimizing the pipeline: Model](/blogs/training-at-larger-scale/part5/) - Optimizing: Profiling and fixing slowdowns
-6. [5. What Is Next](/blogs/training-at-larger-scale/part6/) - Further optimizations, experiments and improvements as the final step before training
+1. [The Setup](/blogs/training-at-larger-scale/part1/) - Overview of the initial setup as a starting point
+2. [Multi-GPU training](/blogs/training-at-larger-scale/part2/) - Scaling from a single GPU to multiple GPUs and using Lightning for better code
+3. [Bigger data in the cloud](/blogs/training-at-larger-scale/part3/) - Properly working with (bigger) data (in the cloud)
+4. [Optimizing the pipeline: Data](/blogs/training-at-larger-scale/part4/) - Optimizing: Maximizing Dataset and DataLoader efficiency
+5. [Optimizing the pipeline: Model](/blogs/training-at-larger-scale/part5/) - Optimizing: Profiling and fixing slowdowns
+6. [What Is Next](/blogs/training-at-larger-scale/part6/) - Final tips and tricks as the last step before training
+7. [Appendix](/blogs/training-at-larger-scale/appendix/) - Appendix with references and additional information
 
 ## Installation
 
@@ -93,4 +102,4 @@ I'll walk you through my process of implementing and optimizing everything. Each
 
 ## Acknowledgements
 
-I would like to thank [Laurens Geffert](https://github.com/JanLauGe), [Andrew Corbett](https://github.com/andycolbert) and [Joe Hamman](https://github.com/jhamman) for their helpful feedback and suggestions. I would like to thank [OceanOS](https://www.oceanos.earth/) for supporting me in writing this blog and enabling me to focus on research.
+I would like to thank [Laurens Geffert](https://github.com/JanLauGe), [Andrew Corbett](https://github.com/andycolbert) and [Joe Hamman](https://github.com/jhamman) for their helpful feedback and suggestions. I would like to thank [OceanOS](https://www.oceanos.earth/) for supporting me in writing this blog and enabling me to focus on research. I would like to thank [Mohammad Islam](https://www.linkedin.com/in/mohammadniaz/) for his helpful feedback and suggestions.
