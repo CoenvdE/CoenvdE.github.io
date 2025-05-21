@@ -1,10 +1,10 @@
 ---
 layout: blog_collection
 title: "Appendix"
-description: "Appendix for the Training at Larger Scale series"
+description: "Chapter 7 of the Training at Larger Scale series"
 date: 2025-04-27
 collection_id: training-at-larger-scale
-chapter_number: appendix
+chapter_number: 7
 toc: true
 categories: [Training, ML, GPU]
 giscus_comments: true

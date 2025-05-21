@@ -52,7 +52,7 @@ I'll walk you through my process of implementing and optimizing everything. Each
 4. [Optimizing the pipeline: Data](/blogs/training-at-larger-scale/part4/) - Optimizing: Maximizing Dataset and DataLoader efficiency
 5. [Optimizing the pipeline: Model](/blogs/training-at-larger-scale/part5/) - Optimizing: Profiling and fixing slowdowns
 6. [What Is Next](/blogs/training-at-larger-scale/part6/) - Final tips and tricks as the last step before training
-7. [Appendix](/blogs/training-at-larger-scale/appendix/) - Appendix with references and additional information
+7. [Appendix](/blogs/training-at-larger-scale/part7/) - Appendix with references and additional information
 
 ## Installation
 
