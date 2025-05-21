@@ -22,35 +22,14 @@ os.makedirs(image_dir, exist_ok=True)
 
 # Get a list of all markdown files
 md_files = [f for f in os.listdir(source_dir) if f.endswith('.md') and f != 'README.md']
-
-# Custom sorting function to place Appendix at the end
-def sort_md_files(filename):
-    # Check if this is the Appendix file
-    if 'appendix' in filename.lower():
-        return (999, filename)  # High number to sort last
-    
-    # Extract number from filename if it exists
-    match = re.match(r'(\d+)', filename)
-    if match:
-        return (int(match.group(1)), filename)
-    
-    # For any other non-numbered files
-    return (500, filename)  # Middle priority for unnumbered files
-
-# Sort the files with the custom function
-md_files.sort(key=sort_md_files)
+# Sort by the number at the beginning of the filename
+md_files.sort(key=lambda x: int(x.split('.')[0]) if x.split('.')[0].isdigit() else 999)
 
 # Create mapping of original md files to their Jekyll URLs
 link_mapping = {}
 for i, md_file in enumerate(md_files):
-    # Set chapter number - regular for most files
-    if 'appendix' in md_file.lower():
-        # Special handling for appendix - use "appendix" instead of number
-        page_url = f"/blogs/training-at-larger-scale/appendix/"
-    else:
-        chapter_num = i + 1
-        page_url = f"/blogs/training-at-larger-scale/part{chapter_num}/"
-        
+    chapter_num = i + 1
+    page_url = f"/blogs/training-at-larger-scale/part{chapter_num}/"
     link_mapping[md_file] = page_url
     
     # Also add variants with URL encoding to handle different link formats
@@ -150,23 +129,6 @@ def fix_links(content, md_file_original_name):
     content = re.sub(r'\[([^\]]+)\]\(([^)]+?)\)', github_link_replacer_closure, content)
     # --- END New GitHub link conversion ---
 
-    # Add specific handling for Appendix.md links
-    appendix_pattern = r'\[([^\]]+)\]\((Appendix\.md(?:#[^)]*)?)\)'
-    content = re.sub(appendix_pattern, r'[\1](/blogs/training-at-larger-scale/appendix/\2)', content)
-    
-    # Handle case-insensitive variations like appendix.md
-    appendix_pattern_ci = r'\[([^\]]+)\]\(((?i:appendix)\.md(?:#[^)]*)?)\)'
-    content = re.sub(appendix_pattern_ci, r'[\1](/blogs/training-at-larger-scale/appendix/\2)', content)
-    
-    # Handle variations with paths like ./Appendix.md or ../Appendix.md
-    appendix_pattern_path = r'\[([^\]]+)\]\((?:\./|\.\./)?(?i:appendix)\.md((?:#[^)]*)?)?\)'
-    content = re.sub(appendix_pattern_path, r'[\1](/blogs/training-at-larger-scale/appendix/\2)', content)
-    
-    # Clean up double .md extension if any
-    content = re.sub(r'(/blogs/training-at-larger-scale/appendix/(?i:appendix)\.md)', r'/blogs/training-at-larger-scale/appendix/', content)
-    # But keep the anchor if it exists
-    content = re.sub(r'(/blogs/training-at-larger-scale/appendix/)#', r'\1#', content)
-
     # First, fix regular markdown links [text](file.md)
     # This loop is now mainly for .md files that might not have been caught by link_mapping in the new section,
     # or if the new section returned original_link_md for an .md file.
@@ -181,15 +143,10 @@ def fix_links(content, md_file_original_name):
         content = re.sub(pattern, r'[\1](' + new_url + r')', content)
     
     # Fix any remaining links that might have different formats
-    for i, md_file in enumerate(md_files):
+    for md_file in md_files:
         base_name = os.path.splitext(md_file)[0]
-        
-        # Determine the correct URL based on whether it's an appendix
-        if 'appendix' in md_file.lower():
-            new_url = f"/blogs/training-at-larger-scale/appendix/"
-        else:
-            chapter_num = i + 1
-            new_url = f"/blogs/training-at-larger-scale/part{chapter_num}/"
+        chapter_num = md_files.index(md_file) + 1
+        new_url = f"/blogs/training-at-larger-scale/part{chapter_num}/"
         
         # Replace any variant of the filename in links
         patterns = [
@@ -208,30 +165,27 @@ def fix_links(content, md_file_original_name):
     
     # Additional fix for remaining chapter references that have a specific pattern
     # Like [Chapter 3](3. Optimizing the pipeline: Data.md)
-    chapter_pattern = r'\[(Chapter\s+\d+|[^\]]+)\]\((\d+\.[^)]+\.md)\)' # Made .md explicit
-    
-    # Check each chapter reference
-    for match in re.finditer(chapter_pattern, content):
-        text = match.group(1)
-        filename = match.group(2)
+    for i, md_file_loop_var in enumerate(md_files): # Renamed md_file to avoid clash with outer scope if any future nesting
+        chapter_num_loop = i + 1 # Renamed chapter_num
+        # chapter_name_loop = os.path.splitext(md_file_loop_var)[0] # Renamed chapter_name
+        # chapter_name_loop = re.sub(r'^\d+\.\s*\', '', chapter_name_loop)
+        new_url_loop = f"/blogs/training-at-larger-scale/part{chapter_num_loop}/" # Renamed new_url
         
-        # Try to find which file it corresponds to by checking beginning numbers
-        file_num = re.match(r'^(\d+)', filename)
-        if file_num:
-            num = int(file_num.group(1))
-            # Find the actual chapter number in our ordered list
-            found_index = None
-            for i, md_f in enumerate(md_files):
-                if md_f.startswith(f"{num}."):
-                    found_index = i
-                    break
+        # This regex catches chapter references like "[Chapter X](...)" or references to numbered markdown files
+        # The target file (group 2) should be specific to an .md file.
+        chapter_pattern = r'\[(Chapter\s+\d+|[^\]]+)\]\((\d+\.[^)]+\.md)\)' # Made .md explicit
+        
+        # Check each chapter reference
+        for match in re.finditer(chapter_pattern, content):
+            text = match.group(1)
+            filename = match.group(2)
             
-            if found_index is not None:
-                # If this is a chapter file, create the correct URL
-                if 'appendix' in md_files[found_index].lower():
-                    content = content.replace(match.group(0), f"[{text}](/blogs/training-at-larger-scale/appendix/)")
-                else:
-                    content = content.replace(match.group(0), f"[{text}](/blogs/training-at-larger-scale/part{found_index+1}/)")
+            # Try to find which file it corresponds to by checking beginning numbers
+            file_num = re.match(r'^(\d+)', filename)
+            if file_num:
+                num = int(file_num.group(1))
+                if 1 <= num <= len(md_files):  # Check if valid chapter number starting from 1
+                    content = content.replace(match.group(0), f"[{text}](/blogs/training-at-larger-scale/part{num}/)")
     
     # First, replace any already fixed paths to avoid double-fixing
     # This handles cases where "/images/training-blog/" might already be in the content
@@ -276,38 +230,6 @@ def fix_links(content, md_file_original_name):
     content = content.replace("src=\"/images/training-blog/images/", "src=\"/images/training-blog/")
     content = content.replace("src='/images/training-blog/images/", "src='/images/training-blog/")
     
-    # Handle specific error patterns mentioned in the GitHub Actions build
-    specific_errors = [
-        r'\[([^\]]+)\]\((?:\.\.\/)*part\d+\/Appendix\.md#([^)]+)\)',  # Links like [text](part5/Appendix.md#section)
-        r'\[([^\]]+)\]\(file:\/\/.*\/part\d+\/Appendix\.md#([^)]+)\)', # Links with absolute file:// URLs
-        r'\[([^\]]+)\]\(\/.*\/part\d+\/Appendix\.md#([^)]+)\)'         # Links with absolute paths
-    ]
-    
-    for pattern in specific_errors:
-        content = re.sub(pattern, r'[\1](/blogs/training-at-larger-scale/appendix/#\2)', content)
-        
-    # Fix for direct anchor links to sections in the Appendix from other chapters
-    # This can appear in multiple formats:
-    section_patterns = [
-        # Match patterns like [text](Appendix.md#1-overview) 
-        r'\[([^\]]+)\]\((?:\.\/|\.\.\/)*(?:appendix|Appendix)\.md#(\d+-[^)]+)\)',
-        # Match patterns like [text](#1-overview) where we need to check if it's a reference to an Appendix section
-        r'\[([^\]]+)\]\(#(\d+-\w[^)]+)\)'
-    ]
-    
-    for pattern in section_patterns:
-        for match in re.finditer(pattern, content):
-            link_text = match.group(1)
-            section_ref = match.group(2)
-            
-            # Check if this appears to be a reference to the Appendix (heuristic)
-            if "appendix" in link_text.lower() or (
-                re.match(r'\d+', section_ref) and 
-                any(keyword in link_text.lower() for keyword in ["overview", "optimizing", "profiling", "advantage"])
-            ):
-                replacement = f"[{link_text}](/blogs/training-at-larger-scale/appendix/#{section_ref})"
-                content = content.replace(match.group(0), replacement)
-
     return content
 
 # Apply link fixing to README content for the index page
@@ -334,26 +256,17 @@ print(f"Created index.md at {index_file_path}")
 # Process each markdown file in the blog repo
 for i, md_file in enumerate(md_files):
     source_file_path = os.path.join(source_dir, md_file)
-    
-    # Determine if this is the appendix file
-    is_appendix = 'appendix' in md_file.lower()
-    
-    if is_appendix:
-        destination_file_path = os.path.join(destination_dir, "appendix.md")
-        chapter_name = "Appendix"
-        chapter_num = "appendix"
-    else:
-        chapter_num = i + 1
-        destination_file_path = os.path.join(destination_dir, f"part{chapter_num}.md")
-        
-        # Extract chapter name from the filename - remove numbers and file extension
-        chapter_name = os.path.splitext(md_file)[0]
-        # Remove any leading numbers and dots/spaces from the filename (like "0. " or "1. ")
-        chapter_name = re.sub(r'^\d+\.\s*', '', chapter_name)
+    chapter_num = i + 1
+    destination_file_path = os.path.join(destination_dir, f"part{chapter_num}.md")
 
     # Read the content of the source file
     with open(source_file_path, "r") as f:
         content = f.read()
+
+    # Extract chapter name from the filename - remove numbers and file extension
+    chapter_name = os.path.splitext(md_file)[0]
+    # Remove any leading numbers and dots/spaces from the filename (like "0. " or "1. ")
+    chapter_name = re.sub(r'^\d+\.\s*', '', chapter_name)
     
     # Also extract the first heading as a fallback
     title_match = re.search(r'^# (.+)', content, re.MULTILINE)
@@ -385,30 +298,17 @@ for i, md_file in enumerate(md_files):
         f.write("---\n")
         f.write("layout: blog_collection\n")
         f.write(f"title: \"{chapter_name}\"\n")
-        
-        if is_appendix:
-            f.write(f"description: \"Appendix for the Training at Larger Scale series\"\n")
-        else:
-            f.write(f"description: \"Chapter {chapter_num} of the Training at Larger Scale series\"\n")
-            
+        f.write(f"description: \"Chapter {chapter_num} of the Training at Larger Scale series\"\n")
         f.write(f"date: {post_date}\n")
         f.write("collection_id: training-at-larger-scale\n")
-        
-        if is_appendix:
-            f.write("chapter_number: appendix\n")
-        else:
-            f.write(f"chapter_number: {chapter_num}\n")
-            
+        f.write(f"chapter_number: {chapter_num}\n")
         f.write("toc: true\n")
         f.write("categories: [Training, ML, GPU]\n")
         f.write("giscus_comments: true\n")
         f.write("---\n\n")
         f.write(content)
 
-    if is_appendix:
-        print(f"Created appendix: {destination_file_path} with title '{chapter_name}'")
-    else:
-        print(f"Created blog post {chapter_num}: {destination_file_path} with title '{chapter_name}'")
+    print(f"Created blog post {chapter_num}: {destination_file_path} with title '{chapter_name}'")
 
 # Step 3: Clean up - remove the cloned repository
 print("Cleaning up...")
