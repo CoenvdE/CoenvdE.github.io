@@ -1,18 +1,16 @@
 ---
 layout: blog_collection
 title: "Training at larger scale"
-description: "A guide on scaling machine learning from small to larger training setups."
+description: "A guide on scaling machine learning from small to larger training setups. At the end of this blog, you will be able to Iterate and prototype faster, Significantly reduce training times, Lower environmental and training impact, Work with data from anywhere and Be properly reproducible."
 collection_id: training-at-larger-scale
 display_chapters: false
 ---
 
 # Training at larger scale
+*By [Coen van den Elsen](https://coenvde.github.io/)*
 
-_By [Coen van den Elsen](https://coenvde.github.io/)_
-
-At the end of this blog, you will be able to Iterate and prototype faster, Significantly reduce training times, Lower environmental and training impact, Work with data from anywhere and Be properly reproducible
-
-<!-- TODO: check if this is nice to have or should be removed -->
+<!-- At the end of this blog, you will be able to Iterate and prototype faster, Significantly reduce training times, Lower environmental and training impact, Work with data from anywhere and Be properly reproducible
+TODO: check if this is nice to have or should be removed -->
 
 ---
 
@@ -20,7 +18,7 @@ At the end of this blog, you will be able to Iterate and prototype faster, Signi
 
 At university, in online blogs, and across tutorials, training machine learning models is often well explained—especially for small-scale setups. These typically involve datasets that fit on a local hard drive, training on a single GPU, and straightforward implementations without worrying about fast data loading, datasets that do not fit onto a local hard drive (lazy loading), or multi-GPU utilization/optimization.
 
-However, when transitioning to a larger setup —not massive SOTA-scale training across thousands of GPUs with internet-scale data, but something in between— good resources are harder to find and are scattered around. I call this the "larger-scale training" realm: working with datasets that are a few terabytes (too large for local storage but far from internet-scale) and training across multiple GPUs (around 10, not 100s or 1000s).
+However, when transitioning to a larger setup —not massive SOTA-scale training across thousands of GPUs with internet-scale data, but something in between— good resources are harder to find and are scattered around. I call this the "larger-scale training" realm: working with datasets that are a few terabytes (too large for local storage but far from internet-scale) and training across multiple GPUs (around 10, not 100s or 1000s). 
 
 <div align="center">
   <img src="/images/training-blog/intro_image_larger_scale.png" alt="Scaling up training" width="400"/>
@@ -46,7 +44,7 @@ I'll walk you through my process of implementing and optimizing everything. Each
 
 ## Chapters
 
-1. [The Setup](/blogs/training-at-larger-scale/part1/) - Overview of the initial setup as a starting point
+1. [The Setup](/blogs/training-at-larger-scale/part1/) - Overview of the initial setup as a starting point 
 2. [Multi-GPU training](/blogs/training-at-larger-scale/part2/) - Scaling from a single GPU to multiple GPUs and using Lightning for better code
 3. [Bigger data in the cloud](/blogs/training-at-larger-scale/part3/) - Properly working with (bigger) data (in the cloud)
 4. [Optimizing the pipeline: Data](/blogs/training-at-larger-scale/part4/) - Optimizing: Maximizing Dataset and DataLoader efficiency
@@ -57,39 +55,32 @@ I'll walk you through my process of implementing and optimizing everything. Each
 ## Installation
 
 1.  **Clone the repository:**
-
     ```bash
     git clone https://github.com/CoenvdE/Training-at-larger-scale-blog.git
     cd Training-at-larger-scale-blog
     ```
 
 2.  **Install uv (if you haven't already):**
-
     ```bash
     pip install uv
     ```
-
     Or, for other installation methods, see the [uv documentation](https://astral.sh/uv/install.sh).
 
 3.  **Create a virtual environment and install dependencies:**
-
     ```bash
     uv venv
     uv sync
     ```
-
+ 
     This will create a virtual environment in `.venv` and install all necessary packages.
 
 4.  **Run the code:**
-
     ```bash
     uv run python your_script.py
     ```
-
     This will run your Python script in the virtual environment with all dependencies available.
 
 5.  **Optional: Set up a conda environment with Jupyter kernel:**
-
     ```bash
     # conda environment
     conda create -n training-at-larger-scale python=3.12
@@ -97,9 +88,8 @@ I'll walk you through my process of implementing and optimizing everything. Each
     pip install -r requirements.txt
     python -m ipykernel install --user --name=training-at-larger-scale --display-name="Training at Larger Scale"
     ```
-
+    
     You can now select the "Training at Larger Scale" kernel in Jupyter notebooks to use all the installed dependencies.
 
 ## Acknowledgements
-
 I would like to thank [Laurens Geffert](https://github.com/JanLauGe), [Andrew Corbett](https://github.com/andycolbert) and [Joe Hamman](https://github.com/jhamman) for their helpful feedback and suggestions. I would like to thank [OceanOS](https://www.oceanos.earth/) for supporting me in writing this blog and enabling me to focus on research. I would like to thank [Mohammad Islam](https://www.linkedin.com/in/mohammadniaz/) for his helpful feedback and suggestions.
