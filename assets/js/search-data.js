@@ -51,7 +51,7 @@ ninja.data = [{
               window.location.href = "/blogs/training-at-larger-scale/image-paths/";
             },},{id: "blogs-training-at-larger-scale",
           title: 'Training at larger scale',
-          description: "A guide on scaling machine learning from small to larger training setups.",
+          description: "A guide on scaling machine learning from small to larger training setups. At the end of this blog, you will be able to Iterate and prototype faster, Significantly reduce training times, Lower environmental and training impact, Work with data from anywhere and Be properly reproducible.",
           section: "Blogs",handler: () => {
               window.location.href = "/blogs/training-at-larger-scale/index/";
             },},{id: "blogs-the-setup",

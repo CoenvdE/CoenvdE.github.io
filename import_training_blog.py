@@ -245,7 +245,8 @@ with open(index_file_path, "w") as f:
     f.write("---\n")
     f.write("layout: blog_collection\n")
     f.write("title: \"Training at larger scale\"\n")
-    f.write("description: \"A guide on scaling machine learning from small to larger training setups.\"\n") # TODO: adjust description
+    # f.write("description: \"A guide on scaling machine learning from small to larger training setups.\"\n") # TODO: adjust description
+    f.write("description: \"A guide on scaling machine learning from small to larger training setups. At the end of this blog, you will be able to Iterate and prototype faster, Significantly reduce training times, Lower environmental and training impact, Work with data from anywhere and Be properly reproducible.\"\n")
     f.write("collection_id: training-at-larger-scale\n")
     f.write("display_chapters: false\n")
     f.write("---\n\n")
