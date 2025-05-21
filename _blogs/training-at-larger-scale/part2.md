@@ -94,7 +94,7 @@ Another strategy is to use a combination of data parallelism and model paralleli
 
 ---
 
-In short: (Pytorch) Lightning is a wrapper around pytorch that can automatically handle multi-gpu communication along with a lot more nice stuff. The key benefit is that Lightning handles all the complexity while still allowing you to customize any part if needed. You get production-ready features without writing boilerplate code, and your code remains clean and focused on the model architecture and training logic. I deeply encourage you to start using this as it will save you a lot of time and effort down the line (In the [Appendix](Appendix.md#1-overview-of-advantages-of-lightning-over-raw-pytorch), I'll state the advantages of this Lightning so you understand why it is so nice), I will now walk you through how to use lightning:
+In short: (Pytorch) Lightning is a wrapper around pytorch that can automatically handle multi-gpu communication along with a lot more nice stuff. The key benefit is that Lightning handles all the complexity while still allowing you to customize any part if needed. You get production-ready features without writing boilerplate code, and your code remains clean and focused on the model architecture and training logic. I deeply encourage you to start using this as it will save you a lot of time and effort down the line (In the [Appendix](7.%20Appendix.md#1-overview-of-advantages-of-lightning-over-raw-pytorch), I'll state the advantages of this Lightning so you understand why it is so nice), I will now walk you through how to use lightning:
 
 **How to go from pytorch to (pytorch) lightning**
 

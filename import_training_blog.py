@@ -245,9 +245,9 @@ with open(index_file_path, "w") as f:
     f.write("---\n")
     f.write("layout: blog_collection\n")
     f.write("title: \"Training at larger scale\"\n")
-    f.write("description: \"A guide on scaling machine learning from small to larger training setups.\"\n")
+    f.write("description: \"A guide on scaling machine learning from small to larger training setups.\"\n") # TODO: adjust description
     f.write("collection_id: training-at-larger-scale\n")
-    f.write("display_chapters: true\n")
+    f.write("display_chapters: false\n")
     f.write("---\n\n")
     f.write(index_content)
 
