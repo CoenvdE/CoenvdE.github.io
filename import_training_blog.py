@@ -150,6 +150,23 @@ def fix_links(content, md_file_original_name):
     content = re.sub(r'\[([^\]]+)\]\(([^)]+?)\)', github_link_replacer_closure, content)
     # --- END New GitHub link conversion ---
 
+    # Add specific handling for Appendix.md links
+    appendix_pattern = r'\[([^\]]+)\]\((Appendix\.md(?:#[^)]*)?)\)'
+    content = re.sub(appendix_pattern, r'[\1](/blogs/training-at-larger-scale/appendix/\2)', content)
+    
+    # Handle case-insensitive variations like appendix.md
+    appendix_pattern_ci = r'\[([^\]]+)\]\(((?i:appendix)\.md(?:#[^)]*)?)\)'
+    content = re.sub(appendix_pattern_ci, r'[\1](/blogs/training-at-larger-scale/appendix/\2)', content)
+    
+    # Handle variations with paths like ./Appendix.md or ../Appendix.md
+    appendix_pattern_path = r'\[([^\]]+)\]\((?:\./|\.\./)?(?i:appendix)\.md((?:#[^)]*)?)?\)'
+    content = re.sub(appendix_pattern_path, r'[\1](/blogs/training-at-larger-scale/appendix/\2)', content)
+    
+    # Clean up double .md extension if any
+    content = re.sub(r'(/blogs/training-at-larger-scale/appendix/(?i:appendix)\.md)', r'/blogs/training-at-larger-scale/appendix/', content)
+    # But keep the anchor if it exists
+    content = re.sub(r'(/blogs/training-at-larger-scale/appendix/)#', r'\1#', content)
+
     # First, fix regular markdown links [text](file.md)
     # This loop is now mainly for .md files that might not have been caught by link_mapping in the new section,
     # or if the new section returned original_link_md for an .md file.
@@ -259,6 +276,38 @@ def fix_links(content, md_file_original_name):
     content = content.replace("src=\"/images/training-blog/images/", "src=\"/images/training-blog/")
     content = content.replace("src='/images/training-blog/images/", "src='/images/training-blog/")
     
+    # Handle specific error patterns mentioned in the GitHub Actions build
+    specific_errors = [
+        r'\[([^\]]+)\]\((?:\.\.\/)*part\d+\/Appendix\.md#([^)]+)\)',  # Links like [text](part5/Appendix.md#section)
+        r'\[([^\]]+)\]\(file:\/\/.*\/part\d+\/Appendix\.md#([^)]+)\)', # Links with absolute file:// URLs
+        r'\[([^\]]+)\]\(\/.*\/part\d+\/Appendix\.md#([^)]+)\)'         # Links with absolute paths
+    ]
+    
+    for pattern in specific_errors:
+        content = re.sub(pattern, r'[\1](/blogs/training-at-larger-scale/appendix/#\2)', content)
+        
+    # Fix for direct anchor links to sections in the Appendix from other chapters
+    # This can appear in multiple formats:
+    section_patterns = [
+        # Match patterns like [text](Appendix.md#1-overview) 
+        r'\[([^\]]+)\]\((?:\.\/|\.\.\/)*(?:appendix|Appendix)\.md#(\d+-[^)]+)\)',
+        # Match patterns like [text](#1-overview) where we need to check if it's a reference to an Appendix section
+        r'\[([^\]]+)\]\(#(\d+-\w[^)]+)\)'
+    ]
+    
+    for pattern in section_patterns:
+        for match in re.finditer(pattern, content):
+            link_text = match.group(1)
+            section_ref = match.group(2)
+            
+            # Check if this appears to be a reference to the Appendix (heuristic)
+            if "appendix" in link_text.lower() or (
+                re.match(r'\d+', section_ref) and 
+                any(keyword in link_text.lower() for keyword in ["overview", "optimizing", "profiling", "advantage"])
+            ):
+                replacement = f"[{link_text}](/blogs/training-at-larger-scale/appendix/#{section_ref})"
+                content = content.replace(match.group(0), replacement)
+
     return content
 
 # Apply link fixing to README content for the index page
