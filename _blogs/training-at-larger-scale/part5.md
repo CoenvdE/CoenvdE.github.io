@@ -107,7 +107,7 @@ The benchmark results will help you identify bottlenecks in your training pipeli
 - If **backward pass** is a big bottleneck, try gradient accumulation or mixed precision (discussed in the [next chapter](/blogs/training-at-larger-scale/part6/))
 - If **other ops** are a big bottleneck, experiment with different optimizers. A good starting point is using the AdamW optimizer with hyperparameters from related literature.
 
-If you need to get more detailed information about the model pipeline and where specific bottlenecks are, you can use profiling. I provided a workflow for this in the [appendix](7.%20Appendix.md#4-profiling-check-your-pipeline).
+If you need to get more detailed information about the model pipeline and where specific bottlenecks are, you can use profiling. I provided a workflow for this in the [appendix](/blogs/training-at-larger-scale/part7/).
 
 ## Next Steps
 
