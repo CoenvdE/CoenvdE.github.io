@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "Optimizing the pipeline: Data"
 description: "Chapter 4 of the Training at Larger Scale series"
-date: 2025-04-24
+date: 2025-04-25
 collection_id: training-at-larger-scale
 chapter_number: 4
 toc: true
@@ -13,6 +13,7 @@ giscus_comments: true
 ## Optimizing the pipeline: Data
 
 Efficient data loading can significantly reduce training time and costs
+
 - The GPU (or TPU/HPU etc.) is **the most expensive and performance-critical component** in a training pipeline.
 - If the data pipeline (i.e., loading, preprocessing, transferring) is slow, the GPU will sit idle, waiting for the next batch.
 
@@ -32,55 +33,60 @@ Efficient data loading can significantly reduce training time and costs
 ```
 
 ### Key Concepts and Metrics
+
 ---
+
 - **GPU Saturation**: The key performance target.
 
 - **CPU (cores)**:
+
   - Used by the **main process and workers** to (lazy) load, transform, and prepare data for training. You want high CPU usage (busy workers) but not so high that the OS or other processes starve. If your CPU utilization is peaking at 100% on all cores and the system becomes unresponsive or the throughput plateaus, you may have too many workers or threads.
   - You can check available CPUs using:
 
   ```python
-  import os  
+  import os
   print(os.cpu_count())
   ```
 
 - **RAM**:
+
   - Used by workers to load batches into memory.
   - Important when working with large datasets, large batch sizes, or complex transforms.
   <!-- - In model training, weights, gradients and calculations are stored here. TODO: TRUE? -->
 
 - **I/O Considerations**
 
-   - **Bandwidth**: The maximum rate of data transfers (e.g., from cloud storage to your instance)
+  - **Bandwidth**: The maximum rate of data transfers (e.g., from cloud storage to your instance)
 
-   - **Chunking**: Use optimal chunk sizes to balance I/O overhead and memory usage
+  - **Chunking**: Use optimal chunk sizes to balance I/O overhead and memory usage
 
-   - **File Formats**: Choose ML-optimized formats (Parquet, TFRecord, WebDataset, Zarr)
-
+  - **File Formats**: Choose ML-optimized formats (Parquet, TFRecord, WebDataset, Zarr)
 
 - **Streaming Workers (Dask) vs DataLoader Workers (PyTorch)**
 
-   PyTorch DataLoader and streaming frameworks like Dask can be combined effectively to stream cloud data into your training pipeline, but it's crucial to understand they operate at different layers of the data process:
+  PyTorch DataLoader and streaming frameworks like Dask can be combined effectively to stream cloud data into your training pipeline, but it's crucial to understand they operate at different layers of the data process:
 
-   - **PyTorch DataLoader** manages the training-specific data handling by:
-      - Creating worker processes to parallelize sample preparation
-      - Implementing batching, shuffling, and sampling strategies
-      - Executing the preprocessing defined in your `__getitem__` method
-      - Transferring prepared batches to the GPU
+  - **PyTorch DataLoader** manages the training-specific data handling by:
 
-   - **Streaming frameworks (e.g. Dask)** handles the low-level data access by:
-      - Building a computational graph (DAG) for lazy loading
-      - Managing how data chunks are read from storage
-      - Orchestrating parallel fetching of data from cloud/disk
+    - Creating worker processes to parallelize sample preparation
+    - Implementing batching, shuffling, and sampling strategies
+    - Executing the preprocessing defined in your `__getitem__` method
+    - Transferring prepared batches to the GPU
 
-   These systems don't automatically coordinate with each other. The connection point occurs when a DataLoader worker calls `__getitem__` on your Dataset, which then triggers Streaming frameworks (e.g. Dask) to materialize the required data chunks when calling a `.load()` function. By understanding this separation, you can optimize each layer independently:
+  - **Streaming frameworks (e.g. Dask)** handles the low-level data access by:
+    - Building a computational graph (DAG) for lazy loading
+    - Managing how data chunks are read from storage
+    - Orchestrating parallel fetching of data from cloud/disk
 
-   1. Configure optimal data reading (e.g. chunk sizes, thread count, worker count)
-   2. Configure DataLoader for optimal batch preparation (e.g. num_workers, prefetch_factor)
+  These systems don't automatically coordinate with each other. The connection point occurs when a DataLoader worker calls `__getitem__` on your Dataset, which then triggers Streaming frameworks (e.g. Dask) to materialize the required data chunks when calling a `.load()` function. By understanding this separation, you can optimize each layer independently:
 
-   It's important to avoid conflicting parallelism between these systems because too many concurrent processes and threads can lead to resource contention and degraded performance. 
+  1.  Configure optimal data reading (e.g. chunk sizes, thread count, worker count)
+  2.  Configure DataLoader for optimal batch preparation (e.g. num_workers, prefetch_factor)
+
+  It's important to avoid conflicting parallelism between these systems because too many concurrent processes and threads can lead to resource contention and degraded performance.
 
 ### Benchmarking: Practical guidelines and background
+
 ---
 
 I have created scripts to help you optimize your data pipeline, but before we dive into the benchmarking and optimization, it is important to understand how everything works.
@@ -98,37 +104,43 @@ The set batch size is important as it dictates how much data is loaded into memo
 
 **Cloud vs. Local Performance**: Note that network bandwidth varies dramatically between environments. When moving from local (WiFi) to cloud training, you may see orders of magnitude improvement in data loading speed. In my case, I observed a 100x decrease in wait time when moving to the cloud. Always benchmark in the same environment where you'll be training, as the optimal configuration can differ significantly between local and cloud setups. High bandwidth allows more data to flow per second, while low bandwidth creates bottlenecks that can leave your GPU waiting for data.
 
-**No need to over-optimize the DataLoader**: 
+**No need to over-optimize the DataLoader**:
 If your model is small or the GPU is not very powerful, there's no point in using 16+ workers or heavy parallel jobs when the GPU is already saturated.
 I have spent quite some time doing research on this, and it is important to think about this step as it can drastically increase your performance, but there is no need to do "grid search" such-like stuff for this.
 Follow my guide and your speed should already improve a lot. Experimenting endlessly with this also costs money and potential experimentation time. I'll tell you more on how to do it in a sec.
 
 ### what can be optimized: **dataset**
+
 ---
 
 In summary, dataset-level optimization is about making data access as efficient as possible. By storing data smartly (chunked, compressed appropriately, possibly colocated with training if remote), and by only doing the minimal necessary work for each access, you ensure that the raw data supply is fast. Once that is in place, DataLoader-level tuning can further amplify the throughput. If there are no parameters, chunking or file format to be optimized, focus on the dataloader instead. (when streaming from machine's disk memory, ssd or when streaming is all handled automatically). If applicable to your usecase, I will show how to approach this in the [Appendix](/blogs/training-at-larger-scale/part7/).
 
 ### what can be optimized: **dataloader**
+
 ---
 
 The DataLoader is critical for training performance. Key parameters to optimize:
 
 1. **`num_workers`**: Controls parallel data loading subprocesses
+
    - Too few: GPU waits for data
    - Too many: Resource contention, diminishing returns
    - NOTE: num_workers is not about CPU's but processes, and a process may use more or less than 1 cpu core.
 
 2. **`prefetch_factor`**: Batches loaded in advance per worker
+
    - Default is 2, which works for most cases
    - Adjust based on sample size and memory requirements
    - Total prefetched = `num_workers * prefetch_factor`
 
 3. **`pin_memory`**: Enables faster CPU to GPU transfers
+
    - Set to `True` when using GPU
    - Creates page-locked memory for direct transfers
    - Slightly increases CPU memory usage
 
 4. **`persistent_workers`**: Keeps workers alive between epochs
+
    - Reduces worker initialization overhead
    - Useful for large datasets and complex initialization
    - Significantly reduces epoch transition time
@@ -138,7 +150,7 @@ The DataLoader is critical for training performance. Key parameters to optimize:
    - Use 'forkserver' (or 'spawn') for better CUDA compatibility
    - Note: for more detail, you can read the [Pytorch docs](https://docs.pytorch.org/docs/stable/notes/multiprocessing.html)
 
-Even with an efficient dataset, proper DataLoader settings are crucial. 
+Even with an efficient dataset, proper DataLoader settings are crucial.
 
 ---
 
@@ -147,6 +159,7 @@ Even with an efficient dataset, proper DataLoader settings are crucial.
 I created two files to help you optimize your data pipeline:
 
 1. **[`benchmark_configurations.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py)**
+
    - suitable for any pytorch Dataset object
    - Runs and logs different DataLoader configurations
    - Measures performance metrics for each configuration
@@ -162,23 +175,26 @@ I created two files to help you optimize your data pipeline:
    - Helps identify the optimal setup for your specific hardware
 
 ### How to optimize with the benchmark scripts
+
 Follow these steps to systematically optimize your data pipeline:
 
 0. **Import your own dataset** by changing the line on top of [`benchmark_configurations.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py).
 
-``` python
+```python
 from dummydataset import DummyDataset as YourDataset # replace with your dataset
 ```
 
 1. **Optional: Measuring the time it takes to (load a mini batch and) complete a single training step.** This information is useful for properly configuring the benchmark script parameters to accurately reflect your real-world training conditions. For this, you can run the [`timing_benchmark.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/timing_benchmark.py) script that is in the folder of [4. Optimizing the pipeline: Model](/blogs/training-at-larger-scale/part4/). and then change the `train_step_time` parameter in the [`benchmark_configurations.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py) script.
 
 2. **Establish a baseline** Start with minimal configuration:
+
    - `num_workers = 0` (single-process loading)
    - `prefetch_factor = None` (default behavior)
    - `persistent_workers = False`
    - `pin_memory = False`
 
 3. **Implement a sensible default configuration**
+
    - E.g. for a system with 10 CPU cores and 1 GPU:
      - Reserve 1-2 cores for the main training process
      - Allocate remaining cores between DataLoader workers (and streaming processes)
@@ -190,6 +206,7 @@ from dummydataset import DummyDataset as YourDataset # replace with your dataset
        - This can increase overall throughput by reducing idle time
 
 4. **Experiment with different configurations**
+
    - Test variations systematically:
      - More streaming workers, fewer DataLoader workers
      - More DataLoader workers, fewer streaming workers
@@ -197,7 +214,6 @@ from dummydataset import DummyDataset as YourDataset # replace with your dataset
      - Optional: Even higher oversubscription
      - Lower CPU oversubscription
      - Different `prefetch_factor` values
-   
 
 5. **Run benchmarks and analyze results**
    - Use [`benchmark_configurations.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py) to test all configurations
