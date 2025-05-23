@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "Bigger data in the cloud"
 description: "Chapter 3 of the Training at Larger Scale series"
-date: 2025-04-24
+date: 2025-04-25
 collection_id: training-at-larger-scale
 chapter_number: 3
 toc: true
@@ -78,9 +78,11 @@ In my case, I needed to get access to the cloud storage directly without the API
 
 I've created both a general example ([`example_cloud_access.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Bigger%20data%20in%20the%20cloud/data/example_cloud_access.py)) and a use-case specific ([`usecase_cloud_access.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Bigger%20data%20in%20the%20cloud/data/usecase_cloud_access.py)) implementation showing how to access data in the cloud efficiently
 
-### Streaming/Lazy Loading
+### Streaming/Lazy Loading with the Dataset object
 
-Now that we have access to the data, we can stream it into memory! For my geospatial data use case, I utilize libraries like Zarr, Dask and Xarray that provide optimizable, efficient lazy loading capabilities. Zarr/Dask creates a computational graph for loading data chunks from storage only when needed, while managing parallel workers to speed up the process. I'll cover optimization strategies for (streaming) data pipelines in the [next chapter](/blogs/training-at-larger-scale/part4/). To be able to work with this (lazy-loaded) data from the cloud in your training pipeline, we need to wrap everything into a PyTorch dataset. I've implemented an example in [`usecase_cloud_dataset.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Bigger%20data%20in%20the%20cloud/data/usecase_cloud_dataset.py) that demonstrates how to create a custom Dataset class that handles cloud data access, lazy loading and converting it to a usable dataset. Note that this is still a simplified version. When working with Xarray, xbatcher is the most efficient way to use batch generation, but this is out of the scope of this guide. Feel free to ask any questions about this.
+Now that we have access to the data, we can stream it into memory! To be able to work with this (lazy-loaded) data from the cloud in your training pipeline, we need to wrap everything into a PyTorch dataset. I've implemented an example in [`usecase_cloud_dataset.py`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Bigger%20data%20in%20the%20cloud/data/usecase_cloud_dataset.py) that demonstrates how to create a custom Dataset class that handles cloud data access, lazy loading and converting it to a usable dataset.
+
+Note that this is still a simplified version. For my geospatial use case, I utilize libraries like Zarr, Dask and Xarray that provide optimizable, efficient lazy loading capabilities. I'll explain more about the general working of this in the [next chapter](/blogs/training-at-larger-scale/part4/). When working with Xarray, xbatcher is the most efficient way to use batch generation, but this is out of the scope of this guide. Feel free to ask any questions about this.
 
 ---
 

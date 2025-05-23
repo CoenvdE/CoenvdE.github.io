@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "Optimizing the pipeline: Data"
 description: "Chapter 4 of the Training at Larger Scale series"
-date: 2025-04-25
+date: 2025-04-26
 collection_id: training-at-larger-scale
 chapter_number: 4
 toc: true
@@ -48,11 +48,14 @@ Efficient data loading can significantly reduce training time and costs
   print(os.cpu_count())
   ```
 
-- **RAM**:
+- **RAM (used by CPU processed tasks)**:
 
   - Used by workers to load batches into memory.
   - Important when working with large datasets, large batch sizes, or complex transforms.
-  <!-- - In model training, weights, gradients and calculations are stored here. TODO: TRUE? -->
+
+  **vRAM (used by GPU)**:
+
+  - During model training weights, gradients and calculations are stored here.
 
 - **I/O Considerations**
 
@@ -109,13 +112,13 @@ If your model is small or the GPU is not very powerful, there's no point in usin
 I have spent quite some time doing research on this, and it is important to think about this step as it can drastically increase your performance, but there is no need to do "grid search" such-like stuff for this.
 Follow my guide and your speed should already improve a lot. Experimenting endlessly with this also costs money and potential experimentation time. I'll tell you more on how to do it in a sec.
 
-### what can be optimized: **dataset**
+### What can be optimized: **dataset**
 
 ---
 
-In summary, dataset-level optimization is about making data access as efficient as possible. By storing data smartly (chunked, compressed appropriately, possibly colocated with training if remote), and by only doing the minimal necessary work for each access, you ensure that the raw data supply is fast. Once that is in place, DataLoader-level tuning can further amplify the throughput. If there are no parameters, chunking or file format to be optimized, focus on the dataloader instead. (when streaming from machine's disk memory, ssd or when streaming is all handled automatically). If applicable to your usecase, I will show how to approach this in the [Appendix](/blogs/training-at-larger-scale/part7/).
+Dataset-level optimization is about making data access as efficient as possible. By storing data smartly (chunked, compressed appropriately, possibly colocated with training if remote), and by only doing the minimal necessary work for each access, you ensure that the raw data supply is fast. Once that is in place, DataLoader-level tuning can further amplify the throughput. If there are no parameters, chunking or file format to be optimized, focus on the dataloader instead. (when streaming from machine's disk memory, ssd or when streaming is all handled automatically). If applicable to your usecase, I will show how to approach this in the [Appendix](/blogs/training-at-larger-scale/part7/).
 
-### what can be optimized: **dataloader**
+### What can be optimized: **dataloader**
 
 ---
 

@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "Multi-GPU training"
 description: "Chapter 2 of the Training at Larger Scale series"
-date: 2025-04-23
+date: 2025-04-24
 collection_id: training-at-larger-scale
 chapter_number: 2
 toc: true

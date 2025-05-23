@@ -10,9 +10,6 @@ display_chapters: false
 
 _By [Coen van den Elsen](https://coenvde.github.io/)_
 
-<!-- At the end of this blog, you will be able to Iterate and prototype faster, Significantly reduce training times, Lower environmental and training impact, Work with data from anywhere and Be properly reproducible
-TODO: check if this is nice to have or should be removed -->
-
 ---
 
 ### Why am I writing this?

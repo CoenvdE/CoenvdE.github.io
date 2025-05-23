@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "Appendix"
 description: "Chapter 7 of the Training at Larger Scale series"
-date: 2025-04-28
+date: 2025-04-29
 collection_id: training-at-larger-scale
 chapter_number: 7
 toc: true
