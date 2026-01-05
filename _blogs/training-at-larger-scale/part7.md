@@ -40,7 +40,7 @@ Here you can find the additional information as referenced in the chapters.
    When using **Zarr v3**, you can achieve a significant speedup by disabling Dask during dataset loading. By setting `chunks=None`, you bypass Dask's graph-building overhead and allow Xarray to use its internal lazy-indexing. This is often faster because Zarr v3's own storage layer is already optimized for concurrent I/O.
 
    ```python
-   # Optimal Zarr v3 loading: bypass Dask overhead for faster metadata discovery
+   # Optimal Zarr v3 loading
    dataset = xr.open_zarr(
       path,
       consolidated=False,
