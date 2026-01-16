@@ -14,7 +14,7 @@ selected_papers: False # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
 ---
 
-Currently, I am a Machine Learning Intern at OceanOS, building a marine foundation model using geospatial data for oceanic intelligence and conservation.
+Currently, I am an AI Research Engineer at OceanOS, building a marine foundation model using geospatial data for oceanic intelligence and conservation.
 
 My goal is to contribute meaningfully to global sustainability and social challenges by combining my interest in nature, human behavior and culture with my passion for technology, particularly AI. My Bachelor’s in Beta-gamma with a specialization in Artificial Intelligence taught me to approach complex problems from multiple angles, while my Master’s in AI gave me the tools to build and apply AI systems to real-world issues. As a Teaching Assistant at the UvA, I combined my social skills and interest in helping others with my expertise in AI, maths and data.
 
