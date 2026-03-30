@@ -4,8 +4,17 @@ import glob
 from bs4 import BeautifulSoup
 import re
 
+def get_title(content):
+    match = re.search(r'^title:\s*"(.*?)"', content, re.MULTILINE)
+    if match: return match.group(1)
+
+    match = re.search(r'^#\s+(.*)', content, re.MULTILINE)
+    if match: return match.group(1)
+    return "Chapter"
+
 def build():
-    os.makedirs('blogs', exist_ok=True)
+    out_dir = 'blogs/training-at-larger-scale'
+    os.makedirs(out_dir, exist_ok=True)
 
     with open('index.html', 'r') as f:
         html = f.read()
@@ -13,19 +22,20 @@ def build():
     soup = BeautifulSoup(html, 'html.parser')
 
     head = soup.head
-    # make links absolute or relative to root
     for link in head.find_all('link'):
         if link.get('href', '').startswith('assets/'):
-            link['href'] = '../' + link['href']
+            link['href'] = '../../' + link['href']
     head = str(head)
 
-    nav = str(soup.find('nav'))
+    # We also need to fix nav links from index.html (like #about) to point to ../../index.html#about
+    nav_str = str(soup.find('nav'))
+    nav_str = nav_str.replace('href="#', 'href="../../index.html#')
+
     footer = str(soup.find('footer'))
 
     md = markdown.Markdown(extensions=['tables', 'fenced_code', 'toc'])
 
     parts = glob.glob('_blogs/training-at-larger-scale/*.md')
-    # Custom sort to handle index.md first, then part1, part2, etc.
     def sort_key(f):
         name = os.path.basename(f)
         if name == 'index.md': return 0
@@ -34,42 +44,65 @@ def build():
 
     parts.sort(key=sort_key)
 
-    blog_content = "<div class=\"max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-32 bg-white shadow-xl rounded-lg my-20 prose prose-slate prose-brand\">\n"
-
+    # Process all parts to get titles for navigation
+    chapters = []
     for part in parts:
         with open(part, 'r') as f:
+            content = f.read()
+            title = get_title(content)
+            basename = os.path.basename(part)
+            out_name = basename.replace('.md', '.html')
+            chapters.append({'path': part, 'out_name': out_name, 'title': title})
+
+    for i, chapter in enumerate(chapters):
+        with open(chapter['path'], 'r') as f:
             content = f.read()
             if content.startswith('---'):
                 parts_split = content.split('---', 2)
                 if len(parts_split) > 2:
                     content = parts_split[2]
 
-            # fix image paths
-            content = content.replace('/images/training-blog/', '../images/training-blog/')
-
-            # Make sure we don't duplicate id "whats-next" if it appears in index and chapter 6
-            if 'part6.md' in part:
-                 content = content.replace('# What\'s Next?', '# What\'s Next? - Chapter 6')
+            # fix image paths - we are in blogs/training-at-larger-scale/
+            # so images are at ../../images/training-blog/
+            content = content.replace('/images/training-blog/', '../../images/training-blog/')
+            # Old link mappings like [Next Chapter](/blogs/training-at-larger-scale/part2/) -> part2.html
+            content = re.sub(r'\/blogs\/training-at-larger-scale\/([a-zA-Z0-9_-]+)\/', r'\1.html', content)
 
             html_content = md.convert(content)
-            blog_content += html_content
-            blog_content += "\n<hr class=\"my-12 border-slate-200\">\n"
 
-    blog_content += "</div>"
+            # Generate navigation links
+            nav_links = "<div class=\"flex justify-between items-center mt-12 pt-8 border-t border-slate-200\">"
+            if i > 0:
+                prev_ch = chapters[i-1]
+                nav_links += f"<a href=\"{prev_ch['out_name']}\" class=\"text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors\">&larr; Previous Chapter: {prev_ch['title']}</a>"
+            else:
+                nav_links += "<div></div>"
 
-    final_html = f"""<!DOCTYPE html>
+            if i < len(chapters) - 1:
+                next_ch = chapters[i+1]
+                nav_links += f"<a href=\"{next_ch['out_name']}\" class=\"text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors\">Next Chapter: {next_ch['title']} &rarr;</a>"
+            else:
+                nav_links += "<div></div>"
+            nav_links += "</div>"
+
+            blog_content = f"""<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-32 bg-white shadow-xl rounded-lg my-20 prose prose-slate prose-brand">
+                {html_content}
+                {nav_links}
+            </div>"""
+
+            final_html = f"""<!DOCTYPE html>
 <html lang="en">
 {head}
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
-    {nav}
+    {nav_str}
     {blog_content}
     {footer}
 </body>
 </html>"""
+            final_html = final_html.replace('<script src="https://cdn.tailwindcss.com"></script>', '<script src="https://cdn.tailwindcss.com?plugins=typography"></script>')
 
-    final_html = final_html.replace('<script src="https://cdn.tailwindcss.com"></script>', '<script src="https://cdn.tailwindcss.com?plugins=typography"></script>')
-
-    with open('blogs/training-at-larger-scale.html', 'w') as f:
-        f.write(final_html)
+            out_path = os.path.join(out_dir, chapter['out_name'])
+            with open(out_path, 'w') as out_f:
+                out_f.write(final_html)
 
 build()

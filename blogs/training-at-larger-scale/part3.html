@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Coen van den Elsen - AI Research Engineer</title>
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                            950: '#042f2e',
+                        },
+                        ocean: {
+                            800: '#0c4a6e',
+                            900: '#082f49',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+        }
+        .bg-ocean-gradient {
+            background: linear-gradient(135deg, #082f49 0%, #134e4a 100%);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
+    <nav class="fixed w-full z-[9999] bg-white/90 backdrop-blur-md border-b border-slate-200">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16 items-center">
+<div class="flex-shrink-0 font-serif font-bold text-xl text-ocean-900">
+                    Coen van den Elsen
+                </div>
+<div class="hidden md:flex space-x-8">
+<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#about">About</a>
+<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#experience">Experience</a>
+<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#education">Education</a>
+<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#blogs">Blogs</a>
+<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#projects">Projects</a>
+</div>
+<div class="md:hidden">
+<!-- Mobile menu button -->
+<button class="text-slate-600 hover:text-brand-600 focus:outline-none" type="button">
+<i class="fas fa-bars text-xl"></i>
+</button>
+</div>
+</div>
+</div>
+</nav>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-32 bg-white shadow-xl rounded-lg my-20 prose prose-slate prose-brand">
+                <h2 id="bigger-data-in-the-cloud">Bigger Data In The Cloud</h2>
+<p>In this part, I will provide a general overview of what streaming is and how to work with data in the cloud, I will also provide a use case specific example for loading and working with geospatial data (xarray) to show an example of with bigger datasets.</p>
+<pre><code>3. Bigger data in the cloud/
+├── data/
+│   ├── usecase_cloud_dataset.py
+│   ├── utils.py
+│   ├── usecase_API_access.py
+│   ├── usecase_cloud_access.py
+│   ├── example_cloud_access.py
+│   └── __pycache__/
+├── output/
+│   ├── copernicus_data/
+│   └── test/
+└── __pycache__/
+</code></pre>
+<h3 id="quick-recap">Quick Recap:</h3>
+<p><strong>torch.utils.data.Dataset</strong>: A PyTorch Dataset is a class that tells PyTorch how to get one data sample.
+It acts as a blueprint for reading a sample from storage (local disk or cloud storage) into active memory (RAM). It has two main functions:</p>
+<ul>
+<li><code>__len__</code>: how many samples there are</li>
+<li><code>__getitem__</code>: how to get one sample (e.g., load an image, label) Note that this can be from local storage or from the cloud.</li>
+</ul>
+<p>The dataset doesn't load anything. It's just a blueprint.</p>
+<p>Cloud data is often stored on object storage servers like:</p>
+<ul>
+<li>Amazon S3</li>
+<li>Google Cloud Storage (GCS)</li>
+<li>Azure Blob Storage</li>
+</ul>
+<p>NOTE: additional information can be found in the <a href="https://pytorch.org/tutorials/beginner/basics/data_tutorial.html">PyTorch Dataset Tutorial</a></p>
+<h2 id="data-storage-strategy-for-gpu-instances">Data Storage Strategy for GPU Instances</h2>
+<p>Most datasets initially reside in cloud-based object storage like Amazon S3 or Google Cloud Storage. While small datasets like CIFAR-10 can easily be downloaded to a local disk, massive datasets present a storage bottleneck. When your data exceeds the capacity of your available local storage or virtual disks, you must choose a storage strategy that balances cost, speed, and persistence.</p>
+<p>One approach is maintaining a fully local pipeline by purchasing physical hardware. While storing data on a local hard drive avoids cloud egress fees and subscription costs, it requires a significant upfront investment in GPUs and high-capacity drives. This is generally only cost-effective if you already own multiple GPUs and intend to run many long-term training jobs.</p>
+<p>For cloud-based training, a common solution is mounting a Virtual SSD, such as an Amazon EBS volume, to your compute instance. These volumes provide reliable data availability and faster read/write speeds than streaming directly over a network. However, virtual SSDs come with additional costs, require manual configuration, and are subject to storage limits defined by your cloud provider and instance type.</p>
+<p>High-performance GPU instances, like the AWS p4d, often include Ephemeral Storage (NVMe SSDs) physically attached to the hardware. This is the fastest storage option available and is ideal for training because it minimizes I/O wait times. The primary trade-off is that ephemeral storage is temporary; all data is lost once the instance is terminated. Furthermore, even these high-speed drives have finite capacity, meaning they still might not accommodate truly massive datasets.</p>
+<h2 id="general-recommendations-for-data-handling">General Recommendations for Data Handling</h2>
+<p>The most efficient workflow follows a clear hierarchy: prioritize <strong>Ephemeral Storage</strong>, fall back to <strong>Virtual SSDs</strong>, and use <strong>Direct Cloud Streaming</strong> only when necessary. Because ephemeral memory (local NVMe SSDs) is physically attached to the GPU instance, it offers the lowest latency and highest throughput. The recommended practice is to maintain your master dataset in cloud storage, such as Amazon S3, and perform a one-time transfer to the instance's ephemeral storage before training begins.</p>
+<p>For example, on an AWS DLAMI instance, you can use the AWS CLI to pull data from a bucket directly into the NVMe directory:</p>
+<pre><code class="language-bash">aws s3 cp s3://PATH_TO_DATA /opt/dlami/nvme/PATH_TO_DATA/ --recursive
+
+</code></pre>
+<p>This approach effectively treats the cloud as a long-term repository and the ephemeral drive as a high-speed local cache. By copying the data once at the start of the session, you avoid the repeated network overhead and I/O costs associated with pulling individual samples during every epoch. If your dataset is too large for the ephemeral drive, a mounted Virtual SSD serves as a middle ground—offering more persistence and capacity than ephemeral memory, though with slightly higher latency. Direct streaming from the cloud remains the final option, reserved exclusively for datasets so massive that they cannot fit on any volume attached to the compute instance.</p>
+<h2 id="handling-datasets-that-exceed-local-capacity">Handling Datasets That Exceed Local Capacity</h2>
+<p>When working with limited hardware or budget-constrained cloud instances, you often encounter datasets that are far too large for the available ephemeral storage or local disks. In these scenarios, streaming or lazy-loading can become the primary solution. Instead of downloading and reading the entire dataset into memory upfront, streaming allows you to load individual samples or data chunks on-the-fly as they are requested by the training loop. This approach bypasses the need for massive local storage and enables you to train on datasets that would otherwise be impossible to handle on modest hardware.</p>
+<p>However, this flexibility comes with specific financial and performance considerations. While you save on the costs of high-capacity storage volumes or expensive multi-GPU setups, you instead incur persistent I/O and data transfer costs every time the model requests a batch from the cloud storage bucket. It is essential to factor these recurring streaming fees into your total training budget. In some cases, the cost of sustained network traffic over multiple epochs can eventually exceed the price of renting an instance with larger local NVMe storage. For my specific project, a cost analysis eventually revealed that switching to a different instance type with more local (ephemeral) capacity was more economical than paying for long-term streaming.</p>
+<p>Several modern tools and formats are built specifically to facilitate this workflow. Some examples where this is integrated:</p>
+<ul>
+<li>Hugging Face Datasets (streaming=True)</li>
+<li>WebDataset format (tar files accessed remotely or locally)</li>
+<li>Some torch.utils.data.Dataset implementations with lazy loading</li>
+<li>Some APIs provide this functionality</li>
+</ul>
+<h3 id="getting-access-to-the-data">Getting access to the data</h3>
+<p>When you want to stream/lazy-load/get data from cloud storage, you need access to the place it is stored (commonly called buckets). This can sometimes be implemented already by APIs (e.g. Huggingface or <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Bigger%20data%20in%20the%20cloud/data/usecase_API_access.py">my usecase</a>: Copernicus).</p>
+<p>In my case, I needed to get access to the cloud storage directly without the API. This direct access gave me more flexibility and control over how I loaded the data. I implemented this using the <code>fsspec</code> library, which provides a unified interface for working with different file systems and storage backends. This approach was particularly valuable because:</p>
+<ol>
+<li>It allowed me to work with multiple storage providers using the same code</li>
+<li>It enabled parallel data access, significantly improving loading speeds</li>
+<li>It gave me fine-grained control over chunking and caching strategies</li>
+<li>It integrated well with my existing PyTorch data pipeline</li>
+<li>It has automatic failsafes for data loading, like retrying.</li>
+</ol>
+<p>I've created both a general example (<a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Bigger%20data%20in%20the%20cloud/data/example_cloud_access.py"><code>example_cloud_access.py</code></a>) and a use-case specific (<a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Bigger%20data%20in%20the%20cloud/data/usecase_cloud_access.py"><code>usecase_cloud_access.py</code></a>) implementation showing how to access data in the cloud efficiently</p>
+<h3 id="streaminglazy-loading-with-the-dataset-object">Streaming/Lazy Loading with the Dataset object</h3>
+<p>Now that we have access to the data, we can stream it into memory! To be able to work with this (lazy-loaded) data from the cloud in your training pipeline, we need to wrap everything into a PyTorch dataset. I've implemented an example in <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Bigger%20data%20in%20the%20cloud/data/usecase_cloud_dataset.py"><code>usecase_cloud_dataset.py</code></a> that demonstrates how to create a custom Dataset class that handles cloud data access, lazy loading and converting it to a usable dataset.</p>
+<p>Note that this is still a simplified version. For my geospatial use case, I utilize libraries like Zarr, Dask and Xarray that provide optimizable, efficient lazy loading capabilities. I'll explain more about the general working of this in the <a href="part4.html">next chapter</a>. When working with Xarray, xbatcher is the most efficient way to use batch generation, but this is out of the scope of this guide. Feel free to ask any questions about this.</p>
+<hr />
+<h3 id="quick-recap_1">Quick Recap:</h3>
+<p><strong>torch.utils.data.Dataloader</strong>: A PyTorch DataLoader defines how to load (many) samples (efficiently) (batching, multiprocessing, shuffling, etc.). Basically the DataLoader keeps asking the Dataset (blueprint) for samples, and handles the rest. It:</p>
+<ul>
+<li>Wraps a Dataset</li>
+<li>Loads batches of data (samples) (in parallel using multiple workers)</li>
+<li>Handles shuffling, batching, prefetching, etc.</li>
+<li>Dataloader has been used to parallelize the data loading as this boosts up the speed and saves memory.</li>
+</ul>
+<p>The Dataloader calls the <strong>getitem</strong>() from the Dataset to get the needed samples. The Dataset (blueprint) defines "what" a sample is and how to get it, the DataLoader defines how to load them efficiently.</p>
+<hr />
+<h3 id="dataloader-parameters-for-efficient-data-loading-from-the-cloud">DataLoader Parameters for Efficient Data Loading (from the cloud)</h3>
+<p><strong>Number of Workers (<code>num_workers</code>)</strong>:</p>
+<ul>
+<li>Specifies how many subprocesses should be used to load data. Each of these subprocesses retrieves a batch of data from your dataset and sends it to the main training process. This is not necessarily equal to the number of cores/threads the data loader uses. Each worker operates independently, loading data in parallel. The loaded data is then sent to the main process(es) for use in training, creating an overlap between training and data loading that reduces idle GPU time. Under the hood, the dataset object is replicated in each worker.</li>
+<li><code>num_workers=0</code>: Data is loaded in the main process. No parallelism.</li>
+<li><code>num_workers=N</code>: Spawns N worker processes to load data in parallel.</li>
+<li>Note: This is <strong>not the number of CPU cores</strong>, but the number of subprocesses that utilize CPU resources.</li>
+<li>each worker might maintain its own HTTP connection or file handle. This can increase throughput (multiple parallel reads) but also load (e.g., more network connections). Ensure your data source can handle concurrent access.</li>
+</ul>
+<p>I will show how to optimize this in the <a href="part4.html">next chapter</a></p>
+<p><strong>Persistent Workers (<code>persistent_workers</code>)</strong>:</p>
+<ul>
+<li>If <code>True</code>, keeps worker processes alive across epochs and thus reduces worker startup overhead.</li>
+<li>Especially useful when using slower file systems or large datasets as opening/closing files is time expensive.</li>
+<li>While persistent workers reduce startup overhead, they can lead to increased memory usage over time as workers may accumulate cached data or experience memory leaks. If you notice growing memory consumption during training. In this case you should reduce the number of workers.</li>
+</ul>
+<p><strong>Pin Memory (<code>pin_memory</code>)</strong>:</p>
+<ul>
+<li>If <code>True</code>, enables automatic allocation of fetched tensors into page-locked (pinned) memory. This can significantly speed up host (CPU) to device (GPU) memory transfer.</li>
+<li>Normal memory -&gt; GPU: Requires copy to temporary pageable buffer first</li>
+<li>Pinned memory -&gt; GPU: Direct transfer without intermediate copies</li>
+<li>Requires that your dataset's <code>__getitem__</code> returns <code>torch.Tensor</code> objects.</li>
+</ul>
+<p><strong>Prefetch Factor (<code>prefetch_factor</code>)</strong>:</p>
+<ul>
+<li>Number of batches loaded in advance by each worker.</li>
+<li>Total prefetched batches = <code>num_workers * prefetch_factor</code>. This needs to taken into account for memory consumption</li>
+<li>Higher values increase memory usage, but can improve throughput by reducing I/O bottlenecks.</li>
+<li>If using streaming datasets (WebDataset tar files, tf.data pipelines, etc.), ensure you take advantage of their features like prefetching and parallel reads</li>
+</ul>
+<p>I will show how to optimize this in the <a href="part4.html">next chapter</a></p>
+<p><strong>Multiprocessing Context</strong>: Controls how worker processes are created in the DataLoader (usable with multiple workers):</p>
+<ul>
+<li>Use <code>multiprocessing_context='forkserver'</code> (or <code>'spawn'</code>) for compatibility with CUDA and complex I/O or filesystem interactions.</li>
+<li><code>'spawn'</code> is the most compatible and is default on Windows and MacOS. Creates entirely new Python processes from scratch, with clean memory space. Safest but slowest method since it needs to re-import modules in each worker.</li>
+<li><code>'forkserver'</code> can also be safer than <code>'fork'</code> (default on Linux) when using CUDA. Creates a server process that handles forking child processes on demand. Offers a good balance between safety and performance.</li>
+<li><code>'fork'</code> is fast but can lead to subtle bugs with CUDA or file handles. Default on Linux. Creates workers by duplicating the entire parent process memory, including all open resources. Fast but dangerous with complex resources like CUDA contexts or file handles.</li>
+<li>Note: additional information can be found in the <a href="https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods">Python Documentation</a></li>
+</ul>
+<p>When this is not set correctly, you can run into gridlock. This is when worker processes become deadlocked or severely bottlenecked, preventing efficient data flow. Common scenarios include:</p>
+<ul>
+<li>CUDA errors when using <code>'fork'</code> with GPU operations</li>
+<li>Corrupted file handles when using <code>'fork'</code> with complex I/O</li>
+<li>Memory leaks from improper resource sharing</li>
+<li>Deadlocks from competing access to shared resources</li>
+</ul>
+<p><strong>Worker Initialization (<code>worker_init_fn</code>)</strong>:</p>
+<ul>
+<li>Optional function to initialize each worker after it's spawned.</li>
+<li>For cloud use: configure filesystem-specific settings and avoid duplication randomness across workers. An example is shown in <code>utils.py</code></li>
+<li>NOTE: Initialization functions are called once per worker process, not once per batch.</li>
+</ul>
+<p>Additional information can be found in the <a href="https://pytorch.org/docs/stable/data.html">PyTorch Documentation</a></p>
+<p>Now we have a clean architecture setup that is validated and set up for multi-GPU training. We've learned how to access and stream data from the cloud, and configured our DataLoader with the appropriate parameters for efficient data loading. With these foundations in place, it's time to optimize the components of our pipeline for better performance. Let's start by focusing <a href="part4.html">optimizing the data part of the pipeline</a></p>
+                <div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-200"><a href="part2.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">&larr; Previous Chapter: Multi-GPU training</a><a href="part4.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">Next Chapter: Optimizing the pipeline: Data &rarr;</a></div>
+            </div>
+    <footer class="bg-ocean-900 text-slate-300 py-12 border-t border-ocean-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+<div class="mb-4 md:mb-0">
+<span class="font-serif font-bold text-xl text-white">Coen van den Elsen</span>
+<p class="text-sm text-ocean-200 mt-2">© 2025 Coen van den Elsen. AI for a better world.</p>
+</div>
+<div class="flex space-x-6">
+<a class="text-ocean-200 hover:text-white transition-colors" href="mailto:coen@vandenelsen.nu">
+<span class="sr-only">Email</span>
+<i class="fas fa-envelope text-xl"></i>
+</a>
+<a class="text-ocean-200 hover:text-white transition-colors" href="https://github.com/CoenvdE" target="_blank">
+<span class="sr-only">GitHub</span>
+<i class="fab fa-github text-xl"></i>
+</a>
+<a class="text-ocean-200 hover:text-white transition-colors" href="https://linkedin.com/in/coen-van-den-elsen" target="_blank">
+<span class="sr-only">LinkedIn</span>
+<i class="fab fa-linkedin text-xl"></i>
+</a>
+</div>
+</div>
+</footer>
+</body>
+</html>

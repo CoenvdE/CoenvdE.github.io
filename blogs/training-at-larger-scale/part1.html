@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Coen van den Elsen - AI Research Engineer</title>
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                            950: '#042f2e',
+                        },
+                        ocean: {
+                            800: '#0c4a6e',
+                            900: '#082f49',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+        }
+        .bg-ocean-gradient {
+            background: linear-gradient(135deg, #082f49 0%, #134e4a 100%);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
+    <nav class="fixed w-full z-[9999] bg-white/90 backdrop-blur-md border-b border-slate-200">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16 items-center">
+<div class="flex-shrink-0 font-serif font-bold text-xl text-ocean-900">
+                    Coen van den Elsen
+                </div>
+<div class="hidden md:flex space-x-8">
+<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#about">About</a>
+<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#experience">Experience</a>
+<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#education">Education</a>
+<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#blogs">Blogs</a>
+<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#projects">Projects</a>
+</div>
+<div class="md:hidden">
+<!-- Mobile menu button -->
+<button class="text-slate-600 hover:text-brand-600 focus:outline-none" type="button">
+<i class="fas fa-bars text-xl"></i>
+</button>
+</div>
+</div>
+</div>
+</nav>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-32 bg-white shadow-xl rounded-lg my-20 prose prose-slate prose-brand">
+                <h2 id="setup">Setup</h2>
+<p>Before diving into optimizations, I will walk you through some best practices and a baseline to give you a solid starting point. Note that my model and pipeline were actually a lot more complicated, but my goal is not how to recreate my complicated pipeline, it is to show you simple examples for you to optimize and improve your own.</p>
+<pre><code>1. The Setup/
+├── config/
+│   └── config.yaml
+├── output/
+├── src/
+│   ├── data/
+│   │   ├── __pycache__/
+│   │   └── pytorch_dataset.py
+│   └── model/
+│       ├── __pycache__/
+│       ├── pytorch_model.py
+│       ├── pytorch_encoder.py
+│       └── pytorch_decoder.py
+├── tests/
+│   ├── __pycache__/
+│   ├── __init__.py
+│   └── test_parameters.py
+├── wandb/
+├── pytorch_train.py
+└── requirements.txt
+</code></pre>
+<h3 id="my-model-components-and-overview">My Model (components and overview)</h3>
+<hr />
+<p>My model is a (Masked) Autoencoder (with some cool stuff that does not matter for this guide) and has the following key components:</p>
+<ul>
+<li><a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/src/model/pytorch_encoder.py"><code>pytorch_encoder</code></a></li>
+<li><a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/src/model/pytorch_decoder.py"><code>pytorch_decoder</code></a></li>
+<li><a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/src/model/pytorch_model.py"><code>pytorch_model</code></a> – responsible for the forward pass and loss calculation</li>
+</ul>
+<h3 id="my-dataset">My Dataset</h3>
+<hr />
+<ul>
+<li>a <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/src/data/pytorch_dataset.py"><code>pytorch_dataset</code></a>
+  I use a big, geospatial dataset for my training. For this tutorial, I created a dummy example, but feel free to swap it out for e.g. <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR</a> or any other dataset you like. It is important that this is wrapped into a <code>torch.utils.data.Dataset</code> object.<br />
+  We will come back to data in more detail in <a href="part3.html">Chapter 3</a>.</li>
+</ul>
+<h3 id="reproducibility">Reproducibility</h3>
+<hr />
+<p>Reproducibility is very important! It allows you and others to reliably verify and compare results. In research, it ensures findings are valid and consistent. For practitioners, it makes debugging and iterative experimentation much easier. Seeding is one of the prerequisites for reproducibility. It ensures consistent pseudo random number generation. Different frameworks may use different generators.
+You need to seed everything (torch, numpy, python, etc.). See the <code>set_seed()</code> function in <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/pytorch_train.py">pytorch_train.py</a> for an example implementation.</p>
+<pre><code class="language-python">def set_seed(seed: int = 13):
+    &quot;&quot;&quot;Set all seeds for reproducibility.&quot;&quot;&quot;
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    np.random.seed(seed)
+    random.seed(seed)
+</code></pre>
+<p>Note that I use a <code>set_seed</code> function to keep everything reproducible in the <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/pytorch_train.py"><code>pytorch_train.py</code> file</a>. By default, this seed does <em>not</em> propagate to the Dataloader. This is why I create a <code>generator</code> for the data loader that has a set seed, for which I use the seed from the <code>set_seed</code> function.
+Pytorch dataloader workers need to be seeded, because each worker runs in its own process. Without explicit seeding, they will use random seeds, leading to <strong>non-deterministic data loading and augmentations</strong>. Look at the <code>worker_init_fn</code> in the <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/pytorch_train.py"><code>pytorch_train.py</code> file</a> for an example.</p>
+<p>For <strong>reproducibility during debugging and testing</strong>, set the following:</p>
+<pre><code class="language-python">torch.backends.cudnn.deterministic = True  # Default: False
+torch.backends.cudnn.benchmark = False     # Default: True
+</code></pre>
+<p>These flags control CUDA kernel selection and execution:</p>
+<ul>
+<li><code>deterministic = True</code>: Ensures consistent results across training runs, though this may impact training speed</li>
+<li><code>benchmark = False</code>: Disables CuDNN's auto-tuner that normally selects optimal convolution algorithms. While auto-tuning can improve performance, it may introduce non-deterministic behavior, particularly with varying input sizes</li>
+</ul>
+<p>When both flags are set, you get consistent, reproducible behavior across all training runs.</p>
+<h3 id="config-files">Config files</h3>
+<hr />
+<p>I use config files for the model, dataloader, training, optimizer, and scheduler arguments. This is best practice, allowing quick adjustments to hyperparameters without modifying the code. This makes experimentation and testing more efficient. An example of a config file with a few of these parameters is given in this <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/config/config.yaml">config.yaml</a></p>
+<h3 id="unittests">Unittests</h3>
+<hr />
+<p>Before moving forward, ensure your model actually works. It is important to write tests that check:</p>
+<ul>
+<li>Proper parameter loading from config file</li>
+<li>Shape consistency</li>
+<li>Correct device allocation</li>
+</ul>
+<p>This first one is very important and can save you a lot of trouble debugging, I made an example <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/tests/test_parameters.py">test</a> for this.</p>
+<pre><code class="language-bash">uv run python -m unittest tests/test_parameters.py
+</code></pre>
+<p>Additionally, I set up automated testing — every push to the GitHub branch runs these tests. For this, look at the <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/.github/workflows/test.yml"><code>.github/workflows/test.yml</code></a> file. While unit tests don't catch everything, they help ensure the code runs smoothly (in the cloud) and prevent accidental breakage. Automatically running them via GitHub gives you good feedback on if you break anything! This can potentially save you a lot of time and money, since it reduces the likelihood of a situation where you spin up a large GPU cluster for model training and then have to spend an hour or more fixing bugs that you failed to catch before.</p>
+<h3 id="tracking-experiment-logging-wandb">Tracking &amp; Experiment Logging (WandB)</h3>
+<hr />
+<p>Proper tracking is essential for monitoring model performance and debugging issues.<br />
+I <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/pytorch_train.py#L100">use</a> Weights &amp; Biases (WandB), but alternatives like MLflow also work.</p>
+<p>What to track?</p>
+<ul>
+<li>Validation loss &amp; training loss</li>
+<li>Learning rate</li>
+<li>Reconstructions &amp; visualizations to monitor model progress</li>
+<li>Config files &amp; training logs for reproducibility</li>
+</ul>
+<p>You can decide for yourself what you want to track and when (per step, per epoch), it never hurts to track more things!<br />
+Give the training loop a go to see what happens:</p>
+<pre><code class="language-bash">uv run python pytorch_train.py
+</code></pre>
+<h3 id="validating-your-model-architecture">Validating Your Model Architecture</h3>
+<hr />
+<p>Validating your model architecture early prevents costly debugging later in training—especially when working with large or domain-specific datasets. These problems often involve unique data formats and multi-dimensional inputs that don't fit a model architecture out of the box. Skipping this step can lead to wasted time and compute on models that silently fail to learn. These validation steps are unique for each problem, but the general idea is to validate the model on a smaller dataset that are representative of the full dataset.</p>
+<p>Example: the problem I need to solve is a geospatial one, meaning my model had to handle multiple dimensions (channels, height, width, time). Before experimenting with my full geospatial dataset, I verified that the model could train properly on local hardware (and a single GPU). I validated the architecture using the following datasets:</p>
+<ul>
+<li><strong>Dummy Dataset</strong>: Randomly initialized tensors with the correct shape. This confirmed the model accepted input as expected and helped verify the pipeline was structurally sound.</li>
+<li><strong>CIFAR-10</strong>: Although not geospatial, CIFAR-10 contains spatial dimensions (height and width), 3 variable channels (RGB), and can simulate a time dimension (e.g. <code>time=1</code>). This made it a useful proxy for early validation.</li>
+<li><strong>Subset of the geospatial dataset</strong>: A small slice of the real dataset ensured the model worked with actual data formats and domain-specific characteristics.</li>
+</ul>
+<p>This step ensured my architecture was robust, flexible, and ready for large-scale training.</p>
+<hr />
+<h3 id="environmental-impact-monitoring">Environmental Impact Monitoring</h3>
+<p>AI models consume significant computational resources and energy. Monitoring environmental impact helps quantify your carbon footprint, which is important for sustainability and responsible AI development. For this reason I made a <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/monitor_training.py">monitoring script</a> to monitor the emissions of any training run. You do not need to modify anything in your training script, just run my script with your training command as shown below. My script is based on the <a href="https://github.com/mlco2/codecarbon">codecarbon</a> package. You may need to fill in the password of your machine to give codecarbon access to monitoring your hardware.</p>
+<pre><code class="language-bash"># Run your training with emissions monitoring
+uv run python monitor_training.py &quot;python pytorch_train.py&quot;
+</code></pre>
+<p>For each run, the script creates a dedicated folder with:</p>
+<ul>
+<li>A timestamped log file capturing all training output</li>
+<li>Carbon emissions data in CSV format (detailed breakdown of emissions by component)</li>
+<li>Visualizations showing emissions and energy breakdown by component (CPU/GPU/RAM)</li>
+<li>A summary report with key metrics</li>
+</ul>
+<hr />
+<p>Now that the model is working, validated and tracking was set up, it is time to dive into how to make it efficient and suitable for <a href="part2.html">larger scale training with multiple GPUs</a>. Before proceeding to the actual training, it's crucial to set up proper fail safes. Training for multiple days without these safeguards can lead to catastrophic failures, wasted resources, and lost progress. Next to the ones we already set up, I'll cover some extra ones in the next chapters.</p>
+                <div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-200"><a href="index.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">&larr; Previous Chapter: Training at larger scale</a><a href="part2.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">Next Chapter: Multi-GPU training &rarr;</a></div>
+            </div>
+    <footer class="bg-ocean-900 text-slate-300 py-12 border-t border-ocean-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+<div class="mb-4 md:mb-0">
+<span class="font-serif font-bold text-xl text-white">Coen van den Elsen</span>
+<p class="text-sm text-ocean-200 mt-2">© 2025 Coen van den Elsen. AI for a better world.</p>
+</div>
+<div class="flex space-x-6">
+<a class="text-ocean-200 hover:text-white transition-colors" href="mailto:coen@vandenelsen.nu">
+<span class="sr-only">Email</span>
+<i class="fas fa-envelope text-xl"></i>
+</a>
+<a class="text-ocean-200 hover:text-white transition-colors" href="https://github.com/CoenvdE" target="_blank">
+<span class="sr-only">GitHub</span>
+<i class="fab fa-github text-xl"></i>
+</a>
+<a class="text-ocean-200 hover:text-white transition-colors" href="https://linkedin.com/in/coen-van-den-elsen" target="_blank">
+<span class="sr-only">LinkedIn</span>
+<i class="fab fa-linkedin text-xl"></i>
+</a>
+</div>
+</div>
+</footer>
+</body>
+</html>

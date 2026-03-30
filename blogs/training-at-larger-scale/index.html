@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Coen van den Elsen - AI Research Engineer</title>
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                            950: '#042f2e',
+                        },
+                        ocean: {
+                            800: '#0c4a6e',
+                            900: '#082f49',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+        }
+        .bg-ocean-gradient {
+            background: linear-gradient(135deg, #082f49 0%, #134e4a 100%);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
+    <nav class="fixed w-full z-[9999] bg-white/90 backdrop-blur-md border-b border-slate-200">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16 items-center">
+<div class="flex-shrink-0 font-serif font-bold text-xl text-ocean-900">
+                    Coen van den Elsen
+                </div>
+<div class="hidden md:flex space-x-8">
+<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#about">About</a>
+<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#experience">Experience</a>
+<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#education">Education</a>
+<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#blogs">Blogs</a>
+<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#projects">Projects</a>
+</div>
+<div class="md:hidden">
+<!-- Mobile menu button -->
+<button class="text-slate-600 hover:text-brand-600 focus:outline-none" type="button">
+<i class="fas fa-bars text-xl"></i>
+</button>
+</div>
+</div>
+</div>
+</nav>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-32 bg-white shadow-xl rounded-lg my-20 prose prose-slate prose-brand">
+                <h1 id="training-at-larger-scale">Training at larger scale</h1>
+<p><em>By <a href="https://coenvde.github.io/">Coen van den Elsen</a></em></p>
+<hr />
+<h3 id="why-am-i-writing-this">Why am I writing this?</h3>
+<p>At university, in online blogs, and across tutorials, training machine learning models is often well explained—especially for small-scale setups. These typically involve datasets that fit on a local hard drive, training on a single GPU, and straightforward implementations without worrying about fast data loading, datasets that do not fit onto a local hard drive (lazy loading), or multi-GPU utilization/optimization.</p>
+<p>However, when transitioning to a larger setup —not massive SOTA-scale training across thousands of GPUs with internet-scale data, but something in between— good resources are harder to find and are scattered around. I call this the "larger-scale training" realm: working with datasets that are a few terabytes (too large for local storage but far from internet-scale) and training across multiple GPUs (around 10, not 100s or 1000s).</p>
+<div align="center">
+  <img src="../../images/training-blog/intro_image_larger_scale.png" alt="Scaling up training" width="400"/>
+  <br>
+  <p><em>Illustration of larger-scale training</em></p>
+</div>
+
+<div align="right">
+  <small>Source: Created with ChatGPT</small>
+</div>
+
+<p>I am currently a Machine Learning Intern at OceanOS, where I am building a geospatial foundation model to improve marine intelligence and ocean conservation. For my research, I need to scale up my training to this realm, but I struggle to find practical, well-structured guides on bridging the gap from small-scale to mid-sized, high-performance training. This larger-scale training" is where a lot of valuable research and development happens, yet optimization and implementation for this space are harder to figure out. Maximizing hardware efficiency at this level can significantly reduce training time, costs and environmental impact.</p>
+<p>This guide is for those stepping into this space —researchers and practitioners who want to scale their training beyond a single GPU while making the most of the resources they have. My experience comes from working with geospatial data, so some examples may be domain-specific, but the core principles apply broadly across all machine learning applications that make use of pytorch.</p>
+<p>I want to note that this is not a definitive guide on how everything should be done. Instead, it's a collection of challenges I faced and the solutions I found along the way. I encourage you to ask questions, share feedback, and suggest improvements — the goal is to learn from each other and train more efficiently every day :)</p>
+<p>This blog is available on <a href="https://github.com/coenvde/training-at-larger-scale-blog">GitHub</a> as well as my <a href="https://coenvde.github.ioindex.html">website</a>. For every chapter, I created a folder on GitHub with all full code. The markdown files are available on both platforms, containing text and code examples.</p>
+<h2 id="whats-next">What's next</h2>
+<p>I'll walk you through my process of implementing and optimizing everything. Each chapter folder contains code examples that demonstrate the concepts discussed in the corresponding markdown file. To run the examples, navigate to the specific chapter folder on GitHub and follow the instructions as specified in the markdown files. I strongly advise to run through them in order, as they build on top of each other and I expect previous chapters as background knowledge for the following one. I especially encourage you to get familiar with pytorch lightning (<a href="part1.html">1. The Setup</a>) as it will streamline, improve and speed up your workflow a lot.</p>
+<h2 id="chapters">Chapters</h2>
+<ol>
+<li><a href="part1.html">The Setup</a> - Overview of the initial setup as a starting point</li>
+<li><a href="part2.html">Multi-GPU training</a> - Scaling from a single GPU to multiple GPUs and using Lightning for better code</li>
+<li><a href="part3.html">Bigger data in the cloud</a> - Properly working with (bigger) data (in the cloud)</li>
+<li><a href="part4.html">Optimizing the pipeline: Data</a> - Optimizing: Maximizing Dataset and DataLoader efficiency</li>
+<li><a href="part5.html">Optimizing the pipeline: Model</a> - Optimizing: Profiling and fixing slowdowns</li>
+<li><a href="part6.html">What Is Next</a> - Final tips and tricks as the last step before training</li>
+<li><a href="part7.html">Appendix</a> - Appendix with references and additional information</li>
+</ol>
+<h2 id="installation">Installation</h2>
+<ol>
+<li>
+<p><strong>Clone the repository:</strong></p>
+<p><code>bash
+git clone https://github.com/CoenvdE/Training-at-larger-scale-blog.git
+cd Training-at-larger-scale-blog</code></p>
+</li>
+<li>
+<p><strong>Install uv (if you haven't already):</strong></p>
+<p><code>bash
+pip install uv</code></p>
+<p>Or, for other installation methods, see the <a href="https://astral.sh/uv/install.sh">uv documentation</a>.</p>
+</li>
+<li>
+<p><strong>Create a virtual environment and install dependencies:</strong></p>
+<p><code>bash
+uv venv
+uv sync</code></p>
+<p>This will create a virtual environment in <code>.venv</code> and install all necessary packages.</p>
+</li>
+<li>
+<p><strong>Run the code:</strong></p>
+<p><code>bash
+uv run python your_script.py</code></p>
+<p>This will run your Python script in the virtual environment with all dependencies available.</p>
+</li>
+<li>
+<p><strong>Optional: Set up a conda environment with Jupyter kernel:</strong></p>
+<p>```bash</p>
+<h1 id="conda-environment">conda environment</h1>
+<p>conda create -n training-at-larger-scale python=3.12
+conda activate training-at-larger-scale
+pip install -r requirements.txt
+python -m ipykernel install --user --name=training-at-larger-scale --display-name="Training at Larger Scale"
+```</p>
+<p>You can now select the "Training at Larger Scale" kernel in Jupyter notebooks to use all the installed dependencies.</p>
+</li>
+</ol>
+<h2 id="acknowledgements">Acknowledgements</h2>
+<p>I would like to thank <a href="https://github.com/JanLauGe">Laurens Geffert</a>, <a href="https://github.com/andycolbert">Andrew Corbett</a> and <a href="https://github.com/jhamman">Joe Hamman</a> for their helpful feedback and suggestions. I would like to thank <a href="https://www.oceanos.earth/">OceanOS</a> for supporting me in writing this blog and enabling me to focus on research. I would like to thank <a href="https://www.linkedin.com/in/mohammadniaz/">Mohammad Islam</a> for his helpful feedback and suggestions.</p>
+                <div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-200"><div></div><a href="part1.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">Next Chapter: The Setup &rarr;</a></div>
+            </div>
+    <footer class="bg-ocean-900 text-slate-300 py-12 border-t border-ocean-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+<div class="mb-4 md:mb-0">
+<span class="font-serif font-bold text-xl text-white">Coen van den Elsen</span>
+<p class="text-sm text-ocean-200 mt-2">© 2025 Coen van den Elsen. AI for a better world.</p>
+</div>
+<div class="flex space-x-6">
+<a class="text-ocean-200 hover:text-white transition-colors" href="mailto:coen@vandenelsen.nu">
+<span class="sr-only">Email</span>
+<i class="fas fa-envelope text-xl"></i>
+</a>
+<a class="text-ocean-200 hover:text-white transition-colors" href="https://github.com/CoenvdE" target="_blank">
+<span class="sr-only">GitHub</span>
+<i class="fab fa-github text-xl"></i>
+</a>
+<a class="text-ocean-200 hover:text-white transition-colors" href="https://linkedin.com/in/coen-van-den-elsen" target="_blank">
+<span class="sr-only">LinkedIn</span>
+<i class="fab fa-linkedin text-xl"></i>
+</a>
+</div>
+</div>
+</footer>
+</body>
+</html>
