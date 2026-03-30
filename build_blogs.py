@@ -152,6 +152,7 @@ def build():
     </script>
 </body>''')
             final_html = final_html.replace('<script src="https://cdn.tailwindcss.com"></script>', '<script src="https://cdn.tailwindcss.com?plugins=typography"></script>')
+            final_html = final_html.replace('</head>', '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">\n<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>\n<script>hljs.highlightAll();</script>\n</head>')
 
             out_path = os.path.join(out_dir, chapter['out_name'])
             with open(out_path, 'w') as out_f:
