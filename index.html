@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coen van den Elsen - AI Research Engineer</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        .section-heading {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: #0284c7;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-200 selection:text-brand-900">
+
+    <div class="max-w-4xl mx-auto px-6 py-16 md:py-24">
+
+        <!-- Header Section -->
+        <header class="flex flex-col md:flex-row items-center md:items-start gap-8 mb-20">
+            <div class="flex-shrink-0">
+                <img src="assets/img/prof_pic.jpg" alt="Coen van den Elsen" class="w-40 h-40 object-cover rounded-full shadow-lg border-4 border-white">
+            </div>
+            <div class="flex-grow text-center md:text-left">
+                <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 mb-2">Coen van den Elsen</h1>
+                <p class="text-xl text-brand-700 font-medium mb-4">AI Research Engineer</p>
+                <div class="flex flex-wrap justify-center md:justify-start gap-4 text-slate-600 font-mono text-sm">
+                    <a href="mailto:coen@vandenelsen.nu" class="flex items-center gap-1 hover:text-brand-600 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        coen@vandenelsen.nu
+                    </a>
+                    <a href="https://github.com/CoenvdE" target="_blank" class="flex items-center gap-1 hover:text-brand-600 transition-colors">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+                        CoenvdE
+                    </a>
+                    <a href="https://linkedin.com/in/coen-van-den-elsen" target="_blank" class="flex items-center gap-1 hover:text-brand-600 transition-colors">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        LinkedIn
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- About Section -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold text-slate-900 section-heading">About</h2>
+            <div class="prose prose-slate max-w-none text-slate-700 leading-relaxed space-y-4">
+                <p>
+                    Currently, I am an AI Research Engineer at <strong>OceanOS</strong>, building a marine foundation model using geospatial data for oceanic intelligence and conservation.
+                </p>
+                <p>
+                    My goal is to contribute meaningfully to global sustainability and social challenges by combining my interest in nature, human behavior, and culture with my passion for technology, particularly AI. My Bachelor’s in Beta-gamma with a specialization in Artificial Intelligence taught me to approach complex problems from multiple angles, while my Master’s in AI gave me the tools to build and apply AI systems to real-world issues. As a Teaching Assistant at the UvA, I combined my social skills and interest in helping others with my expertise in AI, maths, and data.
+                </p>
+                <p>
+                    I’ve traveled across Africa, Central America, and Asia, and spent 7 months in Cape Town studying Marine Biology and Development and Sustainability at the University of Cape Town through an exchange program. These experiences broadened my cultural perspective and deepened my global awareness. Outside of work, I’m a musician and passionate surfer. I hope to combine my passion for art and creativity with my work to innovate and help the world move forward.
+                </p>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold text-slate-900 section-heading">Experience</h2>
+            <div class="space-y-10">
+
+                <div class="group">
+                    <div class="flex flex-col sm:flex-row sm:items-baseline justify-between mb-2">
+                        <h3 class="text-xl font-semibold text-slate-900 group-hover:text-brand-600 transition-colors">AI Research Engineer</h3>
+                        <span class="text-sm font-mono text-slate-500">Jan 2025 – Present</span>
+                    </div>
+                    <div class="text-brand-700 font-medium mb-3"><a href="https://www.oceanos.earth/" target="_blank" class="hover:underline">OceanOS</a> · London, UK</div>
+                    <p class="text-slate-700 mb-3">Developed a marine foundation model using geospatial data to support oceanic intelligence and marine conservation.</p>
+                    <ul class="list-disc list-inside text-slate-600 space-y-1.5 ml-1">
+                        <li>Created geospatial pretraining datasets from NetCDF/Zarr files using Xarray.</li>
+                        <li>Designed 3D spatiotemporal model architecture for marine data.</li>
+                        <li>Built Dockerized, multi-GPU training pipeline with cloud support.</li>
+                        <li>Implemented training failsafes including unit tests and cloud backups.</li>
+                        <li>Used CodeCarbon for environmental monitoring.</li>
+                        <li>Achieved 35× training speedup without performance loss.</li>
+                        <li>Developed end-to-end forecasting model.</li>
+                    </ul>
+                </div>
+
+                <div class="group">
+                    <div class="flex flex-col sm:flex-row sm:items-baseline justify-between mb-2">
+                        <h3 class="text-xl font-semibold text-slate-900 group-hover:text-brand-600 transition-colors">Teaching Assistant</h3>
+                        <span class="text-sm font-mono text-slate-500">Sep 2020 – Jan 2025</span>
+                    </div>
+                    <div class="text-brand-700 font-medium mb-3"><a href="https://www.uva.nl/" target="_blank" class="hover:underline">University of Amsterdam (FNWI)</a> · Amsterdam, NL</div>
+                    <p class="text-slate-700 mb-3">Led tutorials for ~30 first- and second-year students across multiple subjects:</p>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        <span class="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-medium">Programming</span>
+                        <span class="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-medium">Linear Algebra</span>
+                        <span class="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-medium">Calculus and Optimisation</span>
+                        <span class="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-medium">Information Visualization</span>
+                    </div>
+                </div>
+
+                <div class="group">
+                    <div class="flex flex-col sm:flex-row sm:items-baseline justify-between mb-2">
+                        <h3 class="text-xl font-semibold text-slate-900 group-hover:text-brand-600 transition-colors">Mentor</h3>
+                        <span class="text-sm font-mono text-slate-500">Sep 2021 – Jul 2022</span>
+                    </div>
+                    <div class="text-brand-700 font-medium mb-2"><a href="https://www.uva.nl/" target="_blank" class="hover:underline">University of Amsterdam</a> · Amsterdam, NL</div>
+                    <p class="text-slate-700">Mentored a group of 30 second-year students.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold text-slate-900 section-heading">Education</h2>
+            <div class="space-y-8">
+
+                <div class="relative pl-6 border-l-2 border-slate-200">
+                    <div class="absolute w-3 h-3 bg-brand-500 rounded-full -left-[7px] top-1.5 ring-4 ring-white"></div>
+                    <div class="flex flex-col sm:flex-row sm:items-baseline justify-between mb-1">
+                        <h3 class="text-lg font-semibold text-slate-900">MSc Artificial Intelligence</h3>
+                        <span class="text-sm font-mono text-slate-500">Sep 2023 – Present</span>
+                    </div>
+                    <div class="text-brand-700 font-medium mb-1">University of Amsterdam</div>
+                    <div class="text-sm text-slate-600">GPA: 8.1</div>
+                </div>
+
+                <div class="relative pl-6 border-l-2 border-slate-200">
+                    <div class="absolute w-3 h-3 bg-slate-300 rounded-full -left-[7px] top-1.5 ring-4 ring-white"></div>
+                    <div class="flex flex-col sm:flex-row sm:items-baseline justify-between mb-1">
+                        <h3 class="text-lg font-semibold text-slate-900">Exchange Program</h3>
+                        <span class="text-sm font-mono text-slate-500">Jul 2022 – Dec 2022</span>
+                    </div>
+                    <div class="text-brand-700 font-medium mb-1">University of Cape Town</div>
+                    <div class="text-sm text-slate-600">Courses: Marine Resources and Geography, Development and Sustainability</div>
+                </div>
+
+                <div class="relative pl-6 border-l-2 border-slate-200">
+                    <div class="absolute w-3 h-3 bg-slate-300 rounded-full -left-[7px] top-1.5 ring-4 ring-white"></div>
+                    <div class="flex flex-col sm:flex-row sm:items-baseline justify-between mb-1">
+                        <h3 class="text-lg font-semibold text-slate-900">BSc Natural and Social Sciences</h3>
+                        <span class="text-sm font-mono text-slate-500">Sep 2019 – Jul 2023</span>
+                    </div>
+                    <div class="text-brand-700 font-medium mb-1">University of Amsterdam</div>
+                    <div class="text-sm text-slate-600 mb-1">Specialization: Artificial Intelligence | Honors program</div>
+                    <div class="text-sm text-slate-600">GPA: 8.02/10</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Publications & Projects Section -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold text-slate-900 section-heading">Research & Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="px-2 py-1 bg-brand-50 text-brand-700 rounded text-xs font-semibold tracking-wide uppercase">Publication</span>
+                        <span class="text-xs font-mono text-slate-400">2025</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2 leading-tight">Reproducing NevIR: Negation in Neural Information Retrieval</h3>
+                    <p class="text-sm text-slate-600 mb-4 line-clamp-3">
+                        Published at SIGIR 2025. Replicated and extended NevIR to assess IR models' handling of negation. Found cross-encoders and LLM re-rankers performed moderately but below human levels.
+                    </p>
+                    <a href="https://arxiv.org/abs/2502.13506" target="_blank" class="text-sm font-medium text-brand-600 hover:text-brand-800 flex items-center gap-1">
+                        arXiv Preprint
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                    </a>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs font-semibold tracking-wide uppercase">Project</span>
+                        <span class="text-xs font-mono text-slate-400">2023</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2 leading-tight">Geometric Algebra Simplicial Transformer</h3>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Proposed a novel class of equivariant transformers leveraging simplicial complexes and Clifford algebra to capture full symmetry group equivariance.
+                    </p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs font-semibold tracking-wide uppercase">Project</span>
+                        <span class="text-xs font-mono text-slate-400">2022</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2 leading-tight">Predicting Perceived Attributes of Urban Images</h3>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Investigated the use of GIST features to cluster Amsterdam street scenes and explored how these clusters capture perceived attributes of urban environments.
+                    </p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs font-semibold tracking-wide uppercase">Project</span>
+                        <span class="text-xs font-mono text-slate-400">2021</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2 leading-tight">Robustness Against Label Noise</h3>
+                    <p class="text-sm text-slate-600 mb-4">
+                        Researched CNN-based road defect severity estimation and classification, studying the impact of label noise and proposing robustness strategies.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-slate-900 section-heading">Skills & Technologies</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">Programming</h3>
+                    <ul class="text-slate-600 text-sm space-y-2 font-mono">
+                        <li>Python</li>
+                        <li>R</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">ML & Data</h3>
+                    <ul class="text-slate-600 text-sm space-y-2 font-mono">
+                        <li>PyTorch</li>
+                        <li>Scikit-learn</li>
+                        <li>Xarray</li>
+                        <li>NumPy / Pandas</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">Cloud & DevOps</h3>
+                    <ul class="text-slate-600 text-sm space-y-2 font-mono">
+                        <li>AWS / DigitalOcean</li>
+                        <li>Docker</li>
+                        <li>W&B</li>
+                        <li>CodeCarbon</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">Concepts</h3>
+                    <ul class="text-slate-600 text-sm space-y-2 font-mono">
+                        <li>Linear Algebra</li>
+                        <li>Calculus</li>
+                        <li>Probability / Stats</li>
+                        <li>Streaming / Zarr</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="pt-10 border-t border-slate-200 mt-20 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-sm text-slate-500">
+                &copy; <script>document.write(new Date().getFullYear())</script> Coen van den Elsen. All rights reserved.
+            </p>
+            <div class="text-sm text-slate-400">
+                Native Dutch &middot; Fluent English (C1)
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>
