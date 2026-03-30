@@ -52,7 +52,7 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
-    <nav class="fixed w-full z-[9999] bg-white/90 backdrop-blur-md border-b border-slate-200">
+    <nav class="fixed top-0 w-full z-[9999] bg-white/90 backdrop-blur-md border-b border-slate-200">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 <div class="flex justify-between h-16 items-center">
 <div class="flex-shrink-0 font-serif font-bold text-xl text-ocean-900">
@@ -74,8 +74,25 @@
 </div>
 </div>
 </nav>
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-32 bg-white shadow-xl rounded-lg my-20 prose prose-slate prose-brand">
-                <h2 id="bigger-data-in-the-cloud">Bigger Data In The Cloud</h2>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 mt-16">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<div class="md:col-span-1 hidden md:block">
+<div class="sticky top-24 bg-white shadow-xl rounded-lg p-6">
+<h3 class="text-lg font-bold text-ocean-900 mb-4 border-b pb-2">Chapters</h3>
+<ul class="space-y-3">
+<li><a href="index.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">Training at larger scale</a></li>
+<li><a href="part1.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">The Setup</a></li>
+<li><a href="part2.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">Multi-GPU training</a></li>
+<li><a href="part3.html" class="text-sm block text-brand-600 font-bold border-l-2 border-brand-500 pl-2">Bigger data in the cloud</a></li>
+<li><a href="part4.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">Optimizing the pipeline: Data</a></li>
+<li><a href="part5.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">Optimizing the pipeline: Model</a></li>
+<li><a href="part6.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">What Is Next</a></li>
+<li><a href="part7.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">Appendix</a></li>
+</ul>
+</div>
+</div>
+<div class="md:col-span-3 bg-white shadow-xl rounded-lg p-8 prose prose-slate prose-brand max-w-none">
+<h2 id="bigger-data-in-the-cloud">Bigger Data In The Cloud</h2>
 <p>In this part, I will provide a general overview of what streaming is and how to work with data in the cloud, I will also provide a use case specific example for loading and working with geospatial data (xarray) to show an example of with bigger datasets.</p>
 <pre><code>3. Bigger data in the cloud/
 ├── data/
@@ -206,8 +223,10 @@ It acts as a blueprint for reading a sample from storage (local disk or cloud st
 </ul>
 <p>Additional information can be found in the <a href="https://pytorch.org/docs/stable/data.html">PyTorch Documentation</a></p>
 <p>Now we have a clean architecture setup that is validated and set up for multi-GPU training. We've learned how to access and stream data from the cloud, and configured our DataLoader with the appropriate parameters for efficient data loading. With these foundations in place, it's time to optimize the components of our pipeline for better performance. Let's start by focusing <a href="part4.html">optimizing the data part of the pipeline</a></p>
-                <div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-200"><a href="part2.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">&larr; Previous Chapter: Multi-GPU training</a><a href="part4.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">Next Chapter: Optimizing the pipeline: Data &rarr;</a></div>
-            </div>
+<div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-200"><a href="part2.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">&larr; Previous Chapter: Multi-GPU training</a><a href="part4.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">Next Chapter: Optimizing the pipeline: Data &rarr;</a></div>
+</div>
+</div>
+</div>
     <footer class="bg-ocean-900 text-slate-300 py-12 border-t border-ocean-800">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
 <div class="mb-4 md:mb-0">

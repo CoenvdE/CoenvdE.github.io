@@ -52,7 +52,7 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
-    <nav class="fixed w-full z-[9999] bg-white/90 backdrop-blur-md border-b border-slate-200">
+    <nav class="fixed top-0 w-full z-[9999] bg-white/90 backdrop-blur-md border-b border-slate-200">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 <div class="flex justify-between h-16 items-center">
 <div class="flex-shrink-0 font-serif font-bold text-xl text-ocean-900">
@@ -74,8 +74,25 @@
 </div>
 </div>
 </nav>
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-32 bg-white shadow-xl rounded-lg my-20 prose prose-slate prose-brand">
-                <h2 id="optimizing-the-pipeline-model">Optimizing the pipeline: Model</h2>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 mt-16">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<div class="md:col-span-1 hidden md:block">
+<div class="sticky top-24 bg-white shadow-xl rounded-lg p-6">
+<h3 class="text-lg font-bold text-ocean-900 mb-4 border-b pb-2">Chapters</h3>
+<ul class="space-y-3">
+<li><a href="index.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">Training at larger scale</a></li>
+<li><a href="part1.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">The Setup</a></li>
+<li><a href="part2.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">Multi-GPU training</a></li>
+<li><a href="part3.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">Bigger data in the cloud</a></li>
+<li><a href="part4.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">Optimizing the pipeline: Data</a></li>
+<li><a href="part5.html" class="text-sm block text-brand-600 font-bold border-l-2 border-brand-500 pl-2">Optimizing the pipeline: Model</a></li>
+<li><a href="part6.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">What Is Next</a></li>
+<li><a href="part7.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">Appendix</a></li>
+</ul>
+</div>
+</div>
+<div class="md:col-span-3 bg-white shadow-xl rounded-lg p-8 prose prose-slate prose-brand max-w-none">
+<h2 id="optimizing-the-pipeline-model">Optimizing the pipeline: Model</h2>
 <p>After optimizing the data pipeline, the next step is investigating the model pipeline to catch bottlenecks like slow ops or CPU–GPU data transfers.
 This is an optional step that, if the code is implemented correctly, will probably not have a big impact on the training time. For this chapter, I made a tool to help you analyse the model pipeline performance. I do suggest you to run the benchmark script and let ChatGPT or another good LLM analyse the results for you and help you figure out if you need to improve something. This part is mainly about reducing the time it takes for a batch to pass through your model pipeline. If you don't need to do it, you can skip this section and look at the <a href="part6.html">next chapter</a>.</p>
 <p>The time it takes for a batch to pass through your model depends on several factors:</p>
@@ -164,8 +181,10 @@ DEFAULT_DATA_CLASS = DataModuleClass
 <p>Additional information can be found in <a href="https://lightning.ai/docs/pytorch/stable/advanced/compile.html">PyTorch Lightning: <code>compile</code> for speed</a> and <a href="https://lightning.ai/docs/pytorch/stable/advanced/speed.html">PyTorch Lightning: General speed-up tips</a></p>
 <h2 id="next-steps">Next Steps</h2>
 <p>Before moving on to actual training, I wrote a final chapter on <a href="part6.html">what is next</a>. These are some final considerations, tips and tricks that I think are important to consider before actually training your model.</p>
-                <div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-200"><a href="part4.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">&larr; Previous Chapter: Optimizing the pipeline: Data</a><a href="part6.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">Next Chapter: What Is Next &rarr;</a></div>
-            </div>
+<div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-200"><a href="part4.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">&larr; Previous Chapter: Optimizing the pipeline: Data</a><a href="part6.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">Next Chapter: What Is Next &rarr;</a></div>
+</div>
+</div>
+</div>
     <footer class="bg-ocean-900 text-slate-300 py-12 border-t border-ocean-800">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
 <div class="mb-4 md:mb-0">

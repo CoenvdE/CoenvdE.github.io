@@ -27,7 +27,6 @@ def build():
             link['href'] = '../../' + link['href']
     head = str(head)
 
-    # We also need to fix nav links from index.html (like #about) to point to ../../index.html#about
     nav_str = str(soup.find('nav'))
     nav_str = nav_str.replace('href="#', 'href="../../index.html#')
 
@@ -44,7 +43,6 @@ def build():
 
     parts.sort(key=sort_key)
 
-    # Process all parts to get titles for navigation
     chapters = []
     for part in parts:
         with open(part, 'r') as f:
@@ -62,15 +60,11 @@ def build():
                 if len(parts_split) > 2:
                     content = parts_split[2]
 
-            # fix image paths - we are in blogs/training-at-larger-scale/
-            # so images are at ../../images/training-blog/
             content = content.replace('/images/training-blog/', '../../images/training-blog/')
-            # Old link mappings like [Next Chapter](/blogs/training-at-larger-scale/part2/) -> part2.html
             content = re.sub(r'\/blogs\/training-at-larger-scale\/([a-zA-Z0-9_-]+)\/', r'\1.html', content)
 
             html_content = md.convert(content)
 
-            # Generate navigation links
             nav_links = "<div class=\"flex justify-between items-center mt-12 pt-8 border-t border-slate-200\">"
             if i > 0:
                 prev_ch = chapters[i-1]
@@ -85,17 +79,28 @@ def build():
                 nav_links += "<div></div>"
             nav_links += "</div>"
 
-            blog_content = f"""<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-32 bg-white shadow-xl rounded-lg my-20 prose prose-slate prose-brand">
-                {html_content}
-                {nav_links}
-            </div>"""
+            # Sidebar chapter list
+            sidebar = "<div class=\"md:col-span-1 hidden md:block\">\n"
+            sidebar += "<div class=\"sticky top-24 bg-white shadow-xl rounded-lg p-6\">\n"
+            sidebar += "<h3 class=\"text-lg font-bold text-ocean-900 mb-4 border-b pb-2\">Chapters</h3>\n"
+            sidebar += "<ul class=\"space-y-3\">\n"
+            for j, ch in enumerate(chapters):
+                active_class = "text-brand-600 font-bold border-l-2 border-brand-500 pl-2" if i == j else "text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors"
+                sidebar += f"<li><a href=\"{ch['out_name']}\" class=\"text-sm block {active_class}\">{ch['title']}</a></li>\n"
+            sidebar += "</ul>\n</div>\n</div>"
+
+            # Main content wrapper
+            main_content = f"<div class=\"md:col-span-3 bg-white shadow-xl rounded-lg p-8 prose prose-slate prose-brand max-w-none\">\n{html_content}\n{nav_links}\n</div>"
+
+            # Put them together in a grid
+            blog_layout = f"<div class=\"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 mt-16\">\n<div class=\"grid grid-cols-1 md:grid-cols-4 gap-8\">\n{sidebar}\n{main_content}\n</div>\n</div>"
 
             final_html = f"""<!DOCTYPE html>
 <html lang="en">
 {head}
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
     {nav_str}
-    {blog_content}
+    {blog_layout}
     {footer}
 </body>
 </html>"""
