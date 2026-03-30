@@ -7,6 +7,7 @@
 <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
 <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -50,24 +51,40 @@
             background: linear-gradient(135deg, #082f49 0%, #134e4a 100%);
         }
     </style>
+<script>
+        // Check for saved theme preference or use system preference
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
-    <nav class="fixed top-0 w-full z-[9999] bg-white/90 backdrop-blur-md border-b border-slate-200">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 antialiased selection:bg-brand-500 selection:text-white transition-colors duration-300">
+    <nav class="fixed top-0 w-full z-[9999] bg-white dark:bg-slate-800/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 dark:border-slate-800 transition-colors duration-300">
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 <div class="flex justify-between h-16 items-center">
-<div class="flex-shrink-0 font-serif font-bold text-xl text-ocean-900">
+<a class="flex-shrink-0 font-serif font-bold text-xl text-ocean-900 dark:text-brand-300 dark:text-brand-400 hover:text-brand-600 dark:hover:text-brand-300 transition-colors" href="index.html">
                     Coen van den Elsen
-                </div>
-<div class="hidden md:flex space-x-8">
-<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#about">About</a>
-<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#experience">Experience</a>
-<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#education">Education</a>
-<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#blogs">Blogs</a>
-<a class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors" href="../../index.html#projects">Projects</a>
+                </a>
+<div class="hidden md:flex space-x-8 items-center">
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#about">About</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#experience">Experience</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#education">Education</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#projects">Projects</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#blogs">Blogs</a>
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 focus:outline-none rounded-lg text-sm p-2.5 transition-colors" id="theme-toggle" type="button">
+<i class="fas fa-moon hidden text-lg" id="theme-toggle-dark-icon"></i>
+<i class="fas fa-sun hidden text-lg" id="theme-toggle-light-icon"></i>
+</button>
 </div>
-<div class="md:hidden">
+<div class="md:hidden flex items-center space-x-4">
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 focus:outline-none rounded-lg text-sm p-2.5 transition-colors" id="theme-toggle-mobile" type="button">
+<i class="fas fa-moon hidden text-lg" id="theme-toggle-dark-icon-mobile"></i>
+<i class="fas fa-sun hidden text-lg" id="theme-toggle-light-icon-mobile"></i>
+</button>
 <!-- Mobile menu button -->
-<button class="text-slate-600 hover:text-brand-600 focus:outline-none" type="button">
+<button class="text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 focus:outline-none" type="button">
 <i class="fas fa-bars text-xl"></i>
 </button>
 </div>
@@ -77,21 +94,21 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 mt-16">
 <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
 <div class="md:col-span-1 hidden md:block">
-<div class="sticky top-24 bg-white shadow-xl rounded-lg p-6">
-<h3 class="text-lg font-bold text-ocean-900 mb-4 border-b pb-2">Chapters</h3>
+<div class="sticky top-24 bg-white dark:bg-slate-800 shadow-xl rounded-lg p-6 border border-slate-100 dark:border-slate-700">
+<h3 class="text-lg font-bold text-ocean-900 dark:text-brand-300 mb-4 border-b border-slate-200 dark:border-slate-700 pb-2">Chapters</h3>
 <ul class="space-y-3">
-<li><a href="index.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">Training at larger scale</a></li>
-<li><a href="part1.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">The Setup</a></li>
-<li><a href="part2.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">Multi-GPU training</a></li>
-<li><a href="part3.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">Bigger data in the cloud</a></li>
-<li><a href="part4.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">Optimizing the pipeline: Data</a></li>
-<li><a href="part5.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">Optimizing the pipeline: Model</a></li>
-<li><a href="part6.html" class="text-sm block text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors">What Is Next</a></li>
-<li><a href="part7.html" class="text-sm block text-brand-600 font-bold border-l-2 border-brand-500 pl-2">Appendix</a></li>
+<li><a href="index.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Training at larger scale</a></li>
+<li><a href="part1.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">The Setup</a></li>
+<li><a href="part2.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Multi-GPU training</a></li>
+<li><a href="part3.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Bigger data in the cloud</a></li>
+<li><a href="part4.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Optimizing the pipeline: Data</a></li>
+<li><a href="part5.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Optimizing the pipeline: Model</a></li>
+<li><a href="part6.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">What Is Next</a></li>
+<li><a href="part7.html" class="text-sm block text-brand-600 dark:text-brand-400 font-bold border-l-2 border-brand-500 pl-2">Appendix</a></li>
 </ul>
 </div>
 </div>
-<div class="md:col-span-3 bg-white shadow-xl rounded-lg p-8 prose prose-slate prose-brand max-w-none">
+<div class="md:col-span-3 bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-lg p-8 prose prose-slate dark:prose-invert prose-brand max-w-none">
 <h1 id="appendix">Appendix</h1>
 <p>Here you can find the additional information as referenced in the chapters.</p>
 <h2 id="1-overview-of-advantages-of-lightning-over-raw-pytorch">1. Overview of advantages of Lightning over Raw PyTorch</h2>

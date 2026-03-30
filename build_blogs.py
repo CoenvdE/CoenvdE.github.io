@@ -81,16 +81,16 @@ def build():
 
             # Sidebar chapter list
             sidebar = "<div class=\"md:col-span-1 hidden md:block\">\n"
-            sidebar += "<div class=\"sticky top-24 bg-white shadow-xl rounded-lg p-6\">\n"
-            sidebar += "<h3 class=\"text-lg font-bold text-ocean-900 mb-4 border-b pb-2\">Chapters</h3>\n"
+            sidebar += "<div class=\"sticky top-24 bg-white dark:bg-slate-800 shadow-xl rounded-lg p-6 border border-slate-100 dark:border-slate-700\">\n"
+            sidebar += "<h3 class=\"text-lg font-bold text-ocean-900 dark:text-brand-300 mb-4 border-b border-slate-200 dark:border-slate-700 pb-2\">Chapters</h3>\n"
             sidebar += "<ul class=\"space-y-3\">\n"
             for j, ch in enumerate(chapters):
-                active_class = "text-brand-600 font-bold border-l-2 border-brand-500 pl-2" if i == j else "text-slate-600 hover:text-brand-600 pl-2 border-l-2 border-transparent transition-colors"
+                active_class = "text-brand-600 dark:text-brand-400 font-bold border-l-2 border-brand-500 pl-2" if i == j else "text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors"
                 sidebar += f"<li><a href=\"{ch['out_name']}\" class=\"text-sm block {active_class}\">{ch['title']}</a></li>\n"
             sidebar += "</ul>\n</div>\n</div>"
 
             # Main content wrapper
-            main_content = f"<div class=\"md:col-span-3 bg-white shadow-xl rounded-lg p-8 prose prose-slate prose-brand max-w-none\">\n{html_content}\n{nav_links}\n</div>"
+            main_content = f"<div class=\"md:col-span-3 bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-lg p-8 prose prose-slate dark:prose-invert prose-brand max-w-none\">\n{html_content}\n{nav_links}\n</div>"
 
             # Put them together in a grid
             blog_layout = f"<div class=\"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 mt-16\">\n<div class=\"grid grid-cols-1 md:grid-cols-4 gap-8\">\n{sidebar}\n{main_content}\n</div>\n</div>"
@@ -98,7 +98,7 @@ def build():
             final_html = f"""<!DOCTYPE html>
 <html lang="en">
 {head}
-<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 antialiased selection:bg-brand-500 selection:text-white transition-colors duration-300">
     {nav_str}
     {blog_layout}
     {footer}
