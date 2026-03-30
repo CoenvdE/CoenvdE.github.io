@@ -3,7 +3,8 @@
  ******************************************************************************/
 
 body {
-  padding-bottom: 70px;
+  padding-bottom: 90px;
+  padding-top: 20px;
   color: var(--global-text-color);
   background-color: var(--global-bg-color);
 
@@ -14,6 +15,13 @@ body {
   h5,
   h6 {
     scroll-margin-top: 66px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
   }
 }
 
