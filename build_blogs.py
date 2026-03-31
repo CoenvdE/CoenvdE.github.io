@@ -162,6 +162,12 @@ def build():
         border-radius: 0.25rem;
         font-weight: 600;
     }
+    .prose :where(code):not(:where([class~="not-prose"] *))::before {
+        content: "" !important;
+    }
+    .prose :where(code):not(:where([class~="not-prose"] *))::after {
+        content: "" !important;
+    }
     .dark .prose :where(code):not(:where([class~="not-prose"] *)) {
         background-color: theme('colors.slate.800');
         color: theme('colors.brand.300');
