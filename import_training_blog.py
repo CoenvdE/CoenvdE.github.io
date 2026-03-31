@@ -187,6 +187,20 @@ def fix_links(content, md_file_original_name):
                 if 1 <= num <= len(md_files):  # Check if valid chapter number starting from 1
                     content = content.replace(match.group(0), f"[{text}](/blogs/training-at-larger-scale/part{num}/)")
 
+    # Fix specific author links to point to LinkedIn instead of GitHub
+    content = content.replace(
+        "[Laurens Geffert](https://github.com/JanLauGe)",
+        "[Laurens Geffert](https://www.linkedin.com/in/laurensgeffert/)"
+    )
+    content = content.replace(
+        "[Andrew Corbett](https://github.com/andycolbert)",
+        "[Andrew Corbett](https://www.linkedin.com/in/dr-andrew-corbett-427162203/)"
+    )
+    content = content.replace(
+        "[Joe Hamman](https://github.com/jhamman)",
+        "[Joe Hamman](https://www.linkedin.com/in/jhamman/)"
+    )
+
     # First, replace any already fixed paths to avoid double-fixing
     # This handles cases where "/images/training-blog/" might already be in the content
     content = content.replace("/images/training-blog/images/", "/images/training-blog/")

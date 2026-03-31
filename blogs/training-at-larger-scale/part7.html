@@ -196,9 +196,9 @@
 </table>
 <h2 id="2-optimizing-the-dataset">2. Optimizing the Dataset</h2>
 <ol>
-<li><strong>Efficient Storage Formats</strong>:</li>
+<li><strong>Efficient Storage Formats</strong>: </li>
 </ol>
-<p>Initially, my data was stored in NetCDF files, which are common for scientific data but can be inefficient when working with streaming from cloud storage. The default chunking in these files was not optimized for machine learning, causing unnecessary data to be loaded into memory during training. To address this, I stored everything in <a href="https://zarr.readthedocs.io/">Zarr</a>. Zarr is specifically designed for fast cloud-based data access. I will not include the migration in this blog, as it is out of scope, I just want to show that it is important to think about the data formats used.</p>
+<p>Initially, my data was stored in NetCDF files, which are common for scientific data but can be inefficient when working with streaming from cloud storage. The default chunking in these files was not optimized for machine learning, causing unnecessary data to be loaded into memory during training. To address this, I stored everything in <a href="https://zarr.readthedocs.io/">Zarr</a>. Zarr is specifically designed for fast cloud-based data access. I will not include the migration in this blog, as it is out of scope, I just want to show that it is important to think about the data formats used. </p>
 <p><strong>Zarr v3 Performance Tip</strong></p>
 <p>When using <strong>Zarr v3</strong>, you can achieve a significant speedup by disabling Dask during dataset loading. By setting <code>chunks=None</code>, you bypass Dask's graph-building overhead and allow Xarray to use its internal lazy-indexing. This is often faster because Zarr v3's own storage layer is already optimized for concurrent I/O.</p>
 <p><code>python
@@ -210,7 +210,7 @@
       chunks=None
    )</code></p>
 <ol>
-<li><strong>Optimal Chunking</strong>:</li>
+<li><strong>Optimal Chunking</strong>: </li>
 </ol>
 <p>When streaming data, the goal is to minimize both the amount of data loaded and the number of individual chunk requests made.</p>
 <ul>
@@ -293,13 +293,11 @@
 <li><strong>Maximal chunks</strong>: Worst-case number of chunks needed (when image spans multiple chunks)</li>
 <li><strong>Minimal/maximal bytes</strong>: Corresponding data volume that must be transferred</li>
 </ul>
-<p>The results show that a 64×64 chunk size (matching the image dimensions) provides the optimal balance:</p>
-<ul>
-<li>It requires loading only 1-4 chunks per image</li>
-<li>The data volume ranges from 4,096 to 16,384 bytes</li>
-<li>Larger chunk sizes (128×128+) dramatically increase the bytes loaded</li>
-<li>Smaller chunk sizes (8×8 to 32×32) require substantially more chunk requests</li>
-</ul>
+<p>The results show that a 64×64 chunk size (matching the image dimensions) provides the optimal balance:
+   - It requires loading only 1-4 chunks per image
+   - The data volume ranges from 4,096 to 16,384 bytes
+   - Larger chunk sizes (128×128+) dramatically increase the bytes loaded
+   - Smaller chunk sizes (8×8 to 32×32) require substantially more chunk requests</p>
 <div align="center" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
    <div>
       <img src="../../images/training-blog/bytes_chunksize.png" alt="Bytes vs Chunk Size" width="350">
@@ -321,7 +319,7 @@
 <p>When working with lazy-loading/streaming data into GPU memory, there are several parameters you might need to optimize:</p>
 <ol>
 <li>
-<p><strong>Parallel Loading Parameters</strong>:</p>
+<p><strong>Parallel Loading Parameters</strong>: </p>
 <ul>
 <li>Number of concurrent readers/workers (processes that execute computations)</li>
 <li>Memory limits per worker (to prevent OOM errors)</li>
@@ -339,22 +337,16 @@
 </ol>
 <p>I will explain how to optimize these (usecase) parameters in the <a href="#appendix-optimizing-dask">next section</a>. For more insights on optimizing cloud data loading, see <a href="https://earthmover.io/blog/cloud-native-dataloader/">Earthmover's guide to cloud-native dataloaders</a> covering streaming techniques, I/O optimization, and resource balancing. Note that this is relevant for zarr v2. In zarr v3, as mentioned above, we disable dask and set chunks=none for an even bigger speedup.</p>
 <h2 id="3-optimizing-dask">3. Optimizing Dask</h2>
-<p>If you're using Dask, you can also leverage the Dask dashboard to monitor:</p>
-<ul>
-<li>Worker memory usage</li>
-<li>CPU utilization</li>
-<li>Task execution</li>
-<li>Resource bottlenecks</li>
-</ul>
+<p>If you're using Dask, you can also leverage the Dask dashboard to monitor:
+- Worker memory usage
+- CPU utilization
+- Task execution
+- Resource bottlenecks</p>
 <p><strong>Understanding Dask Execution Modes</strong></p>
 <p>Dask offers three execution modes, each with different trade-offs:</p>
 <ol>
-<li>
-<p><strong>Single-Threaded Scheduler</strong></p>
-</li>
-<li>
-<p>Uses <code>dask.config.set(scheduler="single-threaded")</code></p>
-</li>
+<li><strong>Single-Threaded Scheduler</strong></li>
+<li>Uses <code>dask.config.set(scheduler="single-threaded")</code></li>
 <li>All tasks run sequentially in the main thread</li>
 <li>No parallelism but minimal overhead</li>
 <li>Useful for debugging or when relying entirely on DataLoader's parallelism</li>
@@ -364,9 +356,7 @@
 <li>
 <p><strong>Threaded Scheduler</strong></p>
 </li>
-<li>
-<p>Uses <code>dask.config.set(scheduler="threads", num_workers=dask_threads)</code></p>
-</li>
+<li>Uses <code>dask.config.set(scheduler="threads", num_workers=dask_threads)</code></li>
 <li>Tasks run in parallel using a thread pool within a single process</li>
 <li>Good for I/O-bound operations (like reading data chunks)</li>
 <li>Moderate parallelism with low overhead</li>
@@ -376,30 +366,24 @@
 <li>
 <p><strong>Distributed Cluster</strong></p>
 </li>
-<li>
-<p>Uses <code>LocalCluster</code> and <code>Client</code> to create a full Dask cluster</p>
-</li>
+<li>Uses <code>LocalCluster</code> and <code>Client</code> to create a full Dask cluster</li>
 <li>Runs multiple worker processes, each with multiple threads</li>
 <li>Provides process-level parallelism, bypassing Python's GIL</li>
 <li>Includes a dashboard for monitoring tasks and resource usage</li>
 <li>Options for per-GPU-process clusters or a single shared cluster</li>
 <li>Higher overhead but better isolation and monitoring capabilities</li>
 </ol>
-<p>For a single GPU with limited CPUs (e.g., 20 cores):</p>
-<ul>
-<li>A threaded scheduler with 4-8 threads is often sufficient</li>
-<li>A small distributed cluster (1-2 workers, 4 threads each) offers better monitoring</li>
-</ul>
-<p>For multi-GPU setups (e.g., 8 GPUs with 20 cores):</p>
-<ul>
-<li>Be careful not to oversubscribe your CPU resources</li>
-<li>If each GPU process uses its own Dask cluster, limit to 1 worker with 2 threads per process</li>
-<li>Consider using a single shared Dask cluster for all GPU processes</li>
-<li>Monitor CPU utilization to avoid contention</li>
-</ul>
+<p>For a single GPU with limited CPUs (e.g., 20 cores):
+   - A threaded scheduler with 4-8 threads is often sufficient
+   - A small distributed cluster (1-2 workers, 4 threads each) offers better monitoring</p>
+<p>For multi-GPU setups (e.g., 8 GPUs with 20 cores):
+   - Be careful not to oversubscribe your CPU resources
+   - If each GPU process uses its own Dask cluster, limit to 1 worker with 2 threads per process
+   - Consider using a single shared Dask cluster for all GPU processes
+   - Monitor CPU utilization to avoid contention</p>
 <p>The key is balancing parallelism against resource constraints. More parallelism isn't always better, especially when resources are shared across multiple GPU processes. Start conservative and scale up while monitoring performance.</p>
 <ol>
-<li><strong>Caching and Locality</strong>: For remote data, implement caching strategies to avoid repeatedly downloading the same data.</li>
+<li><strong>Caching and Locality</strong>: For remote data, implement caching strategies to avoid repeatedly downloading the same data. </li>
 </ol>
 <h2 id="4-profiling-check-your-pipeline">4. Profiling: Check Your Pipeline</h2>
 <h3 id="what-is-it">What is it?</h3>
@@ -477,7 +461,7 @@ Here’s what to look for in each profiler and how to make sense of the data.</p
 <h3 id="when-to-take-action-example_2">When to Take Action (example):</h3>
 <ul>
 <li>If any function is causing a lot of time, (where you expect it to be fast) check if it is necessary.</li>
-<li>If idle gaps exist, investigate DataLoader efficiency</li>
+<li>If idle gaps exist, investigate DataLoader efficiency </li>
 </ul>
 <div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-200"><a href="part6.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">&larr; Previous Chapter: What Is Next</a><div></div></div>
 </div>

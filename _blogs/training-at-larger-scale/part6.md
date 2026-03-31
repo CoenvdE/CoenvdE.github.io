@@ -2,7 +2,7 @@
 layout: blog_collection
 title: "What Is Next"
 description: "Chapter 6 of the Training at Larger Scale series"
-date: 2025-12-11
+date: 2026-03-06
 collection_id: training-at-larger-scale
 chapter_number: 6
 toc: true
@@ -48,23 +48,22 @@ This callback uploads the model checkpoints to the cloud storage at specified in
 You can add this callback to your training loop by adding the following to your [`cli_config.yaml`](https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/6.%20What%20Is%20Next/config/cli_config.yaml) file:
 
 ```yaml
-callbacks:
-  - class_path: src.callbacks.CloudUploadCallback
-    init_args:
-      local_dir: output/test/checkpoints
-      cloud_storage_path: s3://your-bucket/autoencoder-checkpoints
-      upload_interval: 10
-      upload_during_training: true
-      upload_on_fit_end: true
-      filesystem: s3
+  callbacks:
+    - class_path: src.callbacks.CloudUploadCallback
+      init_args:
+        local_dir: output/test/checkpoints
+        cloud_storage_path: s3://your-bucket/autoencoder-checkpoints
+        upload_interval: 10
+        upload_during_training: true
+        upload_on_fit_end: true
+        filesystem: s3
 ```
 
 ### Docker — And Why It's Nice
 
 Docker lets you **containerize** your environment, making sure your code runs the same everywhere—on your laptop or in the cloud.
 Why it's nice:
-
-- Reproducible setups across different machines or cloud providers (Digital Ocean, AWS, etc.)
+- Reproducible setups  across different machines or cloud providers (Digital Ocean, AWS, etc.)
 - Lightweight & portable
 - Dependency management
 - Easy to test in isolated environments
@@ -80,7 +79,6 @@ Choosing the right precision can significantly impact training **speed** and **e
 I changed from `float32` to `16-mixed` and saw a 2x speedup. If your gpu also supports `bf16-mixed`, use that. It is more stable.
 
 Why it's nice:
-
 - Less memory usage
 - Faster training
 - Bigger batch sizes
@@ -94,7 +92,6 @@ precision: 16-mixed # Precision parameter added, default is 32-true (float32)
 Additional information can be found in the [Lightning documentation](https://pytorch-lightning.readthedocs.io/en/1.5.10/guides/speed.html).
 
 ## Step-Based Training
-
 When working with large-scale datasets, the concept of an "epoch" becomes less relevant, as you may only complete 2 or 3 full passes during the entire training process. In these cases, step-based training is the standard. It provides more granular control over logging, checkpointing, and learning rate updates.
 
 To switch to step-based training in PyTorch Lightning, update your cli_config.yaml:
@@ -128,12 +125,10 @@ torch.optim.lr_scheduler.CosineAnnealingWarmRestarts
 ```
 
 ---
-
 ### Environment Variables — And Why They're Nice
 
 Env vars help you **manage secrets and config** without hardcoding.
 Why it's nice:
-
 - Store keys/passwords securely
 - Change behavior across environments (dev, prod, test)
 - Fast configuration without changing code

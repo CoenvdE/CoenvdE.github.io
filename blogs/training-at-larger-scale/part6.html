@@ -146,10 +146,10 @@ Here I'll cover my last tips and tricks, one more failsafe and some final experi
 <h3 id="experiment-first-train-later">Experiment First, Train Later</h3>
 <p>Before jumping into full-scale training, it's important to run some experiments first (e.g. how big should a patch be? What would be a good optimizer configuration starting point?). The idea is not to test this on the full training run, but test it for e.g. 200 (instead of 3000) epochs, and observe the loss curves over epochs.</p>
 <ul>
-<li>Select a baseline configuration</li>
+<li>Select a baseline configuration  </li>
 <li>Observe the loss curves and training speed</li>
-<li>Run small-scale experiments to test different settings</li>
-<li>Compare outcomes to identify the best setup</li>
+<li>Run small-scale experiments to test different settings  </li>
+<li>Compare outcomes to identify the best setup  </li>
 </ul>
 <p>This approach helps avoid wasting compute and accelerates convergence.</p>
 <h3 id="failsafe-uploading-to-the-cloud-intermittently">Failsafe: uploading to the cloud intermittently</h3>
@@ -158,37 +158,33 @@ Training pipelines sometimes crash due to various reasons, and it's always good 
 For this reason I have uploaded a <code>CloudUploadCallback</code> in <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/6.%20What%20Is%20Next/src/callbacks.py">callbacks.py</a>.
 This callback uploads the model checkpoints to the cloud storage at specified intervals and/or when the training is finished.</p>
 <p>You can add this callback to your training loop by adding the following to your <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/6.%20What%20Is%20Next/config/cli_config.yaml"><code>cli_config.yaml</code></a> file:</p>
-<pre><code class="language-yaml">callbacks:
-  - class_path: src.callbacks.CloudUploadCallback
-    init_args:
-      local_dir: output/test/checkpoints
-      cloud_storage_path: s3://your-bucket/autoencoder-checkpoints
-      upload_interval: 10
-      upload_during_training: true
-      upload_on_fit_end: true
-      filesystem: s3
+<pre><code class="language-yaml">  callbacks:
+    - class_path: src.callbacks.CloudUploadCallback
+      init_args:
+        local_dir: output/test/checkpoints
+        cloud_storage_path: s3://your-bucket/autoencoder-checkpoints
+        upload_interval: 10
+        upload_during_training: true
+        upload_on_fit_end: true
+        filesystem: s3
 </code></pre>
 <h3 id="docker-and-why-its-nice">Docker — And Why It's Nice</h3>
 <p>Docker lets you <strong>containerize</strong> your environment, making sure your code runs the same everywhere—on your laptop or in the cloud.<br />
-Why it's nice:</p>
-<ul>
-<li>Reproducible setups across different machines or cloud providers (Digital Ocean, AWS, etc.)</li>
-<li>Lightweight &amp; portable</li>
-<li>Dependency management</li>
-<li>Easy to test in isolated environments</li>
-</ul>
+Why it's nice:
+- Reproducible setups  across different machines or cloud providers (Digital Ocean, AWS, etc.)
+- Lightweight &amp; portable<br />
+- Dependency management
+- Easy to test in isolated environments  </p>
 <p>This personally helped me a lot as switching between different machines and cloud providers went almost seamless.
 Get started with docker with this <a href="https://dev.to/docker/getting-started-with-docker-for-aiml-a-beginners-guide-4k6j">guide</a>, watch some videos and discuss with a nice LLM.</p>
 <hr />
 <h3 id="precision-in-training-in-pytorch-lightning">Precision in Training (in PyTorch Lightning)</h3>
 <p>Choosing the right precision can significantly impact training <strong>speed</strong> and <strong>efficiency</strong>, without sacrificing performance—if used correctly.
 I changed from <code>float32</code> to <code>16-mixed</code> and saw a 2x speedup. If your gpu also supports <code>bf16-mixed</code>, use that. It is more stable.</p>
-<p>Why it's nice:</p>
-<ul>
-<li>Less memory usage</li>
-<li>Faster training</li>
-<li>Bigger batch sizes</li>
-</ul>
+<p>Why it's nice:
+- Less memory usage<br />
+- Faster training<br />
+- Bigger batch sizes  </p>
 <p>you can change this by adding the following to your <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/6.%20What%20Is%20Next/config/cli_config.yaml"><code>cli_config.yaml</code></a> file:</p>
 <pre><code class="language-yaml">precision: 16-mixed # Precision parameter added, default is 32-true (float32)
 </code></pre>
@@ -218,12 +214,10 @@ As a general strategy, it typically performs better than fixed or step decay sch
 <hr />
 <h3 id="environment-variables-and-why-theyre-nice">Environment Variables — And Why They're Nice</h3>
 <p>Env vars help you <strong>manage secrets and config</strong> without hardcoding.<br />
-Why it's nice:</p>
-<ul>
-<li>Store keys/passwords securely</li>
-<li>Change behavior across environments (dev, prod, test)</li>
-<li>Fast configuration without changing code</li>
-</ul>
+Why it's nice:
+- Store keys/passwords securely<br />
+- Change behavior across environments (dev, prod, test)<br />
+- Fast configuration without changing code  </p>
 <p>Here's a simple <code>.env example</code> file example:</p>
 <pre><code># Cloud storage credentials
 CLOUD_STORAGE_KEY=your_secret_key_here

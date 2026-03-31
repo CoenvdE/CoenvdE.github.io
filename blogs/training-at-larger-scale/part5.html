@@ -135,7 +135,9 @@
 This is an optional step that, if the code is implemented correctly, will probably not have a big impact on the training time. For this chapter, I made a tool to help you analyse the model pipeline performance. I do suggest you to run the benchmark script and let ChatGPT or another good LLM analyse the results for you and help you figure out if you need to improve something. This part is mainly about reducing the time it takes for a batch to pass through your model pipeline. If you don't need to do it, you can skip this section and look at the <a href="part6.html">next chapter</a>.</p>
 <p>The time it takes for a batch to pass through your model depends on several factors:</p>
 <ul>
-<li><strong>Batch size</strong>: Larger batch sizes generally increase the duration of a single training step because more data is processed simultaneously. Operations like a dot product scale linearly with the batch size, so the duration of a single training step increases with the batch size. However, the relationship isn't always linear - GPUs can achieve higher utilization with larger batches, potentially making the per-sample processing time lower.</li>
+<li>
+<p><strong>Batch size</strong>: Larger batch sizes generally increase the duration of a single training step because more data is processed simultaneously. Operations like a dot product scale linearly with the batch size, so the duration of a single training step increases with the batch size. However, the relationship isn't always linear - GPUs can achieve higher utilization with larger batches, potentially making the per-sample processing time lower.</p>
+</li>
 <li>
 <p><strong>Model complexity</strong>: More complex models (deeper, wider networks) take longer to process each batch.</p>
 </li>
@@ -143,7 +145,7 @@ This is an optional step that, if the code is implemented correctly, will probab
 <p><strong>Hardware</strong>: The specs of your GPU/TPU significantly impact processing time.</p>
 </li>
 </ul>
-<p>In my experiments, a single training step took around 0.4 seconds for moderate-sized models with a batch size of 32. This can vary widely - from milliseconds for small models to several seconds for larger architectures. I have seen 0.1 seconds as well with other models. For my model, the time it took to complete 1 step scaled around linearly with the batch size, which makes sense given that most operations scale linearly with the batch size (e.g. a dot product).</p>
+<p>In my experiments, a single training step took around 0.4 seconds for moderate-sized models with a batch size of 32. This can vary widely - from milliseconds for small models to several seconds for larger architectures. I have seen 0.1 seconds as well with other models. For my model, the time it took to complete 1 step scaled around linearly with the batch size, which makes sense given that most operations scale linearly with the batch size (e.g. a dot product). </p>
 <pre><code>4. Optimizing the pipeline: Model/
 ├── profiler.py
 ├── timing_benchmark.py
@@ -163,16 +165,14 @@ This is an optional step that, if the code is implemented correctly, will probab
 └── output/
 </code></pre>
 <h3 id="easy-timing-benchmark">Easy timing benchmark</h3>
-<p><a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/5.%20Optimizing%20the%20pipeline%3A%20Model/timing_benchmark.py">This</a> is a tool I made to benchmark a pipeline. It is designed to work with <strong>any</strong> PyTorch Lightning model module and data module, so you can also use it to benchmark your own model pipeline. It measures detailed timing information for each step of the training process:</p>
-<ul>
-<li>Data loading time</li>
-<li>Forward pass time</li>
-<li>Backward pass time</li>
-<li>Other ops: everything that happens after the backward pass but before the end of the batch. This primarily includes:</li>
-<li>The optimizer step (applying gradients to update model weights)</li>
-<li>Scaler updates (when using mixed precision)</li>
-<li>Any additional overhead between batches</li>
-</ul>
+<p><a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/5.%20Optimizing%20the%20pipeline%3A%20Model/timing_benchmark.py">This</a> is a tool I made to benchmark a pipeline. It is designed to work with <strong>any</strong> PyTorch Lightning model module and data module, so you can also use it to benchmark your own model pipeline. It measures detailed timing information for each step of the training process:
+  - Data loading time
+  - Forward pass time
+  - Backward pass time
+  - Other ops: everything that happens after the backward pass but before the end of the batch. This primarily includes:
+    - The optimizer step (applying gradients to update model weights)
+    - Scaler updates (when using mixed precision)
+    - Any additional overhead between batches</p>
 <p>I find the timing summary printed at the end of the script particularly useful. It gives you a good overview of the time spent in each step of the pipeline.</p>
 <h2 id="usage">Usage</h2>
 <p>Replace the model and data classes with your own.</p>

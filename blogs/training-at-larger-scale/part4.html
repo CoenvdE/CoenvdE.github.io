@@ -131,11 +131,9 @@
 </div>
 <div class="md:col-span-3 bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-lg p-8 prose prose-slate dark:prose-invert prose-brand max-w-none">
 <h2 id="optimizing-the-pipeline-data">Optimizing the pipeline: Data</h2>
-<p>Efficient data loading can significantly reduce training time and costs</p>
-<ul>
-<li>The GPU (or TPU/HPU etc.) is <strong>the most expensive and performance-critical component</strong> in a training pipeline.</li>
-<li>If the data pipeline (i.e., loading, preprocessing, transferring) is slow, the GPU will sit idle, waiting for the next batch.</li>
-</ul>
+<p>Efficient data loading can significantly reduce training time and costs
+- The GPU (or TPU/HPU etc.) is <strong>the most expensive and performance-critical component</strong> in a training pipeline.
+- If the data pipeline (i.e., loading, preprocessing, transferring) is slow, the GPU will sit idle, waiting for the next batch.</p>
 <h3 id="what-you-want">What You Want</h3>
 <ul>
 <li>A data pipeline <strong>that saturates the GPU as much as possible</strong> without introducing too much memory pressure or over demanding CPUs.</li>
@@ -158,28 +156,20 @@
 <li>
 <p><strong>CPU (cores)</strong>:</p>
 </li>
-<li>
-<p>Used by the <strong>main process and workers</strong> to (lazy) load, transform, and prepare data for training. You want high CPU usage (busy workers) but not so high that the OS or other processes starve. If your CPU utilization is peaking at 100% on all cores and the system becomes unresponsive or the throughput plateaus, you may have too many workers or threads.</p>
-</li>
+<li>Used by the <strong>main process and workers</strong> to (lazy) load, transform, and prepare data for training. You want high CPU usage (busy workers) but not so high that the OS or other processes starve. If your CPU utilization is peaking at 100% on all cores and the system becomes unresponsive or the throughput plateaus, you may have too many workers or threads.</li>
 <li>You can check available CPUs using:</li>
 </ul>
 <p><code>python
   import os
   print(os.cpu_count())</code></p>
 <ul>
-<li>
-<p><strong>RAM (used by CPU processed tasks)</strong>:</p>
-</li>
-<li>
-<p>Used by workers to load batches into memory.</p>
-</li>
+<li><strong>RAM (used by CPU processed tasks)</strong>:</li>
+<li>Used by workers to load batches into memory.</li>
 <li>Important when working with large datasets, large batch sizes, or complex transforms.</li>
 </ul>
-<p><strong>vRAM (used by GPU)</strong>:</p>
+<p><strong>vRAM (used by GPU)</strong>:
+   - During model training weights, gradients and calculations are stored here.</p>
 <ul>
-<li>
-<p>During model training weights, gradients and calculations are stored here.</p>
-</li>
 <li>
 <p><strong>I/O Considerations</strong></p>
 </li>
@@ -221,7 +211,7 @@
 <li>Configure optimal data reading (e.g. chunk sizes, thread count, worker count)</li>
 <li>Configure DataLoader for optimal batch preparation (e.g. num_workers, prefetch_factor)</li>
 </ol>
-<p>It's important to avoid conflicting parallelism between these systems because too many concurrent processes and threads can lead to resource contention and degraded performance.</p>
+<p>It's important to avoid conflicting parallelism between these systems because too many concurrent processes and threads can lead to resource contention and degraded performance. </p>
 <h3 id="benchmarking-practical-guidelines-and-background">Benchmarking: Practical guidelines and background</h3>
 <hr />
 <p>I have created scripts to help you optimize your data pipeline, but before we dive into the benchmarking and optimization, it is important to understand how everything works.</p>
@@ -249,12 +239,8 @@ Follow my guide and your speed should already improve a lot. Experimenting endle
 <hr />
 <p>The DataLoader is critical for training performance. Key parameters to optimize:</p>
 <ol>
-<li>
-<p><strong><code>num_workers</code></strong>: Controls parallel data loading subprocesses</p>
-</li>
-<li>
-<p>Too few: GPU waits for data</p>
-</li>
+<li><strong><code>num_workers</code></strong>: Controls parallel data loading subprocesses</li>
+<li>Too few: GPU waits for data</li>
 <li>Too many: Resource contention, diminishing returns</li>
 <li>
 <p>NOTE: num_workers is not about CPU's but processes, and a process may use more or less than 1 cpu core.</p>
@@ -262,9 +248,7 @@ Follow my guide and your speed should already improve a lot. Experimenting endle
 <li>
 <p><strong><code>prefetch_factor</code></strong>: Batches loaded in advance per worker</p>
 </li>
-<li>
-<p>Default is 2, which works for most cases</p>
-</li>
+<li>Default is 2, which works for most cases</li>
 <li>Adjust based on sample size and memory requirements</li>
 <li>
 <p>Total prefetched = <code>num_workers * prefetch_factor</code></p>
@@ -272,9 +256,7 @@ Follow my guide and your speed should already improve a lot. Experimenting endle
 <li>
 <p><strong><code>pin_memory</code></strong>: Enables faster CPU to GPU transfers</p>
 </li>
-<li>
-<p>Set to <code>True</code> when using GPU</p>
-</li>
+<li>Set to <code>True</code> when using GPU</li>
 <li>Creates page-locked memory for direct transfers</li>
 <li>
 <p>Slightly increases CPU memory usage</p>
@@ -282,9 +264,7 @@ Follow my guide and your speed should already improve a lot. Experimenting endle
 <li>
 <p><strong><code>persistent_workers</code></strong>: Keeps workers alive between epochs</p>
 </li>
-<li>
-<p>Reduces worker initialization overhead</p>
-</li>
+<li>Reduces worker initialization overhead</li>
 <li>Useful for large datasets and complex initialization</li>
 <li>
 <p>Significantly reduces epoch transition time</p>
@@ -296,17 +276,13 @@ Follow my guide and your speed should already improve a lot. Experimenting endle
 <li>Use 'forkserver' (or 'spawn') for better CUDA compatibility</li>
 <li>Note: for more detail, you can read the <a href="https://docs.pytorch.org/docs/stable/notes/multiprocessing.html">Pytorch docs</a></li>
 </ol>
-<p>Even with an efficient dataset, proper DataLoader settings are crucial.</p>
+<p>Even with an efficient dataset, proper DataLoader settings are crucial. </p>
 <hr />
 <h3 id="optimizing-benchmarking-tools-for-dataloader-optimization">Optimizing: Benchmarking Tools for DataLoader Optimization</h3>
 <p>I created two files to help you optimize your data pipeline:</p>
 <ol>
-<li>
-<p><strong><a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py"><code>benchmark_configurations.py</code></a></strong></p>
-</li>
-<li>
-<p>suitable for any pytorch Dataset object</p>
-</li>
+<li><strong><a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py"><code>benchmark_configurations.py</code></a></strong></li>
+<li>suitable for any pytorch Dataset object</li>
 <li>Runs and logs different DataLoader configurations</li>
 <li>Measures performance metrics for each configuration</li>
 <li>Includes Dask integration (commented out by default for those who don't need it)</li>
@@ -339,9 +315,7 @@ Follow my guide and your speed should already improve a lot. Experimenting endle
 <li>
 <p><strong>Establish a baseline</strong> Start with minimal configuration:</p>
 </li>
-<li>
-<p><code>num_workers = 0</code> (single-process loading)</p>
-</li>
+<li><code>num_workers = 0</code> (single-process loading)</li>
 <li><code>prefetch_factor = None</code> (default behavior)</li>
 <li><code>persistent_workers = False</code></li>
 <li>

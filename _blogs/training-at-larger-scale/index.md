@@ -7,8 +7,7 @@ display_chapters: false
 ---
 
 # Training at larger scale
-
-_By [Coen van den Elsen](https://coenvde.github.io/)_
+*By [Coen van den Elsen](https://coenvde.github.io/)*
 
 ---
 
@@ -53,22 +52,18 @@ I'll walk you through my process of implementing and optimizing everything. Each
 ## Installation
 
 1.  **Clone the repository:**
-
     ```bash
     git clone https://github.com/CoenvdE/Training-at-larger-scale-blog.git
     cd Training-at-larger-scale-blog
     ```
 
 2.  **Install uv (if you haven't already):**
-
     ```bash
     pip install uv
     ```
-
     Or, for other installation methods, see the [uv documentation](https://astral.sh/uv/install.sh).
 
 3.  **Create a virtual environment and install dependencies:**
-
     ```bash
     uv venv
     uv sync
@@ -77,15 +72,12 @@ I'll walk you through my process of implementing and optimizing everything. Each
     This will create a virtual environment in `.venv` and install all necessary packages.
 
 4.  **Run the code:**
-
     ```bash
     uv run python your_script.py
     ```
-
     This will run your Python script in the virtual environment with all dependencies available.
 
 5.  **Optional: Set up a conda environment with Jupyter kernel:**
-
     ```bash
     # conda environment
     conda create -n training-at-larger-scale python=3.12
@@ -97,5 +89,4 @@ I'll walk you through my process of implementing and optimizing everything. Each
     You can now select the "Training at Larger Scale" kernel in Jupyter notebooks to use all the installed dependencies.
 
 ## Acknowledgements
-
-I would like to thank [Laurens Geffert](https://github.com/JanLauGe), [Andrew Corbett](https://github.com/andycolbert) and [Joe Hamman](https://github.com/jhamman) for their helpful feedback and suggestions. I would like to thank [OceanOS](https://www.oceanos.earth/) for supporting me in writing this blog and enabling me to focus on research. I would like to thank [Mohammad Islam](https://www.linkedin.com/in/mohammadniaz/) for his helpful feedback and suggestions.
+I would like to thank [Laurens Geffert](https://www.linkedin.com/in/laurensgeffert/), [Andrew Corbett](https://www.linkedin.com/in/dr-andrew-corbett-427162203/) and [Joe Hamman](https://www.linkedin.com/in/jhamman/) for their helpful feedback and suggestions. I would like to thank [OceanOS](https://www.oceanos.earth/) for supporting me in writing this blog and enabling me to focus on research. I would like to thank [Mohammad Islam](https://www.linkedin.com/in/mohammadniaz/) for his helpful feedback and suggestions.
