@@ -31,7 +31,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install markdown beautifulsoup4
+          pip install markdown beautifulsoup4 pymdown-extensions
 
       - name: Build blogs
         run: |

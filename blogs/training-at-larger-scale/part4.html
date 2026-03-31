@@ -145,14 +145,13 @@
 <li>A data pipeline <strong>that saturates the GPU as much as possible</strong> without introducing too much memory pressure or over demanding CPUs.</li>
 <li>Each DataLoader worker is effectively a producer that loads data in parallel, while your training loop (running on the main process/GPU) is the consumer. The goal is to maximize overlap: while one batch is being processed on the GPU, the next batch (or several batches) are being loaded by the CPU workers in the background.</li>
 </ul>
-<pre><code>4. Optimizing the pipeline: Data/
+<pre class="highlight"><code>4. Optimizing the pipeline: Data/
 ├── benchmark_datapipeline_configurations.py  # Main benchmark script
 ├── plot_benchmark_runs.ipynb                # Analysis notebook
 ├── dummydataset.py                          # Dummy dataset for testing
 ├── utils.py                                 # Utility functions
 ├── benchmark_logs/                          # Benchmark results
-└── benchmark_imgs/                          # Visualizations
-</code></pre>
+└── benchmark_imgs/                          # Visualizations</code></pre>
 <h3 id="key-concepts-and-metrics">Key Concepts and Metrics</h3>
 <hr />
 <ul>
@@ -165,9 +164,8 @@
 <li>Used by the <strong>main process and workers</strong> to (lazy) load, transform, and prepare data for training. You want high CPU usage (busy workers) but not so high that the OS or other processes starve. If your CPU utilization is peaking at 100% on all cores and the system becomes unresponsive or the throughput plateaus, you may have too many workers or threads.</li>
 <li>You can check available CPUs using:</li>
 </ul>
-<p><code>python
-  import os
-  print(os.cpu_count())</code></p>
+<pre class="highlight"><code class="language-python">import os
+print(os.cpu_count())</code></pre>
 <ul>
 <li><strong>RAM (used by CPU processed tasks)</strong>:</li>
 <li>Used by workers to load batches into memory.</li>
@@ -217,7 +215,7 @@
 <li>Configure optimal data reading (e.g. chunk sizes, thread count, worker count)</li>
 <li>Configure DataLoader for optimal batch preparation (e.g. num_workers, prefetch_factor)</li>
 </ol>
-<p>It's important to avoid conflicting parallelism between these systems because too many concurrent processes and threads can lead to resource contention and degraded performance. </p>
+<p>It's important to avoid conflicting parallelism between these systems because too many concurrent processes and threads can lead to resource contention and degraded performance.</p>
 <h3 id="benchmarking-practical-guidelines-and-background">Benchmarking: Practical guidelines and background</h3>
 <hr />
 <p>I have created scripts to help you optimize your data pipeline, but before we dive into the benchmarking and optimization, it is important to understand how everything works.</p>
@@ -282,7 +280,7 @@ Follow my guide and your speed should already improve a lot. Experimenting endle
 <li>Use 'forkserver' (or 'spawn') for better CUDA compatibility</li>
 <li>Note: for more detail, you can read the <a href="https://docs.pytorch.org/docs/stable/notes/multiprocessing.html">Pytorch docs</a></li>
 </ol>
-<p>Even with an efficient dataset, proper DataLoader settings are crucial. </p>
+<p>Even with an efficient dataset, proper DataLoader settings are crucial.</p>
 <hr />
 <h3 id="optimizing-benchmarking-tools-for-dataloader-optimization">Optimizing: Benchmarking Tools for DataLoader Optimization</h3>
 <p>I created two files to help you optimize your data pipeline:</p>
@@ -312,8 +310,7 @@ Follow my guide and your speed should already improve a lot. Experimenting endle
 <ol>
 <li><strong>Import your own dataset</strong> by changing the line on top of <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py"><code>benchmark_configurations.py</code></a>.</li>
 </ol>
-<pre><code class="language-python">from dummydataset import DummyDataset as YourDataset # replace with your dataset
-</code></pre>
+<pre class="highlight"><code class="language-python">from dummydataset import DummyDataset as YourDataset # replace with your dataset</code></pre>
 <ol>
 <li>
 <p><strong>Optional: Measuring the time it takes to (load a mini batch and) complete a single training step.</strong> This information is useful for properly configuring the benchmark script parameters to accurately reflect your real-world training conditions. For this, you can run the <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/timing_benchmark.py"><code>timing_benchmark.py</code></a> script that is in the folder of <a href="part4.html">4. Optimizing the pipeline: Model</a>. and then change the <code>train_step_time</code> parameter in the <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py"><code>benchmark_configurations.py</code></a> script.</p>
