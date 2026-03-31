@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Coen van den Elsen - AI Research Engineer</title>
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                            950: '#042f2e',
+                        },
+                        ocean: {
+                            800: '#0c4a6e',
+                            900: '#082f49',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+        }
+        .bg-ocean-gradient {
+            background: linear-gradient(135deg, #082f49 0%, #134e4a 100%);
+        }
+    </style>
+<script>
+        // Check for saved theme preference or use system preference
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<style>
+    .prose :where(code):not(:where([class~="not-prose"] *)) {
+        background-color: theme('colors.slate.100');
+        padding: 0.2em 0.4em;
+        border-radius: 0.25rem;
+        font-weight: 600;
+    }
+    .prose :where(code):not(:where([class~="not-prose"] *))::before {
+        content: "" !important;
+    }
+    .prose :where(code):not(:where([class~="not-prose"] *))::after {
+        content: "" !important;
+    }
+    .dark .prose :where(code):not(:where([class~="not-prose"] *)) {
+        background-color: theme('colors.slate.800');
+        color: theme('colors.brand.300');
+    }
+    .prose :where(pre code):not(:where([class~="not-prose"] *)) {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        color: inherit;
+    }
+</style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 antialiased selection:bg-brand-500 selection:text-white transition-colors duration-300">
+    <nav class="fixed top-0 w-full z-[9999] bg-white dark:bg-slate-800/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 dark:border-slate-800 transition-colors duration-300">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16 items-center">
+<a class="flex-shrink-0 font-serif font-bold text-xl text-ocean-900 dark:text-brand-300 dark:text-brand-400 hover:text-brand-600 dark:hover:text-brand-300 transition-colors" href="../../index.html">
+                    Coen van den Elsen
+                </a>
+<div class="hidden md:flex space-x-8 items-center">
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#about">About</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#experience">Experience</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#education">Education</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#projects">Projects</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#blogs">Blogs</a>
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 focus:outline-none rounded-lg text-sm p-2.5 transition-colors" id="theme-toggle" type="button">
+<i class="fas fa-moon hidden text-lg" id="theme-toggle-dark-icon"></i>
+<i class="fas fa-sun hidden text-lg" id="theme-toggle-light-icon"></i>
+</button>
+</div>
+<div class="md:hidden flex items-center space-x-4">
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 focus:outline-none rounded-lg text-sm p-2.5 transition-colors" id="theme-toggle-mobile" type="button">
+<i class="fas fa-moon hidden text-lg" id="theme-toggle-dark-icon-mobile"></i>
+<i class="fas fa-sun hidden text-lg" id="theme-toggle-light-icon-mobile"></i>
+</button>
+<!-- Mobile menu button -->
+<button class="text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 focus:outline-none" type="button">
+<i class="fas fa-bars text-xl"></i>
+</button>
+</div>
+</div>
+</div>
+</nav>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 mt-16">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<div class="md:col-span-1 hidden md:block">
+<div class="sticky top-24 bg-white dark:bg-slate-800 shadow-xl rounded-lg p-6 border border-slate-100 dark:border-slate-700">
+<h3 class="text-lg font-bold text-ocean-900 dark:text-brand-300 mb-4 border-b border-slate-200 dark:border-slate-700 pb-2">Chapters</h3>
+<ul class="space-y-3">
+<li><a href="index.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Training at larger scale</a></li>
+<li><a href="part1.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">The Setup</a></li>
+<li><a href="part2.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Multi-GPU training</a></li>
+<li><a href="part3.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Bigger data in the cloud</a></li>
+<li><a href="part4.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Optimizing the pipeline: Data</a></li>
+<li><a href="part5.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Optimizing the pipeline: Model</a></li>
+<li><a href="part6.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">What Is Next</a></li>
+<li><a href="part7.html" class="text-sm block text-brand-600 dark:text-brand-400 font-bold border-l-2 border-brand-500 pl-2">Appendix</a></li>
+</ul>
+</div>
+</div>
+<div class="md:col-span-3 bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-lg p-8 prose prose-slate dark:prose-invert prose-brand max-w-none">
+<h1 id="appendix">Appendix</h1>
+<p>Here you can find the additional information as referenced in the chapters.</p>
+<h2 id="1-overview-of-advantages-of-lightning-over-raw-pytorch">1. Overview of advantages of Lightning over Raw PyTorch</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>PyTorch</th>
+<th>Lightning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Device/GPU Handling</strong></td>
+<td>Manual device placement (<code>.to(device)</code>), manual multi-GPU management</td>
+<td><code>accelerator="auto"</code>, <code>devices="auto"</code> handles single GPU, multi-GPU (DDP), TPU, CPU fallback</td>
+</tr>
+<tr>
+<td><strong>Training Loop</strong></td>
+<td>Manual train/eval mode, gradient zeroing, loss, backward, optimizer steps</td>
+<td>Handled in <code>training_step</code>, <code>validation_step</code></td>
+</tr>
+<tr>
+<td><strong>Logging</strong></td>
+<td>Manual <code>print</code> or custom logging</td>
+<td>Built-in TensorBoard, WandB, MLflow, auto metric aggregation, progress bars</td>
+</tr>
+<tr>
+<td><strong>Callbacks</strong></td>
+<td>Manual implementation</td>
+<td>Built-in model checkpointing, early stopping, learning rate monitoring</td>
+</tr>
+<tr>
+<td><strong>Multi-GPU Strategies</strong></td>
+<td>Manual data parallelism, distributed training, gradient synchronization</td>
+<td>Specify <code>strategy</code> parameter in Trainer</td>
+</tr>
+<tr>
+<td><strong>Profiling &amp; Debugging</strong></td>
+<td>Manual profiling setup</td>
+<td>Built-in profilers and debugging tools</td>
+</tr>
+<tr>
+<td><strong>Reproducibility</strong></td>
+<td>Manual seed setting everywhere</td>
+<td><code>seed_everything()</code> (Note: manual seed for data loader/workers still needed)</td>
+</tr>
+<tr>
+<td><strong>Mixed Precision Training</strong></td>
+<td>Manual AMP implementation</td>
+<td><code>precision="16-mixed"</code> in Trainer</td>
+</tr>
+<tr>
+<td><strong>Automatic Sanity Checks</strong></td>
+<td>No built-in pre-training validation</td>
+<td>Sanity validation batch (model forward pass, shape compatibility, loss calculation). Disable with <code>num_sanity_val_steps=0</code>.</td>
+</tr>
+<tr>
+<td><strong>Cloud Storage Integration</strong></td>
+<td>Manual cloud storage uploads</td>
+<td>Easy integration via custom callbacks for checkpoint uploads (e.g., AWS S3, GCS). Prevents data loss, customizable backup strategies.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-optimizing-the-dataset">2. Optimizing the Dataset</h2>
+<ol>
+<li><strong>Efficient Storage Formats</strong>: </li>
+</ol>
+<p>Initially, my data was stored in NetCDF files, which are common for scientific data but can be inefficient when working with streaming from cloud storage. The default chunking in these files was not optimized for machine learning, causing unnecessary data to be loaded into memory during training. To address this, I stored everything in <a href="https://zarr.readthedocs.io/">Zarr</a>. Zarr is specifically designed for fast cloud-based data access. I will not include the migration in this blog, as it is out of scope, I just want to show that it is important to think about the data formats used. </p>
+<p><strong>Zarr v3 Performance Tip</strong></p>
+<p>When using <strong>Zarr v3</strong>, you can achieve a significant speedup by disabling Dask during dataset loading. By setting <code>chunks=None</code>, you bypass Dask's graph-building overhead and allow Xarray to use its internal lazy-indexing. This is often faster because Zarr v3's own storage layer is already optimized for concurrent I/O.</p>
+<p><code>python
+   # Optimal Zarr v3 loading
+   dataset = xr.open_zarr(
+      path,
+      consolidated=False,
+      zarr_format=3,
+      chunks=None
+   )</code></p>
+<ol>
+<li><strong>Optimal Chunking</strong>: </li>
+</ol>
+<p>When streaming data, the goal is to minimize both the amount of data loaded and the number of individual chunk requests made.</p>
+<ul>
+<li><strong>Too small chunks</strong>: Results in many small I/O requests, creating overhead</li>
+<li><strong>Too large chunks</strong>: Loads unnecessary data, wasting bandwidth and memory</li>
+</ul>
+<p>I created a <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/chunk_size_calculator.ipynb">script</a> to (handwavy) calculate the optimal chunk size by analyzing how different chunk dimensions affect data access patterns. For an image of 64x64 pixels:</p>
+<table>
+<thead>
+<tr>
+<th>chunk_size</th>
+<th>minimal_chunks</th>
+<th>maximal_chunks</th>
+<th>minimal_bytes</th>
+<th>maximal_bytes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>8x8</td>
+<td>64</td>
+<td>81</td>
+<td>4096</td>
+<td>5184</td>
+</tr>
+<tr>
+<td>16x16</td>
+<td>16</td>
+<td>25</td>
+<td>4096</td>
+<td>6400</td>
+</tr>
+<tr>
+<td>32x32</td>
+<td>4</td>
+<td>9</td>
+<td>4096</td>
+<td>9216</td>
+</tr>
+<tr>
+<td>64x64</td>
+<td>1</td>
+<td>4</td>
+<td>4096</td>
+<td>16384</td>
+</tr>
+<tr>
+<td>128x128</td>
+<td>1</td>
+<td>4</td>
+<td>16384</td>
+<td>65536</td>
+</tr>
+<tr>
+<td>256x256</td>
+<td>1</td>
+<td>4</td>
+<td>65536</td>
+<td>262144</td>
+</tr>
+<tr>
+<td>512x512</td>
+<td>1</td>
+<td>4</td>
+<td>262144</td>
+<td>1048576</td>
+</tr>
+<tr>
+<td>1024x1024</td>
+<td>1</td>
+<td>4</td>
+<td>1048576</td>
+<td>4194304</td>
+</tr>
+</tbody>
+</table>
+<p>The table shows how different chunk sizes affect loading efficiency:</p>
+<ul>
+<li><strong>Minimal chunks</strong>: Fewest number of chunks needed to load the image data</li>
+<li><strong>Maximal chunks</strong>: Worst-case number of chunks needed (when image spans multiple chunks)</li>
+<li><strong>Minimal/maximal bytes</strong>: Corresponding data volume that must be transferred</li>
+</ul>
+<p>The results show that a 64×64 chunk size (matching the image dimensions) provides the optimal balance:
+   - It requires loading only 1-4 chunks per image
+   - The data volume ranges from 4,096 to 16,384 bytes
+   - Larger chunk sizes (128×128+) dramatically increase the bytes loaded
+   - Smaller chunk sizes (8×8 to 32×32) require substantially more chunk requests</p>
+<div align="center" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+   <div>
+      <img src="../../images/training-blog/bytes_chunksize.png" alt="Bytes vs Chunk Size" width="350">
+   </div>
+   <div>
+      <img src="../../images/training-blog/chunks_chunksize.png" alt="Chunks vs Chunk Size" width="350">
+   </div>
+   </div>
+<div align="center">
+   <p><em>Number of bytes and chunks for different chunk sizes</em></p>
+   </div>
+
+<p><strong>Handling the Small File Bottleneck</strong></p>
+<p>Optimizing Zarr chunks can inadvertently create millions of small files (inodes) On servers with poor small-file I/O, this can cripple training speed even if your chunk sizes are technically "optimal." A powerful solution is SquashFS, which packs your entire dataset into a single compressed, read-only filesystem image. By mounting this image, your code sees the original directory structure, but the hardware only manages one large file, drastically reducing overhead. This combination of SquashFS and Zarr v3 is particularly effective for static datasets on high-performance clusters where metadata lookups are the primary bottleneck. This is out of scope for this blog, but do reach out if you need help!</p>
+<ol>
+<li><strong>Parallelize I/O: Loading Efficiently</strong></li>
+</ol>
+<p>Some libraries, like Dask, can parallelize reading within a dataset, providing their own optimization parameters. However, be careful when combining these with PyTorch DataLoader workers, as this can lead to resource contention and diminishing returns.</p>
+<p>When working with lazy-loading/streaming data into GPU memory, there are several parameters you might need to optimize:</p>
+<ol>
+<li>
+<p><strong>Parallel Loading Parameters</strong>: </p>
+<ul>
+<li>Number of concurrent readers/workers (processes that execute computations)</li>
+<li>Memory limits per worker (to prevent OOM errors)</li>
+<li>Thread pool size per worker (for parallel execution within a worker)</li>
+</ul>
+</li>
+<li>
+<p><strong>Caching Parameters</strong>:</p>
+<ul>
+<li>Cache size limits (to prevent OOM errors)</li>
+<li>Cache eviction policies (to prevent OOM errors)</li>
+<li>Persistent vs. in-memory caching (to prevent OOM errors)</li>
+</ul>
+</li>
+</ol>
+<p>I will explain how to optimize these (usecase) parameters in the <a href="#appendix-optimizing-dask">next section</a>. For more insights on optimizing cloud data loading, see <a href="https://earthmover.io/blog/cloud-native-dataloader/">Earthmover's guide to cloud-native dataloaders</a> covering streaming techniques, I/O optimization, and resource balancing. Note that this is relevant for zarr v2. In zarr v3, as mentioned above, we disable dask and set chunks=none for an even bigger speedup.</p>
+<h2 id="3-optimizing-dask">3. Optimizing Dask</h2>
+<p>If you're using Dask, you can also leverage the Dask dashboard to monitor:
+- Worker memory usage
+- CPU utilization
+- Task execution
+- Resource bottlenecks</p>
+<p><strong>Understanding Dask Execution Modes</strong></p>
+<p>Dask offers three execution modes, each with different trade-offs:</p>
+<ol>
+<li><strong>Single-Threaded Scheduler</strong></li>
+<li>Uses <code>dask.config.set(scheduler="single-threaded")</code></li>
+<li>All tasks run sequentially in the main thread</li>
+<li>No parallelism but minimal overhead</li>
+<li>Useful for debugging or when relying entirely on DataLoader's parallelism</li>
+<li>
+<p>In multi-GPU setups, each process runs its own sequential scheduler</p>
+</li>
+<li>
+<p><strong>Threaded Scheduler</strong></p>
+</li>
+<li>Uses <code>dask.config.set(scheduler="threads", num_workers=dask_threads)</code></li>
+<li>Tasks run in parallel using a thread pool within a single process</li>
+<li>Good for I/O-bound operations (like reading data chunks)</li>
+<li>Moderate parallelism with low overhead</li>
+<li>
+<p>In multi-GPU setups, be careful of the total thread count (e.g., 8 processes × 4 threads = 32 threads)</p>
+</li>
+<li>
+<p><strong>Distributed Cluster</strong></p>
+</li>
+<li>Uses <code>LocalCluster</code> and <code>Client</code> to create a full Dask cluster</li>
+<li>Runs multiple worker processes, each with multiple threads</li>
+<li>Provides process-level parallelism, bypassing Python's GIL</li>
+<li>Includes a dashboard for monitoring tasks and resource usage</li>
+<li>Options for per-GPU-process clusters or a single shared cluster</li>
+<li>Higher overhead but better isolation and monitoring capabilities</li>
+</ol>
+<p>For a single GPU with limited CPUs (e.g., 20 cores):
+   - A threaded scheduler with 4-8 threads is often sufficient
+   - A small distributed cluster (1-2 workers, 4 threads each) offers better monitoring</p>
+<p>For multi-GPU setups (e.g., 8 GPUs with 20 cores):
+   - Be careful not to oversubscribe your CPU resources
+   - If each GPU process uses its own Dask cluster, limit to 1 worker with 2 threads per process
+   - Consider using a single shared Dask cluster for all GPU processes
+   - Monitor CPU utilization to avoid contention</p>
+<p>The key is balancing parallelism against resource constraints. More parallelism isn't always better, especially when resources are shared across multiple GPU processes. Start conservative and scale up while monitoring performance.</p>
+<ol>
+<li><strong>Caching and Locality</strong>: For remote data, implement caching strategies to avoid repeatedly downloading the same data. </li>
+</ol>
+<h2 id="4-profiling-check-your-pipeline">4. Profiling: Check Your Pipeline</h2>
+<h3 id="what-is-it">What is it?</h3>
+<p>Profiling helps you understand where time and resources are spent in your training pipeline. It guides optimization by identifying bottlenecks.
+The profiler also looks at the data part of the pipeline, so it is a good idea to run it after the data part is done.</p>
+<h3 id="how-does-it-work">How does it work?</h3>
+<p>Look at the <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/5.%20Optimizing%20the%20pipeline%3A%20Model/profiler.py">provided script</a> to profile your training loop. Import your <code>dataloader</code> and <code>model</code> modules,
+then run the script 3 times with the three profilers:</p>
+<ul>
+<li><strong>Simple Profiler</strong></li>
+<li><strong>Advanced Profiler</strong></li>
+<li><strong>PyTorch Profiler (Chrome Trace Viewer)</strong></li>
+</ul>
+<p>it stores the output in the <code>output/profiler/{config_name}/profiler_logs</code> folder.</p>
+<pre><code class="language-bash">uv run python profiler.py
+</code></pre>
+<h3 id="interpreting-profiler-outputs-a-quick-guide">Interpreting Profiler Outputs – A Quick Guide</h3>
+<p>Understanding what the profiler outputs mean is key to optimizing your training pipeline.
+Here’s what to look for in each profiler and how to make sense of the data.</p>
+<h3 id="1-fit-simple_profiler_outputtxt-summary-view-simple-profiler">1. <code>fit-simple_profiler_output.txt</code> – Summary View (Simple Profiler)</h3>
+<h3 id="what-it-shows">What it shows:</h3>
+<ul>
+<li>High-level summary of function calls</li>
+<li>Average time per operation</li>
+<li>Relative contribution of each function to total runtime</li>
+</ul>
+<h3 id="how-to-read-it">How to read it:</h3>
+<ul>
+<li>Look at the top-consuming operations — these are usually bottlenecks.</li>
+<li>Pay attention to data loading functions (<code>*_dataloader_next</code>, <code>__next__</code>) — these often take more time than expected.</li>
+<li>Training loops like <code>run_training_epoch</code> will typically be a large portion; the key is to ensure they're not dwarfed by overheads.</li>
+</ul>
+<h3 id="when-to-take-action-example">When to take action (example):</h3>
+<ul>
+<li>If data loading takes a large share of total time (e.g., &gt;40%), your pipeline is I/O-bound.</li>
+<li>If your model training steps are taking less time than preprocessing, you're likely under-utilizing the GPU.</li>
+</ul>
+<h3 id="2-fit-advanced_profiler_outputtxt-line-level-view">2. <code>fit-advanced_profiler_output.txt</code> – Line-Level View</h3>
+<h3 id="what-it-shows_1">What it shows:</h3>
+<ul>
+<li>Function-level granularity (per-call stats)</li>
+<li>Total calls, total time, average time per call</li>
+<li>Stack trace to locate the exact code path</li>
+</ul>
+<h3 id="how-to-read-it_1">How to read it:</h3>
+<ul>
+<li>Sort by total time and identify high-call-count, low-time ops — these may be optimized or batched.</li>
+<li>Use stack traces to pinpoint performance sinks inside your own code or framework code.</li>
+<li>Investigate setup or utility functions being called excessively (e.g., synthetic data generation, logging, checkpointing).</li>
+</ul>
+<h3 id="when-to-take-action-example_1">When to take action (example):</h3>
+<ul>
+<li>If any function is causing a lot of time, (where you expect it to be fast) check if it is necessary.</li>
+</ul>
+<h3 id="3-pttracejson-chrome-trace-viewer-pytorch-profiler">3. <code>pt.trace.json</code> – Chrome Trace Viewer (PyTorch Profiler)</h3>
+<h3 id="what-it-shows_2">What it shows:</h3>
+<ul>
+<li>Frame-by-frame execution timeline</li>
+<li>Operator-level breakdown (CPU and GPU)</li>
+<li>Optional memory usage tracking</li>
+</ul>
+<h3 id="how-to-read-it_2">How to read it:</h3>
+<ol>
+<li>Open Chrome and go to <code>chrome://tracing</code>.</li>
+<li>Drop in the <code>.json</code> file.</li>
+<li>Hover over timeline blocks to see operator names, start/end times, and device usage.</li>
+</ol>
+<h3 id="what-to-look-for">What to look for:</h3>
+<ul>
+<li>Long horizontal bars → slow operations (usually backward passes, large convolutions)</li>
+<li>Gaps between ops → potential I/O waits or CPU/GPU syncs</li>
+<li>Overlapping CPU/GPU ops → good utilization</li>
+<li>Memory heatmaps (if enabled) → identify peaks or leaks</li>
+</ul>
+<h3 id="when-to-take-action-example_2">When to Take Action (example):</h3>
+<ul>
+<li>If any function is causing a lot of time, (where you expect it to be fast) check if it is necessary.</li>
+<li>If idle gaps exist, investigate DataLoader efficiency </li>
+</ul>
+<div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-200"><a href="part6.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">&larr; Previous Chapter: What Is Next</a><div></div></div>
+</div>
+</div>
+</div>
+    <footer class="bg-ocean-900 text-slate-300 py-12 border-t border-ocean-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+<div class="mb-4 md:mb-0">
+<span class="font-serif font-bold text-xl text-white">Coen van den Elsen</span>
+<p class="text-sm text-ocean-200 mt-2">© 2025 Coen van den Elsen. AI for a better world.</p>
+</div>
+<div class="flex space-x-6">
+<a class="text-ocean-200 hover:text-white transition-colors" href="mailto:coen@vandenelsen.nu">
+<span class="sr-only">Email</span>
+<i class="fas fa-envelope text-xl"></i>
+</a>
+<a class="text-ocean-200 hover:text-white transition-colors" href="https://github.com/CoenvdE" target="_blank">
+<span class="sr-only">GitHub</span>
+<i class="fab fa-github text-xl"></i>
+</a>
+<a class="text-ocean-200 hover:text-white transition-colors" href="https://linkedin.com/in/coen-van-den-elsen" target="_blank">
+<span class="sr-only">LinkedIn</span>
+<i class="fab fa-linkedin text-xl"></i>
+</a>
+</div>
+</div>
+</footer>
+
+<script>
+        function setupThemeToggle(btnId, darkIconId, lightIconId) {
+            var themeToggleBtn = document.getElementById(btnId);
+            var themeToggleDarkIcon = document.getElementById(darkIconId);
+            var themeToggleLightIcon = document.getElementById(lightIconId);
+
+            if (!themeToggleBtn) return;
+
+            // Change the icons inside the button based on previous settings
+            if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                themeToggleLightIcon.classList.remove('hidden');
+            } else {
+                themeToggleDarkIcon.classList.remove('hidden');
+            }
+
+            themeToggleBtn.addEventListener('click', function() {
+                // toggle icons inside button
+                themeToggleDarkIcon.classList.toggle('hidden');
+                themeToggleLightIcon.classList.toggle('hidden');
+
+                // if set via local storage previously
+                if (localStorage.getItem('color-theme')) {
+                    if (localStorage.getItem('color-theme') === 'light') {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    }
+                // if NOT set via local storage previously
+                } else {
+                    if (document.documentElement.classList.contains('dark')) {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    } else {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    }
+                }
+            });
+        }
+        setupThemeToggle('theme-toggle', 'theme-toggle-dark-icon', 'theme-toggle-light-icon');
+        setupThemeToggle('theme-toggle-mobile', 'theme-toggle-dark-icon-mobile', 'theme-toggle-light-icon-mobile');
+    </script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Coen van den Elsen - AI Research Engineer</title>
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                            950: '#042f2e',
+                        },
+                        ocean: {
+                            800: '#0c4a6e',
+                            900: '#082f49',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+        }
+        .bg-ocean-gradient {
+            background: linear-gradient(135deg, #082f49 0%, #134e4a 100%);
+        }
+    </style>
+<script>
+        // Check for saved theme preference or use system preference
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<style>
+    .prose :where(code):not(:where([class~="not-prose"] *)) {
+        background-color: theme('colors.slate.100');
+        padding: 0.2em 0.4em;
+        border-radius: 0.25rem;
+        font-weight: 600;
+    }
+    .prose :where(code):not(:where([class~="not-prose"] *))::before {
+        content: "" !important;
+    }
+    .prose :where(code):not(:where([class~="not-prose"] *))::after {
+        content: "" !important;
+    }
+    .dark .prose :where(code):not(:where([class~="not-prose"] *)) {
+        background-color: theme('colors.slate.800');
+        color: theme('colors.brand.300');
+    }
+    .prose :where(pre code):not(:where([class~="not-prose"] *)) {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        color: inherit;
+    }
+</style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 antialiased selection:bg-brand-500 selection:text-white transition-colors duration-300">
+    <nav class="fixed top-0 w-full z-[9999] bg-white dark:bg-slate-800/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 dark:border-slate-800 transition-colors duration-300">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16 items-center">
+<a class="flex-shrink-0 font-serif font-bold text-xl text-ocean-900 dark:text-brand-300 dark:text-brand-400 hover:text-brand-600 dark:hover:text-brand-300 transition-colors" href="../../index.html">
+                    Coen van den Elsen
+                </a>
+<div class="hidden md:flex space-x-8 items-center">
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#about">About</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#experience">Experience</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#education">Education</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#projects">Projects</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#blogs">Blogs</a>
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 focus:outline-none rounded-lg text-sm p-2.5 transition-colors" id="theme-toggle" type="button">
+<i class="fas fa-moon hidden text-lg" id="theme-toggle-dark-icon"></i>
+<i class="fas fa-sun hidden text-lg" id="theme-toggle-light-icon"></i>
+</button>
+</div>
+<div class="md:hidden flex items-center space-x-4">
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 focus:outline-none rounded-lg text-sm p-2.5 transition-colors" id="theme-toggle-mobile" type="button">
+<i class="fas fa-moon hidden text-lg" id="theme-toggle-dark-icon-mobile"></i>
+<i class="fas fa-sun hidden text-lg" id="theme-toggle-light-icon-mobile"></i>
+</button>
+<!-- Mobile menu button -->
+<button class="text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 focus:outline-none" type="button">
+<i class="fas fa-bars text-xl"></i>
+</button>
+</div>
+</div>
+</div>
+</nav>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 mt-16">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<div class="md:col-span-1 hidden md:block">
+<div class="sticky top-24 bg-white dark:bg-slate-800 shadow-xl rounded-lg p-6 border border-slate-100 dark:border-slate-700">
+<h3 class="text-lg font-bold text-ocean-900 dark:text-brand-300 mb-4 border-b border-slate-200 dark:border-slate-700 pb-2">Chapters</h3>
+<ul class="space-y-3">
+<li><a href="index.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Training at larger scale</a></li>
+<li><a href="part1.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">The Setup</a></li>
+<li><a href="part2.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Multi-GPU training</a></li>
+<li><a href="part3.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Bigger data in the cloud</a></li>
+<li><a href="part4.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Optimizing the pipeline: Data</a></li>
+<li><a href="part5.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Optimizing the pipeline: Model</a></li>
+<li><a href="part6.html" class="text-sm block text-brand-600 dark:text-brand-400 font-bold border-l-2 border-brand-500 pl-2">What Is Next</a></li>
+<li><a href="part7.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Appendix</a></li>
+</ul>
+</div>
+</div>
+<div class="md:col-span-3 bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-lg p-8 prose prose-slate dark:prose-invert prose-brand max-w-none">
+<h2 id="whats-next">What's Next?</h2>
+<p>The last part before we get to the training.
+Here I'll cover my last tips and tricks, one more failsafe and some final experiments to run before we get to the training.</p>
+<pre><code>6. What Is Next/
+├── config/
+│   └── cli_config.yaml
+├── src/
+│   ├── callbacks.py
+│   ├── data/
+│   └── model/
+├── lightning_trainer.py
+└── lightning_train.py
+</code></pre>
+<h3 id="experiment-first-train-later">Experiment First, Train Later</h3>
+<p>Before jumping into full-scale training, it's important to run some experiments first (e.g. how big should a patch be? What would be a good optimizer configuration starting point?). The idea is not to test this on the full training run, but test it for e.g. 200 (instead of 3000) epochs, and observe the loss curves over epochs.</p>
+<ul>
+<li>Select a baseline configuration  </li>
+<li>Observe the loss curves and training speed</li>
+<li>Run small-scale experiments to test different settings  </li>
+<li>Compare outcomes to identify the best setup  </li>
+</ul>
+<p>This approach helps avoid wasting compute and accelerates convergence.</p>
+<h3 id="failsafe-uploading-to-the-cloud-intermittently">Failsafe: uploading to the cloud intermittently</h3>
+<p>If you are training for a longer time, it's a good idea to upload to the cloud intermittently.
+Training pipelines sometimes crash due to various reasons, and it's always good to have a failsafe.
+For this reason I have uploaded a <code>CloudUploadCallback</code> in <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/6.%20What%20Is%20Next/src/callbacks.py">callbacks.py</a>.
+This callback uploads the model checkpoints to the cloud storage at specified intervals and/or when the training is finished.</p>
+<p>You can add this callback to your training loop by adding the following to your <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/6.%20What%20Is%20Next/config/cli_config.yaml"><code>cli_config.yaml</code></a> file:</p>
+<pre><code class="language-yaml">  callbacks:
+    - class_path: src.callbacks.CloudUploadCallback
+      init_args:
+        local_dir: output/test/checkpoints
+        cloud_storage_path: s3://your-bucket/autoencoder-checkpoints
+        upload_interval: 10
+        upload_during_training: true
+        upload_on_fit_end: true
+        filesystem: s3
+</code></pre>
+<h3 id="docker-and-why-its-nice">Docker — And Why It's Nice</h3>
+<p>Docker lets you <strong>containerize</strong> your environment, making sure your code runs the same everywhere—on your laptop or in the cloud.<br />
+Why it's nice:
+- Reproducible setups  across different machines or cloud providers (Digital Ocean, AWS, etc.)
+- Lightweight &amp; portable<br />
+- Dependency management
+- Easy to test in isolated environments  </p>
+<p>This personally helped me a lot as switching between different machines and cloud providers went almost seamless.
+Get started with docker with this <a href="https://dev.to/docker/getting-started-with-docker-for-aiml-a-beginners-guide-4k6j">guide</a>, watch some videos and discuss with a nice LLM.</p>
+<hr />
+<h3 id="precision-in-training-in-pytorch-lightning">Precision in Training (in PyTorch Lightning)</h3>
+<p>Choosing the right precision can significantly impact training <strong>speed</strong> and <strong>efficiency</strong>, without sacrificing performance—if used correctly.
+I changed from <code>float32</code> to <code>16-mixed</code> and saw a 2x speedup. If your gpu also supports <code>bf16-mixed</code>, use that. It is more stable.</p>
+<p>Why it's nice:
+- Less memory usage<br />
+- Faster training<br />
+- Bigger batch sizes  </p>
+<p>you can change this by adding the following to your <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/6.%20What%20Is%20Next/config/cli_config.yaml"><code>cli_config.yaml</code></a> file:</p>
+<pre><code class="language-yaml">precision: 16-mixed # Precision parameter added, default is 32-true (float32)
+</code></pre>
+<p>Additional information can be found in the <a href="https://pytorch-lightning.readthedocs.io/en/1.5.10/guides/speed.html">Lightning documentation</a>.</p>
+<h2 id="step-based-training">Step-Based Training</h2>
+<p>When working with large-scale datasets, the concept of an "epoch" becomes less relevant, as you may only complete 2 or 3 full passes during the entire training process. In these cases, step-based training is the standard. It provides more granular control over logging, checkpointing, and learning rate updates.</p>
+<p>To switch to step-based training in PyTorch Lightning, update your cli_config.yaml:</p>
+<pre><code class="language-YAML">trainer:
+  max_steps: 100000          # Train for a fixed number of iterations
+  val_check_interval: 1000   # Run validation every 1000 steps
+  log_every_n_steps: 50      # Frequent logging for better visibility
+</code></pre>
+<p>Note: Ensure you disable epoch-based settings (like max_epochs) to prevent the trainer from stopping prematurely or do extra validation iterations.
+Also make sure you configure your learning rate scheduler based on steps instead of epochs.</p>
+<h2 id="learning-rate-schedulers">Learning Rate Schedulers</h2>
+<p>When experimenting, use a flat learning rate (e.g. 1e-4). Only change to a schedulers when you are confident in the model architecture.</p>
+<p>The Standard: Cosine Annealing with WarmupFor large-scale runs (e.g., 100k steps), a standard curve involves a short warmup phase (e.g., 3k steps) where the learning rate increases linearly, followed by a cosine decay that reduces the rate by $10\times$ or $100\times$. This prevents the model from diverging early on while ensuring it settles into a sharp local minimum at the end.</p>
+<p>Tip: Use Cosine annealing with warm restarts.</p>
+<ol>
+<li><strong>Escapes local minima</strong>: The periodic "restarts" help the model escape poor local minima by temporarily increasing the learning rate.</li>
+<li><strong>Faster convergence</strong>: The cyclical learning rate schedule often leads to faster convergence than linear or step decay schedules.</li>
+</ol>
+<p>I experienced a very stable training process with this. (It was recommended to me by someone from the Allan turing institute) and other foundational model builders used it in their training as well. It is recommended to set the restart frequency to a value that is around 2-3 times the number of epochs it takes for the loss to be at the same level as just before the restart. This way the model learns stable and is able to escape local minima.
+As a general strategy, it typically performs better than fixed or step decay schedules with minimal tuning.</p>
+<pre><code class="language-python">torch.optim.lr_scheduler.CosineAnnealingWarmRestarts
+</code></pre>
+<hr />
+<h3 id="environment-variables-and-why-theyre-nice">Environment Variables — And Why They're Nice</h3>
+<p>Env vars help you <strong>manage secrets and config</strong> without hardcoding.<br />
+Why it's nice:
+- Store keys/passwords securely<br />
+- Change behavior across environments (dev, prod, test)<br />
+- Fast configuration without changing code  </p>
+<p>Here's a simple <code>.env example</code> file example:</p>
+<pre><code># Cloud storage credentials
+CLOUD_STORAGE_KEY=your_secret_key_here
+CLOUD_STORAGE_BUCKET=training-data-bucket
+
+# Experiment tracking
+WANDB_API_KEY=your_wandb_key_here
+EXPERIMENT_NAME=transformer_v2
+</code></pre>
+<p><strong>Important</strong>: Never commit your <code>.env</code>file to your repository. It often contains sensitive information like API keys and credentials. Instead:</p>
+<ol>
+<li>Add <code>.env</code> to your <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/6.%20What%20Is%20Next/config/.gitignore"><code>.gitignore</code></a></li>
+<li>Provide a <code>.env example</code> template with dummy values in the repo</li>
+<li>Document the required environment variables in your README</li>
+<li>For cloud deployments, use the platform's secrets management (AWS Secrets Manager, GitHub Secrets, etc.)</li>
+</ol>
+<p>This approach keeps your secrets secure while making configuration straightforward for team members.</p>
+<hr />
+<p>Thank you for reading!</p>
+<p>I hope this guide was helpful. If you have any questions or feedback, feel very welcome to <a href="https://www.linkedin.com/in/coen-van-den-elsen/">contact</a> me.</p>
+<div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-200"><a href="part5.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">&larr; Previous Chapter: Optimizing the pipeline: Model</a><a href="part7.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">Next Chapter: Appendix &rarr;</a></div>
+</div>
+</div>
+</div>
+    <footer class="bg-ocean-900 text-slate-300 py-12 border-t border-ocean-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+<div class="mb-4 md:mb-0">
+<span class="font-serif font-bold text-xl text-white">Coen van den Elsen</span>
+<p class="text-sm text-ocean-200 mt-2">© 2025 Coen van den Elsen. AI for a better world.</p>
+</div>
+<div class="flex space-x-6">
+<a class="text-ocean-200 hover:text-white transition-colors" href="mailto:coen@vandenelsen.nu">
+<span class="sr-only">Email</span>
+<i class="fas fa-envelope text-xl"></i>
+</a>
+<a class="text-ocean-200 hover:text-white transition-colors" href="https://github.com/CoenvdE" target="_blank">
+<span class="sr-only">GitHub</span>
+<i class="fab fa-github text-xl"></i>
+</a>
+<a class="text-ocean-200 hover:text-white transition-colors" href="https://linkedin.com/in/coen-van-den-elsen" target="_blank">
+<span class="sr-only">LinkedIn</span>
+<i class="fab fa-linkedin text-xl"></i>
+</a>
+</div>
+</div>
+</footer>
+
+<script>
+        function setupThemeToggle(btnId, darkIconId, lightIconId) {
+            var themeToggleBtn = document.getElementById(btnId);
+            var themeToggleDarkIcon = document.getElementById(darkIconId);
+            var themeToggleLightIcon = document.getElementById(lightIconId);
+
+            if (!themeToggleBtn) return;
+
+            // Change the icons inside the button based on previous settings
+            if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                themeToggleLightIcon.classList.remove('hidden');
+            } else {
+                themeToggleDarkIcon.classList.remove('hidden');
+            }
+
+            themeToggleBtn.addEventListener('click', function() {
+                // toggle icons inside button
+                themeToggleDarkIcon.classList.toggle('hidden');
+                themeToggleLightIcon.classList.toggle('hidden');
+
+                // if set via local storage previously
+                if (localStorage.getItem('color-theme')) {
+                    if (localStorage.getItem('color-theme') === 'light') {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    }
+                // if NOT set via local storage previously
+                } else {
+                    if (document.documentElement.classList.contains('dark')) {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    } else {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    }
+                }
+            });
+        }
+        setupThemeToggle('theme-toggle', 'theme-toggle-dark-icon', 'theme-toggle-light-icon');
+        setupThemeToggle('theme-toggle-mobile', 'theme-toggle-dark-icon-mobile', 'theme-toggle-light-icon-mobile');
+    </script>
+</body>
+</html>

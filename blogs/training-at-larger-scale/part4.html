@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Coen van den Elsen - AI Research Engineer</title>
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                            950: '#042f2e',
+                        },
+                        ocean: {
+                            800: '#0c4a6e',
+                            900: '#082f49',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+        }
+        .bg-ocean-gradient {
+            background: linear-gradient(135deg, #082f49 0%, #134e4a 100%);
+        }
+    </style>
+<script>
+        // Check for saved theme preference or use system preference
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<style>
+    .prose :where(code):not(:where([class~="not-prose"] *)) {
+        background-color: theme('colors.slate.100');
+        padding: 0.2em 0.4em;
+        border-radius: 0.25rem;
+        font-weight: 600;
+    }
+    .prose :where(code):not(:where([class~="not-prose"] *))::before {
+        content: "" !important;
+    }
+    .prose :where(code):not(:where([class~="not-prose"] *))::after {
+        content: "" !important;
+    }
+    .dark .prose :where(code):not(:where([class~="not-prose"] *)) {
+        background-color: theme('colors.slate.800');
+        color: theme('colors.brand.300');
+    }
+    .prose :where(pre code):not(:where([class~="not-prose"] *)) {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        color: inherit;
+    }
+</style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 antialiased selection:bg-brand-500 selection:text-white transition-colors duration-300">
+    <nav class="fixed top-0 w-full z-[9999] bg-white dark:bg-slate-800/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 dark:border-slate-800 transition-colors duration-300">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16 items-center">
+<a class="flex-shrink-0 font-serif font-bold text-xl text-ocean-900 dark:text-brand-300 dark:text-brand-400 hover:text-brand-600 dark:hover:text-brand-300 transition-colors" href="../../index.html">
+                    Coen van den Elsen
+                </a>
+<div class="hidden md:flex space-x-8 items-center">
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#about">About</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#experience">Experience</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#education">Education</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#projects">Projects</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#blogs">Blogs</a>
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 focus:outline-none rounded-lg text-sm p-2.5 transition-colors" id="theme-toggle" type="button">
+<i class="fas fa-moon hidden text-lg" id="theme-toggle-dark-icon"></i>
+<i class="fas fa-sun hidden text-lg" id="theme-toggle-light-icon"></i>
+</button>
+</div>
+<div class="md:hidden flex items-center space-x-4">
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 focus:outline-none rounded-lg text-sm p-2.5 transition-colors" id="theme-toggle-mobile" type="button">
+<i class="fas fa-moon hidden text-lg" id="theme-toggle-dark-icon-mobile"></i>
+<i class="fas fa-sun hidden text-lg" id="theme-toggle-light-icon-mobile"></i>
+</button>
+<!-- Mobile menu button -->
+<button class="text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 focus:outline-none" type="button">
+<i class="fas fa-bars text-xl"></i>
+</button>
+</div>
+</div>
+</div>
+</nav>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 mt-16">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<div class="md:col-span-1 hidden md:block">
+<div class="sticky top-24 bg-white dark:bg-slate-800 shadow-xl rounded-lg p-6 border border-slate-100 dark:border-slate-700">
+<h3 class="text-lg font-bold text-ocean-900 dark:text-brand-300 mb-4 border-b border-slate-200 dark:border-slate-700 pb-2">Chapters</h3>
+<ul class="space-y-3">
+<li><a href="index.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Training at larger scale</a></li>
+<li><a href="part1.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">The Setup</a></li>
+<li><a href="part2.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Multi-GPU training</a></li>
+<li><a href="part3.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Bigger data in the cloud</a></li>
+<li><a href="part4.html" class="text-sm block text-brand-600 dark:text-brand-400 font-bold border-l-2 border-brand-500 pl-2">Optimizing the pipeline: Data</a></li>
+<li><a href="part5.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Optimizing the pipeline: Model</a></li>
+<li><a href="part6.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">What Is Next</a></li>
+<li><a href="part7.html" class="text-sm block text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors">Appendix</a></li>
+</ul>
+</div>
+</div>
+<div class="md:col-span-3 bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-lg p-8 prose prose-slate dark:prose-invert prose-brand max-w-none">
+<h2 id="optimizing-the-pipeline-data">Optimizing the pipeline: Data</h2>
+<p>Efficient data loading can significantly reduce training time and costs
+- The GPU (or TPU/HPU etc.) is <strong>the most expensive and performance-critical component</strong> in a training pipeline.
+- If the data pipeline (i.e., loading, preprocessing, transferring) is slow, the GPU will sit idle, waiting for the next batch.</p>
+<h3 id="what-you-want">What You Want</h3>
+<ul>
+<li>A data pipeline <strong>that saturates the GPU as much as possible</strong> without introducing too much memory pressure or over demanding CPUs.</li>
+<li>Each DataLoader worker is effectively a producer that loads data in parallel, while your training loop (running on the main process/GPU) is the consumer. The goal is to maximize overlap: while one batch is being processed on the GPU, the next batch (or several batches) are being loaded by the CPU workers in the background.</li>
+</ul>
+<pre><code>4. Optimizing the pipeline: Data/
+├── benchmark_datapipeline_configurations.py  # Main benchmark script
+├── plot_benchmark_runs.ipynb                # Analysis notebook
+├── dummydataset.py                          # Dummy dataset for testing
+├── utils.py                                 # Utility functions
+├── benchmark_logs/                          # Benchmark results
+└── benchmark_imgs/                          # Visualizations
+</code></pre>
+<h3 id="key-concepts-and-metrics">Key Concepts and Metrics</h3>
+<hr />
+<ul>
+<li>
+<p><strong>GPU Saturation</strong>: The key performance target.</p>
+</li>
+<li>
+<p><strong>CPU (cores)</strong>:</p>
+</li>
+<li>Used by the <strong>main process and workers</strong> to (lazy) load, transform, and prepare data for training. You want high CPU usage (busy workers) but not so high that the OS or other processes starve. If your CPU utilization is peaking at 100% on all cores and the system becomes unresponsive or the throughput plateaus, you may have too many workers or threads.</li>
+<li>You can check available CPUs using:</li>
+</ul>
+<p><code>python
+  import os
+  print(os.cpu_count())</code></p>
+<ul>
+<li><strong>RAM (used by CPU processed tasks)</strong>:</li>
+<li>Used by workers to load batches into memory.</li>
+<li>Important when working with large datasets, large batch sizes, or complex transforms.</li>
+</ul>
+<p><strong>vRAM (used by GPU)</strong>:
+   - During model training weights, gradients and calculations are stored here.</p>
+<ul>
+<li>
+<p><strong>I/O Considerations</strong></p>
+</li>
+<li>
+<p><strong>Bandwidth</strong>: The maximum rate of data transfers (e.g., from cloud storage to your instance)</p>
+</li>
+<li>
+<p><strong>Chunking</strong>: Use optimal chunk sizes to balance I/O overhead and memory usage</p>
+</li>
+<li>
+<p><strong>File Formats</strong>: Choose ML-optimized formats (Parquet, TFRecord, WebDataset, Zarr)</p>
+</li>
+<li>
+<p><strong>Streaming Workers (Dask) vs DataLoader Workers (PyTorch)</strong></p>
+</li>
+</ul>
+<p>PyTorch DataLoader and streaming frameworks like Dask can be combined effectively to stream cloud data into your training pipeline, but it's crucial to understand they operate at different layers of the data process:</p>
+<ul>
+<li>
+<p><strong>PyTorch DataLoader</strong> manages the training-specific data handling by:</p>
+<ul>
+<li>Creating worker processes to parallelize sample preparation</li>
+<li>Implementing batching, shuffling, and sampling strategies</li>
+<li>Executing the preprocessing defined in your <code>__getitem__</code> method</li>
+<li>Transferring prepared batches to the GPU</li>
+</ul>
+</li>
+<li>
+<p><strong>Streaming frameworks (e.g. Dask)</strong> handles the low-level data access by:</p>
+<ul>
+<li>Building a computational graph (DAG) for lazy loading</li>
+<li>Managing how data chunks are read from storage</li>
+<li>Orchestrating parallel fetching of data from cloud/disk</li>
+</ul>
+</li>
+</ul>
+<p>These systems don't automatically coordinate with each other. The connection point occurs when a DataLoader worker calls <code>__getitem__</code> on your Dataset, which then triggers Streaming frameworks (e.g. Dask) to materialize the required data chunks when calling a <code>.load()</code> function. By understanding this separation, you can optimize each layer independently:</p>
+<ol>
+<li>Configure optimal data reading (e.g. chunk sizes, thread count, worker count)</li>
+<li>Configure DataLoader for optimal batch preparation (e.g. num_workers, prefetch_factor)</li>
+</ol>
+<p>It's important to avoid conflicting parallelism between these systems because too many concurrent processes and threads can lead to resource contention and degraded performance. </p>
+<h3 id="benchmarking-practical-guidelines-and-background">Benchmarking: Practical guidelines and background</h3>
+<hr />
+<p>I have created scripts to help you optimize your data pipeline, but before we dive into the benchmarking and optimization, it is important to understand how everything works.</p>
+<p><strong>Understanding DataLoader Workers and Process Distribution</strong> When optimizing your data pipeline, it's important to understand how worker processes are distributed across your available CPU cores and to leave sufficient CPU resources for main processes and system overhead. Reserve 1-2 CPU cores per GPU for the main training process and system overhead. When using containerization solutions like Docker, you may need to reserve additional CPU resources for container management.</p>
+<ul>
+<li>
+<p><strong>Single GPU setup</strong>: With a single GPU and one main training process, you'll have a single DataLoader that spawns <code>num_workers</code> processes. For example, on a machine with 20 CPU cores and 1 GPU, you should reserve 1-2 cores for the main process and system overhead, leaving about 18 cores for DataLoader workers.</p>
+</li>
+<li>
+<p><strong>Multi-GPU setup</strong>: With multiple GPUs (e.g., using DistributedDataParallel), each GPU has its own main process, and each main process creates its own set of DataLoader workers. For instance, on a machine with 8 GPUs and 160 CPU cores, you should reserve 8-16 cores for main processes and system overhead (1-2 per GPU), leaving approximately 144-152 cores to be distributed among all worker processes.</p>
+</li>
+</ul>
+<p>To avoid CPU contention, ensure the total number of worker processes does not exceed your available cores minus those needed for the main process. Without <code>torch.compile</code>, the main thread orchestrating the GPU (especially for high-performance hardware like an H100) can become a bottleneck if it has to compete with data workers. To prevent this, set <code>num_workers = total_cores - 1</code> to keep one core dedicated to GPU control. While slight oversubscription can be beneficial when workers are idling on I/O, prioritizing a free core for the main process is generally safer unless <code>torch.compile</code> is used to reduce CPU overhead.</p>
+<p><strong>Batch size</strong>
+The set batch size is important as it dictates how much data is loaded into memory at once. The ideal batch size depends on your dataset characteristics, model complexity, and available GPU memory. You want a batch size that enables stochastic gradient descent, while having a stable enough learning signal. For my use case, 32 worked well, but you may need to adjust this based on your specific requirements. This batch size is needed because it is used in my optimization benchmark script later.</p>
+<p><strong>Cloud vs. Local Performance</strong>: Note that network bandwidth varies dramatically between environments. When moving from local (WiFi) to cloud training, you may see orders of magnitude improvement in data loading speed. In my case, I observed a 100x decrease in wait time when moving to the cloud. Always benchmark in the same environment where you'll be training, as the optimal configuration can differ significantly between local and cloud setups. High bandwidth allows more data to flow per second, while low bandwidth creates bottlenecks that can leave your GPU waiting for data.</p>
+<p><strong>No need to over-optimize the DataLoader</strong>:
+If your model is small or the GPU is not very powerful, there's no point in using 16+ workers or heavy parallel jobs when the GPU is already saturated.
+I have spent quite some time doing research on this, and it is important to think about this step as it can drastically increase your performance, but there is no need to do "grid search" such-like stuff for this.
+Follow my guide and your speed should already improve a lot. Experimenting endlessly with this also costs money and potential experimentation time. I'll tell you more on how to do it in a sec.</p>
+<h3 id="what-can-be-optimized-dataset">What can be optimized: <strong>dataset</strong></h3>
+<hr />
+<p>Dataset-level optimization is about making data access as efficient as possible. By storing data smartly (chunked, compressed appropriately, possibly colocated with training if remote), and by only doing the minimal necessary work for each access, you ensure that the raw data supply is fast. Once that is in place, DataLoader-level tuning can further amplify the throughput. If there are no parameters, chunking or file format to be optimized, focus on the dataloader instead. (when streaming from machine's disk memory, ssd or when streaming is all handled automatically). If applicable to your usecase, I will show how to approach this in the <a href="part7.html">Appendix</a>.</p>
+<h3 id="what-can-be-optimized-dataloader">What can be optimized: <strong>dataloader</strong></h3>
+<hr />
+<p>The DataLoader is critical for training performance. Key parameters to optimize:</p>
+<ol>
+<li><strong><code>num_workers</code></strong>: Controls parallel data loading subprocesses</li>
+<li>Too few: GPU waits for data</li>
+<li>Too many: Resource contention, diminishing returns</li>
+<li>
+<p>NOTE: num_workers is not about CPU's but processes, and a process may use more or less than 1 cpu core.</p>
+</li>
+<li>
+<p><strong><code>prefetch_factor</code></strong>: Batches loaded in advance per worker</p>
+</li>
+<li>Default is 2, which works for most cases</li>
+<li>Adjust based on sample size and memory requirements</li>
+<li>
+<p>Total prefetched = <code>num_workers * prefetch_factor</code></p>
+</li>
+<li>
+<p><strong><code>pin_memory</code></strong>: Enables faster CPU to GPU transfers</p>
+</li>
+<li>Set to <code>True</code> when using GPU</li>
+<li>Creates page-locked memory for direct transfers</li>
+<li>
+<p>Slightly increases CPU memory usage</p>
+</li>
+<li>
+<p><strong><code>persistent_workers</code></strong>: Keeps workers alive between epochs</p>
+</li>
+<li>Reduces worker initialization overhead</li>
+<li>Useful for large datasets and complex initialization</li>
+<li>
+<p>Significantly reduces epoch transition time</p>
+</li>
+<li>
+<p><strong><code>multiprocessing_context</code></strong>: Controls worker process spawning</p>
+</li>
+<li>Options: 'fork', 'spawn', 'forkserver'</li>
+<li>Use 'forkserver' (or 'spawn') for better CUDA compatibility</li>
+<li>Note: for more detail, you can read the <a href="https://docs.pytorch.org/docs/stable/notes/multiprocessing.html">Pytorch docs</a></li>
+</ol>
+<p>Even with an efficient dataset, proper DataLoader settings are crucial. </p>
+<hr />
+<h3 id="optimizing-benchmarking-tools-for-dataloader-optimization">Optimizing: Benchmarking Tools for DataLoader Optimization</h3>
+<p>I created two files to help you optimize your data pipeline:</p>
+<ol>
+<li><strong><a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py"><code>benchmark_configurations.py</code></a></strong></li>
+<li>suitable for any pytorch Dataset object</li>
+<li>Runs and logs different DataLoader configurations</li>
+<li>Measures performance metrics for each configuration</li>
+<li>Includes Dask integration (commented out by default for those who don't need it)</li>
+<li>
+<p>Contains a configurable <code>train_step_time</code> parameter (default: 0.1 seconds)</p>
+<ul>
+<li>This simulates model training time</li>
+<li>You can set this to match your actual model's training time per batch</li>
+<li>The goal remains the same: minimize data loading wait times</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/plot_benchmark_runs.ipynb"><code>plot_benchmark_runs.ipynb</code></a></strong></p>
+</li>
+<li>Jupyter notebook for visualizing benchmark results</li>
+<li>Creates charts comparing different configurations</li>
+<li>Helps identify the optimal setup for your specific hardware</li>
+</ol>
+<h3 id="how-to-optimize-with-the-benchmark-scripts">How to optimize with the benchmark scripts</h3>
+<p>Follow these steps to systematically optimize your data pipeline:</p>
+<ol>
+<li><strong>Import your own dataset</strong> by changing the line on top of <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py"><code>benchmark_configurations.py</code></a>.</li>
+</ol>
+<pre><code class="language-python">from dummydataset import DummyDataset as YourDataset # replace with your dataset
+</code></pre>
+<ol>
+<li>
+<p><strong>Optional: Measuring the time it takes to (load a mini batch and) complete a single training step.</strong> This information is useful for properly configuring the benchmark script parameters to accurately reflect your real-world training conditions. For this, you can run the <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/timing_benchmark.py"><code>timing_benchmark.py</code></a> script that is in the folder of <a href="part4.html">4. Optimizing the pipeline: Model</a>. and then change the <code>train_step_time</code> parameter in the <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py"><code>benchmark_configurations.py</code></a> script.</p>
+</li>
+<li>
+<p><strong>Establish a baseline</strong> Start with minimal configuration:</p>
+</li>
+<li><code>num_workers = 0</code> (single-process loading)</li>
+<li><code>prefetch_factor = None</code> (default behavior)</li>
+<li><code>persistent_workers = False</code></li>
+<li>
+<p><code>pin_memory = False</code></p>
+</li>
+<li>
+<p><strong>Implement a sensible default configuration</strong></p>
+</li>
+<li>
+<p>E.g. for a system with 10 CPU cores and 1 GPU:</p>
+<ul>
+<li>Reserve 1-2 cores for the main training process</li>
+<li>Allocate remaining cores between DataLoader workers (and streaming processes)</li>
+<li>Example allocation:</li>
+<li>3 cores for Dask streaming workers (if using Dask)</li>
+<li>5 cores for DataLoader workers</li>
+</ul>
+</li>
+<li>
+<p><strong>Experiment with different configurations</strong></p>
+</li>
+<li>
+<p>Test variations systematically:</p>
+<ul>
+<li>More streaming workers, fewer DataLoader workers</li>
+<li>More DataLoader workers, fewer streaming workers</li>
+<li>Higher CPU oversubscription</li>
+<li>Optional: Even higher oversubscription</li>
+<li>Lower CPU oversubscription</li>
+<li>Different <code>prefetch_factor</code> values</li>
+</ul>
+</li>
+<li>
+<p><strong>Run benchmarks and analyze results</strong></p>
+</li>
+<li>Use <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Optimizing%20the%20pipeline%3A%20Data/benchmark_configurations.py"><code>benchmark_configurations.py</code></a> to test all configurations</li>
+<li>Can be run locally or in the cloud</li>
+<li>(Download and) analyze the files with <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/plot_benchmark_runs.ipynb"><code>plot_benchmark_runs.ipynb</code></a> (use the <code>*.log</code> files, not the <code>*_workers.log</code> files. They make sure the <code>*.log</code> files are correct)</li>
+<li>Compare performance metrics across configurations</li>
+</ol>
+<p>Use the <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/4.%20Optimizing%20the%20pipeline%3A%20Data/plot_benchmark_runs.ipynb">plotting notebook</a> to visualize differences between runs and identify which configuration has the lowest wait/batch fetching time. I do not explicitly measure vRAM/CPU utilization in these tools, the primary goal is to significantly improve training time with reasonable effort. Having that said, watch for these warning signs:</p>
+<ul>
+<li><strong>Memory issues</strong>: If memory usage spikes, reduce workers, prefetch factor, or caching.</li>
+<li><strong>Diminishing returns</strong>: If adding workers doesn't improve throughput, you've reached saturation.</li>
+</ul>
+<h3 id="example-benchmark-results">Example Benchmark Results</h3>
+<p>Below are example benchmark results showing the significant difference between an unoptimized baseline configuration and an optimized one:</p>
+<div align="center">
+  <img src="../../images/training-blog/benchmark_bad.png" alt="Unoptimized Baseline"  width="400">
+</div>
+
+<div align="center">
+  <img src="../../images/training-blog/benchmark_good.png" alt="Optimized Configuration"  width="400">
+  <p><em>Unoptimized baseline vs optimized configuration performance after 3 epochs with 50 batches</em></p>
+</div>
+
+<div align="right">
+  <small>Source: <a href="https://blog.dailydoseofds.com/p/4-strategies-for-multi-gpu-training">Daily Dose of Data Science</a></small>
+</div>
+
+<p>With these simple optimizations, my dataloader became 35 times faster than the baseline. <a href="https://earthmover.io/">Earthmover</a>, who made the first version of this benchmark script was able to run 15x faster. This performance improvement is transformative for training - where others might only complete 4 epochs in a given timeframe, I was able to run 140. This acceleration dramatically reduces overall training time, costs and allows for more experimentation and model iterations.</p>
+<p>Now that we have the data-part of the pipeline optimized, lets focus on <a href="part5.html">optimizing the Model</a></p>
+<div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-200"><a href="part3.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">&larr; Previous Chapter: Bigger data in the cloud</a><a href="part5.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">Next Chapter: Optimizing the pipeline: Model &rarr;</a></div>
+</div>
+</div>
+</div>
+    <footer class="bg-ocean-900 text-slate-300 py-12 border-t border-ocean-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+<div class="mb-4 md:mb-0">
+<span class="font-serif font-bold text-xl text-white">Coen van den Elsen</span>
+<p class="text-sm text-ocean-200 mt-2">© 2025 Coen van den Elsen. AI for a better world.</p>
+</div>
+<div class="flex space-x-6">
+<a class="text-ocean-200 hover:text-white transition-colors" href="mailto:coen@vandenelsen.nu">
+<span class="sr-only">Email</span>
+<i class="fas fa-envelope text-xl"></i>
+</a>
+<a class="text-ocean-200 hover:text-white transition-colors" href="https://github.com/CoenvdE" target="_blank">
+<span class="sr-only">GitHub</span>
+<i class="fab fa-github text-xl"></i>
+</a>
+<a class="text-ocean-200 hover:text-white transition-colors" href="https://linkedin.com/in/coen-van-den-elsen" target="_blank">
+<span class="sr-only">LinkedIn</span>
+<i class="fab fa-linkedin text-xl"></i>
+</a>
+</div>
+</div>
+</footer>
+
+<script>
+        function setupThemeToggle(btnId, darkIconId, lightIconId) {
+            var themeToggleBtn = document.getElementById(btnId);
+            var themeToggleDarkIcon = document.getElementById(darkIconId);
+            var themeToggleLightIcon = document.getElementById(lightIconId);
+
+            if (!themeToggleBtn) return;
+
+            // Change the icons inside the button based on previous settings
+            if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                themeToggleLightIcon.classList.remove('hidden');
+            } else {
+                themeToggleDarkIcon.classList.remove('hidden');
+            }
+
+            themeToggleBtn.addEventListener('click', function() {
+                // toggle icons inside button
+                themeToggleDarkIcon.classList.toggle('hidden');
+                themeToggleLightIcon.classList.toggle('hidden');
+
+                // if set via local storage previously
+                if (localStorage.getItem('color-theme')) {
+                    if (localStorage.getItem('color-theme') === 'light') {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    }
+                // if NOT set via local storage previously
+                } else {
+                    if (document.documentElement.classList.contains('dark')) {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    } else {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    }
+                }
+            });
+        }
+        setupThemeToggle('theme-toggle', 'theme-toggle-dark-icon', 'theme-toggle-light-icon');
+        setupThemeToggle('theme-toggle-mobile', 'theme-toggle-dark-icon-mobile', 'theme-toggle-light-icon-mobile');
+    </script>
+</body>
+</html>
