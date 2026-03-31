@@ -152,7 +152,28 @@ def build():
     </script>
 </body>''')
             final_html = final_html.replace('<script src="https://cdn.tailwindcss.com"></script>', '<script src="https://cdn.tailwindcss.com?plugins=typography"></script>')
-            final_html = final_html.replace('</head>', '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">\n<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>\n<script>hljs.highlightAll();</script>\n</head>')
+            final_html = final_html.replace('</head>', '''<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<style>
+    .prose :where(code):not(:where([class~="not-prose"] *)) {
+        background-color: theme('colors.slate.100');
+        padding: 0.2em 0.4em;
+        border-radius: 0.25rem;
+        font-weight: 600;
+    }
+    .dark .prose :where(code):not(:where([class~="not-prose"] *)) {
+        background-color: theme('colors.slate.800');
+        color: theme('colors.brand.300');
+    }
+    .prose :where(pre code):not(:where([class~="not-prose"] *)) {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        color: inherit;
+    }
+</style>
+</head>''')
 
             out_path = os.path.join(out_dir, chapter['out_name'])
             with open(out_path, 'w') as out_f:
