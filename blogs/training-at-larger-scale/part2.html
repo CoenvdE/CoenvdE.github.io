@@ -138,7 +138,7 @@
 <div class="md:col-span-3 bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-lg p-8 prose prose-slate dark:prose-invert prose-brand max-w-none">
 <h2 id="single-to-multi-gpu-training">Single- to Multi-GPU training</h2>
 <p>Multi-GPU training provides accelerated computing power, meaning faster training once set up correctly. This is necessary when having bigger datasets and larger models.</p>
-<pre><code>2. Multi-GPU training/
+<pre class="highlight"><code>2. Multi-GPU training/
 ├── config/
 │   ├── config.yaml
 │   └── cli_config.yaml
@@ -160,8 +160,7 @@
 ├── __pycache__/
 ├── lightning_train.py
 ├── lightning_trainer.py
-└── requirements.txt
-</code></pre>
+└── requirements.txt</code></pre>
 <p>By default, pytorch deep learning models only utilize a single GPU for training, even if multiple GPUs are available. This of course is not what we want. Multi-GPU training setup for pytorch itself can be quite a pain, which is why we are going to use (Pytorch) Lightning. This is very useful and saves you a lot of work down the line (not just multi-GPU training), you'll see.</p>
 <div align="center">
   <img src="../../images/training-blog/idle_gpu.webp" alt="Idle GPU Utilization" width="400">
@@ -238,21 +237,18 @@ I will list a few below:</p>
     - <strong>device</strong>: Indicates which (or the number) device(s) to run on. For example, it could be an integer (like 1 or 4) or a specific device string (e.g., "cuda:0") or "auto" to choose one or multiple GPUs. If you have 8 GPU's, use 8.
     - <strong>strategy</strong>: Defines the parallelization approach. Options include "dp" (data parallel), "ddp" (distributed data parallel), "auto", among others, which determine how training is distributed across GPUs.
     - <strong>num_nodes</strong>: Specifies the number of nodes (or machines) to use for training. (this is relevant when you have multiple clusters)</p>
-<pre><code class="language-bash">uv run python -m unittest tests/test_lightning_parameters.py
-</code></pre>
-<pre><code class="language-bash">uv run python lightning_train.py
-</code></pre>
+<p><pre class="highlight"><code class="language-bash">uv run python -m unittest tests/test_lightning_parameters.py</code></pre>
+<pre class="highlight"><code class="language-bash">uv run python lightning_train.py</code></pre></p>
 <p><strong><em><a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/2.%20Multi-GPU%20training/lightning_trainer.py"><code>lightning_trainer.py</code></a></em></strong>
 - NOTE: even less code and a CLI (very useful because now you can use the --help flag to see everything that can be initiated and how)
 - go through the code and see how everything is initiated. It is important to note that CLI requires a specific format for the <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/2.%20Multi-GPU%20training/config/config.yaml"><code>config.yaml</code></a> (example in <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/2.%20Multi-GPU%20training/config/cli_config.yaml"><code>cli_config.yaml</code></a>) with specific config sections:
   - model
   - data
-  - trainer </p>
+  - trainer</p>
 <p>Run the following commands to see how to use the CLI: (note that you can switch between fit, validate, test, predict)</p>
-<pre><code class="language-bash">uv run python -m lightning_trainer --help
+<pre class="highlight"><code class="language-bash">uv run python -m lightning_trainer --help
 uv run python -m lightning_trainer fit --help
-uv run python -m lightning_trainer fit -c config/cli_config.yaml
-</code></pre>
+uv run python -m lightning_trainer fit -c config/cli_config.yaml</code></pre>
 <p>Additional information on how to use the Lightning CLI is available in the <a href="https://lightning.ai/docs/pytorch/2.1.0/cli/lightning_cli.html">Lightning CLI Documentation</a></p>
 <h3 id="managing-multiple-processes-in-distributed-training">Managing Multiple Processes in Distributed Training</h3>
 <hr />
@@ -276,24 +272,23 @@ uv run python -m lightning_trainer fit -c config/cli_config.yaml
 - Works in both distributed and non-distributed setups
 - Prevents read/write file corruption and redundant downloads</p>
 <h4 id="example-implementation">Example Implementation</h4>
-<pre><code class="language-python">def is_main_process():
-    &quot;&quot;&quot;Check if the current process is the main process.&quot;&quot;&quot;
+<pre class="highlight"><code class="language-python">def is_main_process():
+    """Check if the current process is the main process."""
     return not dist.is_available() or not dist.is_initialized() or dist.get_rank() == 0
 
 def download_dummy_data():
-    &quot;&quot;&quot;Download the dummy data, only on the main process.&quot;&quot;&quot;
+    """Download the dummy data, only on the main process."""
     should_download = is_main_process()
 
     if should_download:
         # Only process with rank 0 performs the download
-        print(&quot;Main process downloading data...&quot;)
+        print("Main process downloading data...")
         # Actual download code here
 
     # Synchronization point - all processes must wait here
     # Until the main process has finished downloading.
     if dist.is_available() and dist.is_initialized():
         dist.barrier()
-
 </code></pre>
 <h3 id="handling-file-uploads-in-distributed-training">Handling File Uploads in Distributed Training</h3>
 <p>When training is complete, uploading checkpoints and logs requires similar coordination to prevent conflicts. In <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/2.%20Multi-GPU%20training/lightning_trainer.py"><code>lightning_trainer.py</code></a> and <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/2.%20Multi-GPU%20training/lightning_train.py"><code>lightning_train.py</code></a> you can see how to implement distributed file uploads correctly:
@@ -302,18 +297,17 @@ def download_dummy_data():
 - Efficient: Reduces network traffic and ensures clean termination
 - No need for other processes to wait, they can terminate.</p>
 <h4 id="example-implementation_1">Example Implementation</h4>
-<pre><code class="language-python">def is_main_process():
-    &quot;&quot;&quot;Check if the current process is the main process.&quot;&quot;&quot;
+<pre class="highlight"><code class="language-python">def is_main_process():
+    """Check if the current process is the main process."""
     return not dist.is_available() or not dist.is_initialized() or dist.get_rank() == 0
 
 def upload_checkpoints_to_cloud(checkpoint_dir, log_dir):
-    &quot;&quot;&quot;Upload checkpoints and logs to cloud storage, only from the main process.&quot;&quot;&quot;
+    """Upload checkpoints and logs to cloud storage, only from the main process."""
     # Only process with rank 0 performs the upload
     if is_main_process():
         # Upload files
 
-        print(&quot;Upload complete!&quot;)
-</code></pre>
+        print("Upload complete!")</code></pre>
 <p><strong>Seeding in Pytorch Lightning</strong></p>
 <p>When using PyTorch Lightning's <code>seed_everything()</code>, it's important to note that by default, the seed is (as far as I have tested) not automatically propagated to worker processes or DataLoader generators. Setting <code>workers=True</code> in <code>seed_everything()</code> ensures the seed is properly propagated to worker processes, but you still need to explicitly set seeds for DataLoader generators. As far as I have tested (please correct me if I am wrong), in the CLI config you cannot specify workers=True, which is why I also made a custom <code>worker_init_fn</code> as an example. All of this can be seen in <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/2.%20Multi-GPU%20training/src/data/lightning_datamodule.py"><code>lightning_datamodule.py</code></a>. It ensures reproducibility across all components of your Lightning pipeline.</p>
 <p><strong>Monitoring Multi-GPU Training</strong></p>
@@ -327,11 +321,10 @@ def upload_checkpoints_to_cloud(checkpoint_dir, log_dir):
 </li>
 <li>
 <p><strong>Hardware Configuration Verification</strong>: My implementation includes a configuration check in <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/2.%20Multi-GPU%20training/lightning_trainer.py"><code>lightning_trainer.py</code></a> that prints the actual hardware setup being used:
-   <code>python
-   print(f"\nTraining Configuration Check:")
-   print(f"- Accelerator: {trainer.accelerator}")
-   print(f"- Devices: {trainer.device_ids}")
-   print(f"- Strategy: {trainer.strategy}\n")</code></p>
+   <pre class="highlight"><code class="language-python">print(f"\nTraining Configuration Check:")
+print(f"- Accelerator: {trainer.accelerator}")
+print(f"- Devices: {trainer.device_ids}")
+print(f"- Strategy: {trainer.strategy}\n")</code></pre></p>
 </li>
 </ol>
 <p><strong>Common Causes of Performance Differences</strong></p>
@@ -358,8 +351,7 @@ def upload_checkpoints_to_cloud(checkpoint_dir, log_dir):
 <p><strong>Hardware Configuration</strong>: Always explicitly set <code>strategy</code>, <code>accelerator</code>, and <code>devices</code> parameters rather than relying on "auto" settings to ensure consistent behavior across environments.</p>
 </li>
 </ol>
-<pre><code class="language-bash">uv run python lightning_train.py
-</code></pre>
+<pre class="highlight"><code class="language-bash">uv run python lightning_train.py</code></pre>
 <p>Great! now we can train with multiple GPUs, let's tackle working with <a href="part3.html">bigger data in the cloud</a></p>
 <div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-200"><a href="part1.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">&larr; Previous Chapter: The Setup</a><a href="part3.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">Next Chapter: Bigger data in the cloud &rarr;</a></div>
 </div>
