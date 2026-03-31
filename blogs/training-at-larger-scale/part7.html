@@ -202,21 +202,20 @@
 </table>
 <h2 id="2-optimizing-the-dataset">2. Optimizing the Dataset</h2>
 <ol>
-<li><strong>Efficient Storage Formats</strong>: </li>
+<li><strong>Efficient Storage Formats</strong>:</li>
 </ol>
-<p>Initially, my data was stored in NetCDF files, which are common for scientific data but can be inefficient when working with streaming from cloud storage. The default chunking in these files was not optimized for machine learning, causing unnecessary data to be loaded into memory during training. To address this, I stored everything in <a href="https://zarr.readthedocs.io/">Zarr</a>. Zarr is specifically designed for fast cloud-based data access. I will not include the migration in this blog, as it is out of scope, I just want to show that it is important to think about the data formats used. </p>
+<p>Initially, my data was stored in NetCDF files, which are common for scientific data but can be inefficient when working with streaming from cloud storage. The default chunking in these files was not optimized for machine learning, causing unnecessary data to be loaded into memory during training. To address this, I stored everything in <a href="https://zarr.readthedocs.io/">Zarr</a>. Zarr is specifically designed for fast cloud-based data access. I will not include the migration in this blog, as it is out of scope, I just want to show that it is important to think about the data formats used.</p>
 <p><strong>Zarr v3 Performance Tip</strong></p>
 <p>When using <strong>Zarr v3</strong>, you can achieve a significant speedup by disabling Dask during dataset loading. By setting <code>chunks=None</code>, you bypass Dask's graph-building overhead and allow Xarray to use its internal lazy-indexing. This is often faster because Zarr v3's own storage layer is already optimized for concurrent I/O.</p>
-<p><code>python
-   # Optimal Zarr v3 loading
-   dataset = xr.open_zarr(
-      path,
-      consolidated=False,
-      zarr_format=3,
-      chunks=None
-   )</code></p>
+<pre class="highlight"><code class="language-python"># Optimal Zarr v3 loading
+dataset = xr.open_zarr(
+   path,
+   consolidated=False,
+   zarr_format=3,
+   chunks=None
+)</code></pre>
 <ol>
-<li><strong>Optimal Chunking</strong>: </li>
+<li><strong>Optimal Chunking</strong>:</li>
 </ol>
 <p>When streaming data, the goal is to minimize both the amount of data loaded and the number of individual chunk requests made.</p>
 <ul>
@@ -325,7 +324,7 @@
 <p>When working with lazy-loading/streaming data into GPU memory, there are several parameters you might need to optimize:</p>
 <ol>
 <li>
-<p><strong>Parallel Loading Parameters</strong>: </p>
+<p><strong>Parallel Loading Parameters</strong>:</p>
 <ul>
 <li>Number of concurrent readers/workers (processes that execute computations)</li>
 <li>Memory limits per worker (to prevent OOM errors)</li>
@@ -389,7 +388,7 @@
    - Monitor CPU utilization to avoid contention</p>
 <p>The key is balancing parallelism against resource constraints. More parallelism isn't always better, especially when resources are shared across multiple GPU processes. Start conservative and scale up while monitoring performance.</p>
 <ol>
-<li><strong>Caching and Locality</strong>: For remote data, implement caching strategies to avoid repeatedly downloading the same data. </li>
+<li><strong>Caching and Locality</strong>: For remote data, implement caching strategies to avoid repeatedly downloading the same data.</li>
 </ol>
 <h2 id="4-profiling-check-your-pipeline">4. Profiling: Check Your Pipeline</h2>
 <h3 id="what-is-it">What is it?</h3>
@@ -404,8 +403,7 @@ then run the script 3 times with the three profilers:</p>
 <li><strong>PyTorch Profiler (Chrome Trace Viewer)</strong></li>
 </ul>
 <p>it stores the output in the <code>output/profiler/{config_name}/profiler_logs</code> folder.</p>
-<pre><code class="language-bash">uv run python profiler.py
-</code></pre>
+<pre class="highlight"><code class="language-bash">uv run python profiler.py</code></pre>
 <h3 id="interpreting-profiler-outputs-a-quick-guide">Interpreting Profiler Outputs – A Quick Guide</h3>
 <p>Understanding what the profiler outputs mean is key to optimizing your training pipeline.
 Here’s what to look for in each profiler and how to make sense of the data.</p>
@@ -467,7 +465,7 @@ Here’s what to look for in each profiler and how to make sense of the data.</p
 <h3 id="when-to-take-action-example_2">When to Take Action (example):</h3>
 <ul>
 <li>If any function is causing a lot of time, (where you expect it to be fast) check if it is necessary.</li>
-<li>If idle gaps exist, investigate DataLoader efficiency </li>
+<li>If idle gaps exist, investigate DataLoader efficiency</li>
 </ul>
 <div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-200"><a href="part6.html" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">&larr; Previous Chapter: What Is Next</a><div></div></div>
 </div>

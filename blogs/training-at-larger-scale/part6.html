@@ -139,7 +139,7 @@
 <h2 id="whats-next">What's Next?</h2>
 <p>The last part before we get to the training.
 Here I'll cover my last tips and tricks, one more failsafe and some final experiments to run before we get to the training.</p>
-<pre><code>6. What Is Next/
+<pre class="highlight"><code>6. What Is Next/
 ├── config/
 │   └── cli_config.yaml
 ├── src/
@@ -147,15 +147,14 @@ Here I'll cover my last tips and tricks, one more failsafe and some final experi
 │   ├── data/
 │   └── model/
 ├── lightning_trainer.py
-└── lightning_train.py
-</code></pre>
+└── lightning_train.py</code></pre>
 <h3 id="experiment-first-train-later">Experiment First, Train Later</h3>
 <p>Before jumping into full-scale training, it's important to run some experiments first (e.g. how big should a patch be? What would be a good optimizer configuration starting point?). The idea is not to test this on the full training run, but test it for e.g. 200 (instead of 3000) epochs, and observe the loss curves over epochs.</p>
 <ul>
-<li>Select a baseline configuration  </li>
+<li>Select a baseline configuration</li>
 <li>Observe the loss curves and training speed</li>
-<li>Run small-scale experiments to test different settings  </li>
-<li>Compare outcomes to identify the best setup  </li>
+<li>Run small-scale experiments to test different settings</li>
+<li>Compare outcomes to identify the best setup</li>
 </ul>
 <p>This approach helps avoid wasting compute and accelerates convergence.</p>
 <h3 id="failsafe-uploading-to-the-cloud-intermittently">Failsafe: uploading to the cloud intermittently</h3>
@@ -164,7 +163,7 @@ Training pipelines sometimes crash due to various reasons, and it's always good 
 For this reason I have uploaded a <code>CloudUploadCallback</code> in <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/6.%20What%20Is%20Next/src/callbacks.py">callbacks.py</a>.
 This callback uploads the model checkpoints to the cloud storage at specified intervals and/or when the training is finished.</p>
 <p>You can add this callback to your training loop by adding the following to your <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/6.%20What%20Is%20Next/config/cli_config.yaml"><code>cli_config.yaml</code></a> file:</p>
-<pre><code class="language-yaml">  callbacks:
+<pre class="highlight"><code class="language-yaml">  callbacks:
     - class_path: src.callbacks.CloudUploadCallback
       init_args:
         local_dir: output/test/checkpoints
@@ -172,15 +171,14 @@ This callback uploads the model checkpoints to the cloud storage at specified in
         upload_interval: 10
         upload_during_training: true
         upload_on_fit_end: true
-        filesystem: s3
-</code></pre>
+        filesystem: s3</code></pre>
 <h3 id="docker-and-why-its-nice">Docker — And Why It's Nice</h3>
-<p>Docker lets you <strong>containerize</strong> your environment, making sure your code runs the same everywhere—on your laptop or in the cloud.<br />
+<p>Docker lets you <strong>containerize</strong> your environment, making sure your code runs the same everywhere—on your laptop or in the cloud.
 Why it's nice:
 - Reproducible setups  across different machines or cloud providers (Digital Ocean, AWS, etc.)
-- Lightweight &amp; portable<br />
+- Lightweight &amp; portable
 - Dependency management
-- Easy to test in isolated environments  </p>
+- Easy to test in isolated environments</p>
 <p>This personally helped me a lot as switching between different machines and cloud providers went almost seamless.
 Get started with docker with this <a href="https://dev.to/docker/getting-started-with-docker-for-aiml-a-beginners-guide-4k6j">guide</a>, watch some videos and discuss with a nice LLM.</p>
 <hr />
@@ -188,21 +186,19 @@ Get started with docker with this <a href="https://dev.to/docker/getting-started
 <p>Choosing the right precision can significantly impact training <strong>speed</strong> and <strong>efficiency</strong>, without sacrificing performance—if used correctly.
 I changed from <code>float32</code> to <code>16-mixed</code> and saw a 2x speedup. If your gpu also supports <code>bf16-mixed</code>, use that. It is more stable.</p>
 <p>Why it's nice:
-- Less memory usage<br />
-- Faster training<br />
-- Bigger batch sizes  </p>
+- Less memory usage
+- Faster training
+- Bigger batch sizes</p>
 <p>you can change this by adding the following to your <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/6.%20What%20Is%20Next/config/cli_config.yaml"><code>cli_config.yaml</code></a> file:</p>
-<pre><code class="language-yaml">precision: 16-mixed # Precision parameter added, default is 32-true (float32)
-</code></pre>
+<pre class="highlight"><code class="language-yaml">precision: 16-mixed # Precision parameter added, default is 32-true (float32)</code></pre>
 <p>Additional information can be found in the <a href="https://pytorch-lightning.readthedocs.io/en/1.5.10/guides/speed.html">Lightning documentation</a>.</p>
 <h2 id="step-based-training">Step-Based Training</h2>
 <p>When working with large-scale datasets, the concept of an "epoch" becomes less relevant, as you may only complete 2 or 3 full passes during the entire training process. In these cases, step-based training is the standard. It provides more granular control over logging, checkpointing, and learning rate updates.</p>
 <p>To switch to step-based training in PyTorch Lightning, update your cli_config.yaml:</p>
-<pre><code class="language-YAML">trainer:
+<pre class="highlight"><code class="language-YAML">trainer:
   max_steps: 100000          # Train for a fixed number of iterations
   val_check_interval: 1000   # Run validation every 1000 steps
-  log_every_n_steps: 50      # Frequent logging for better visibility
-</code></pre>
+  log_every_n_steps: 50      # Frequent logging for better visibility</code></pre>
 <p>Note: Ensure you disable epoch-based settings (like max_epochs) to prevent the trainer from stopping prematurely or do extra validation iterations.
 Also make sure you configure your learning rate scheduler based on steps instead of epochs.</p>
 <h2 id="learning-rate-schedulers">Learning Rate Schedulers</h2>
@@ -215,24 +211,22 @@ Also make sure you configure your learning rate scheduler based on steps instead
 </ol>
 <p>I experienced a very stable training process with this. (It was recommended to me by someone from the Allan turing institute) and other foundational model builders used it in their training as well. It is recommended to set the restart frequency to a value that is around 2-3 times the number of epochs it takes for the loss to be at the same level as just before the restart. This way the model learns stable and is able to escape local minima.
 As a general strategy, it typically performs better than fixed or step decay schedules with minimal tuning.</p>
-<pre><code class="language-python">torch.optim.lr_scheduler.CosineAnnealingWarmRestarts
-</code></pre>
+<pre class="highlight"><code class="language-python">torch.optim.lr_scheduler.CosineAnnealingWarmRestarts</code></pre>
 <hr />
 <h3 id="environment-variables-and-why-theyre-nice">Environment Variables — And Why They're Nice</h3>
-<p>Env vars help you <strong>manage secrets and config</strong> without hardcoding.<br />
+<p>Env vars help you <strong>manage secrets and config</strong> without hardcoding.
 Why it's nice:
-- Store keys/passwords securely<br />
-- Change behavior across environments (dev, prod, test)<br />
-- Fast configuration without changing code  </p>
+- Store keys/passwords securely
+- Change behavior across environments (dev, prod, test)
+- Fast configuration without changing code</p>
 <p>Here's a simple <code>.env example</code> file example:</p>
-<pre><code># Cloud storage credentials
+<pre class="highlight"><code># Cloud storage credentials
 CLOUD_STORAGE_KEY=your_secret_key_here
 CLOUD_STORAGE_BUCKET=training-data-bucket
 
 # Experiment tracking
 WANDB_API_KEY=your_wandb_key_here
-EXPERIMENT_NAME=transformer_v2
-</code></pre>
+EXPERIMENT_NAME=transformer_v2</code></pre>
 <p><strong>Important</strong>: Never commit your <code>.env</code>file to your repository. It often contains sensitive information like API keys and credentials. Instead:</p>
 <ol>
 <li>Add <code>.env</code> to your <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/6.%20What%20Is%20Next/config/.gitignore"><code>.gitignore</code></a></li>

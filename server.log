@@ -1,0 +1,2 @@
+127.0.0.1 - - [31/Mar/2026 11:57:13] "GET /blogs/training-at-larger-scale/index.html HTTP/1.1" 200 -
+127.0.0.1 - - [31/Mar/2026 11:57:14] "GET /images/training-blog/intro_image_larger_scale.png HTTP/1.1" 200 -

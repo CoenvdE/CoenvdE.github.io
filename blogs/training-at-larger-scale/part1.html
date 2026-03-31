@@ -138,7 +138,7 @@
 <div class="md:col-span-3 bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-lg p-8 prose prose-slate dark:prose-invert prose-brand max-w-none">
 <h2 id="setup">Setup</h2>
 <p>Before diving into optimizations, I will walk you through some best practices and a baseline to give you a solid starting point. Note that my model and pipeline were actually a lot more complicated, but my goal is not how to recreate my complicated pipeline, it is to show you simple examples for you to optimize and improve your own.</p>
-<pre><code>1. The Setup/
+<pre class="highlight"><code>1. The Setup/
 ├── config/
 │   └── config.yaml
 ├── output/
@@ -157,8 +157,7 @@
 │   └── test_parameters.py
 ├── wandb/
 ├── pytorch_train.py
-└── requirements.txt
-</code></pre>
+└── requirements.txt</code></pre>
 <h3 id="my-model-components-and-overview">My Model (components and overview)</h3>
 <hr />
 <p>My model is a (Masked) Autoencoder (with some cool stuff that does not matter for this guide) and has the following key components:
@@ -169,27 +168,25 @@
 <hr />
 <ul>
 <li>a <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/src/data/pytorch_dataset.py"><code>pytorch_dataset</code></a>
-I use a big, geospatial dataset for my training. For this tutorial, I created a dummy example, but feel free to swap it out for e.g. <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR</a> or any other dataset you like. It is important that this is wrapped into a <code>torch.utils.data.Dataset</code> object.<br />
-We will come back to data in more detail in <a href="part3.html">Chapter 3</a>.  </li>
+I use a big, geospatial dataset for my training. For this tutorial, I created a dummy example, but feel free to swap it out for e.g. <a href="https://www.cs.toronto.edu/~kriz/cifar.html">CIFAR</a> or any other dataset you like. It is important that this is wrapped into a <code>torch.utils.data.Dataset</code> object.
+We will come back to data in more detail in <a href="part3.html">Chapter 3</a>.</li>
 </ul>
 <h3 id="reproducibility">Reproducibility</h3>
 <hr />
 <p>Reproducibility is very important! It allows you and others to reliably verify and compare results. In research, it ensures findings are valid and consistent. For practitioners, it makes debugging and iterative experimentation much easier. Seeding is one of the prerequisites for reproducibility. It ensures consistent pseudo random number generation. Different frameworks may use different generators.
 You need to seed everything (torch, numpy, python, etc.). See the <code>set_seed()</code> function in <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/pytorch_train.py">pytorch_train.py</a> for an example implementation.</p>
-<pre><code class="language-python">def set_seed(seed: int = 13):
-    &quot;&quot;&quot;Set all seeds for reproducibility.&quot;&quot;&quot;
+<pre class="highlight"><code class="language-python">def set_seed(seed: int = 13):
+    """Set all seeds for reproducibility."""
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
     np.random.seed(seed)
-    random.seed(seed)
-</code></pre>
+    random.seed(seed)</code></pre>
 <p>Note that I use a <code>set_seed</code> function to keep everything reproducible in the <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/pytorch_train.py"><code>pytorch_train.py</code> file</a>. By default, this seed does <em>not</em> propagate to the Dataloader. This is why I create a <code>generator</code> for the data loader that has a set seed, for which I use the seed from the <code>set_seed</code> function.
 Pytorch dataloader workers need to be seeded, because each worker runs in its own process. Without explicit seeding, they will use random seeds, leading to <strong>non-deterministic data loading and augmentations</strong>. Look at the <code>worker_init_fn</code> in the <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/pytorch_train.py"><code>pytorch_train.py</code> file</a> for an example.</p>
 <p>For <strong>reproducibility during debugging and testing</strong>, set the following:</p>
-<pre><code class="language-python">torch.backends.cudnn.deterministic = True  # Default: False
-torch.backends.cudnn.benchmark = False     # Default: True
-</code></pre>
-<p>These flags control CUDA kernel selection and execution:</p>
+<p><pre class="highlight"><code class="language-python">torch.backends.cudnn.deterministic = True  # Default: False
+torch.backends.cudnn.benchmark = False     # Default: True</code></pre>
+These flags control CUDA kernel selection and execution:</p>
 <ul>
 <li><code>deterministic = True</code>: Ensures consistent results across training runs, though this may impact training speed</li>
 <li><code>benchmark = False</code>: Disables CuDNN's auto-tuner that normally selects optimal convolution algorithms. While auto-tuning can improve performance, it may introduce non-deterministic behavior, particularly with varying input sizes</li>
@@ -202,41 +199,38 @@ torch.backends.cudnn.benchmark = False     # Default: True
 <hr />
 <p>Before moving forward, ensure your model actually works. It is important to write tests that check:
 - Proper parameter loading from config file
-- Shape consistency<br />
-- Correct device allocation   </p>
+- Shape consistency
+- Correct device allocation</p>
 <p>This first one is very important and can save you a lot of trouble debugging, I made an example <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/tests/test_parameters.py">test</a> for this.</p>
-<pre><code class="language-bash">uv run python -m unittest tests/test_parameters.py
-</code></pre>
+<pre class="highlight"><code class="language-bash">uv run python -m unittest tests/test_parameters.py</code></pre>
 <p>Additionally, I set up automated testing — every push to the GitHub branch runs these tests. For this, look at the <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/.github/workflows/test.yml"><code>.github/workflows/test.yml</code></a> file. While unit tests don't catch everything, they help ensure the code runs smoothly (in the cloud) and prevent accidental breakage.   Automatically running them via GitHub gives you good feedback on if you break anything! This can potentially save you a lot of time and money, since it reduces the likelihood of a situation where you spin up a large GPU cluster for model training and then have to spend an hour or more fixing bugs that you failed to catch before.</p>
 <h3 id="tracking-experiment-logging-wandb">Tracking &amp; Experiment Logging (WandB)</h3>
 <hr />
-<p>Proper tracking is essential for monitoring model performance and debugging issues.<br />
+<p>Proper tracking is essential for monitoring model performance and debugging issues.
 I <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/pytorch_train.py#L100">use</a> Weights &amp; Biases (WandB), but alternatives like MLflow also work.</p>
 <p>What to track?
-- Validation loss &amp; training loss<br />
-- Learning rate<br />
-- Reconstructions &amp; visualizations to monitor model progress<br />
-- Config files &amp; training logs for reproducibility  </p>
-<p>You can decide for yourself what you want to track and when (per step, per epoch), it never hurts to track more things!<br />
+- Validation loss &amp; training loss
+- Learning rate
+- Reconstructions &amp; visualizations to monitor model progress
+- Config files &amp; training logs for reproducibility</p>
+<p>You can decide for yourself what you want to track and when (per step, per epoch), it never hurts to track more things!
 Give the training loop a go to see what happens:</p>
-<pre><code class="language-bash">uv run python pytorch_train.py
-</code></pre>
+<pre class="highlight"><code class="language-bash">uv run python pytorch_train.py</code></pre>
 <h3 id="validating-your-model-architecture">Validating Your Model Architecture</h3>
 <hr />
 <p>Validating your model architecture early prevents costly debugging later in training—especially when working with large or domain-specific datasets. These problems often involve unique data formats and multi-dimensional inputs that don't fit a model architecture out of the box. Skipping this step can lead to wasted time and compute on models that silently fail to learn. These validation steps are unique for each problem, but the general idea is to validate the model on a smaller dataset that are representative of the full dataset.</p>
 <p>Example: the problem I need to solve is a geospatial one, meaning my model had to handle multiple dimensions (channels, height, width, time). Before experimenting with my full geospatial dataset, I verified that the model could train properly on local hardware (and a single GPU). I validated the architecture using the following datasets:</p>
 <ul>
-<li><strong>Dummy Dataset</strong>: Randomly initialized tensors with the correct shape. This confirmed the model accepted input as expected and helped verify the pipeline was structurally sound.  </li>
-<li><strong>CIFAR-10</strong>: Although not geospatial, CIFAR-10 contains spatial dimensions (height and width), 3 variable channels (RGB), and can simulate a time dimension (e.g. <code>time=1</code>). This made it a useful proxy for early validation.  </li>
+<li><strong>Dummy Dataset</strong>: Randomly initialized tensors with the correct shape. This confirmed the model accepted input as expected and helped verify the pipeline was structurally sound.</li>
+<li><strong>CIFAR-10</strong>: Although not geospatial, CIFAR-10 contains spatial dimensions (height and width), 3 variable channels (RGB), and can simulate a time dimension (e.g. <code>time=1</code>). This made it a useful proxy for early validation.</li>
 <li><strong>Subset of the geospatial dataset</strong>: A small slice of the real dataset ensured the model worked with actual data formats and domain-specific characteristics.</li>
 </ul>
 <p>This step ensured my architecture was robust, flexible, and ready for large-scale training.</p>
 <hr />
 <h3 id="environmental-impact-monitoring">Environmental Impact Monitoring</h3>
 <p>AI models consume significant computational resources and energy. Monitoring environmental impact helps quantify your carbon footprint, which is important for sustainability and responsible AI development. For this reason I made a <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/1.%20The%20Setup/monitor_training.py">monitoring script</a> to monitor the emissions of any training run. You do not need to modify anything in your training script, just run my script with your training command as shown below. My script is based on the <a href="https://github.com/mlco2/codecarbon">codecarbon</a> package. You may need to fill in the password of your machine to give codecarbon access to monitoring your hardware.</p>
-<pre><code class="language-bash"># Run your training with emissions monitoring
-uv run python monitor_training.py &quot;python pytorch_train.py&quot;
-</code></pre>
+<pre class="highlight"><code class="language-bash"># Run your training with emissions monitoring
+uv run python monitor_training.py "python pytorch_train.py"</code></pre>
 <p>For each run, the script creates a dedicated folder with:
 - A timestamped log file capturing all training output
 - Carbon emissions data in CSV format (detailed breakdown of emissions by component)

@@ -138,7 +138,7 @@
 <div class="md:col-span-3 bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-lg p-8 prose prose-slate dark:prose-invert prose-brand max-w-none">
 <h2 id="bigger-data-in-the-cloud">Bigger Data In The Cloud</h2>
 <p>In this part, I will provide a general overview of what streaming is and how to work with data in the cloud, I will also provide a use case specific example for loading and working with geospatial data (xarray) to show an example of with bigger datasets.</p>
-<pre><code>3. Bigger data in the cloud/
+<pre class="highlight"><code>3. Bigger data in the cloud/
 ├── data/
 │   ├── usecase_cloud_dataset.py
 │   ├── utils.py
@@ -149,14 +149,13 @@
 ├── output/
 │   ├── copernicus_data/
 │   └── test/
-└── __pycache__/
-</code></pre>
+└── __pycache__/</code></pre>
 <h3 id="quick-recap">Quick Recap:</h3>
 <p><strong>torch.utils.data.Dataset</strong>: A PyTorch Dataset is a class that tells PyTorch how to get one data sample.
 It acts as a blueprint for reading a sample from storage (local disk or cloud storage) into active memory (RAM). It has two main functions:
 -   <code>__len__</code>: how many samples there are
-- <code>__getitem__</code>: how to get one sample (e.g., load an image, label) Note that this can be from local storage or from the cloud. </p>
-<p>The dataset doesn't load anything. It's just a blueprint. </p>
+- <code>__getitem__</code>: how to get one sample (e.g., load an image, label) Note that this can be from local storage or from the cloud.</p>
+<p>The dataset doesn't load anything. It's just a blueprint.</p>
 <p>Cloud data is often stored on object storage servers like:
 -   Amazon S3
 - Google Cloud Storage (GCS)
@@ -170,8 +169,7 @@ It acts as a blueprint for reading a sample from storage (local disk or cloud st
 <h2 id="general-recommendations-for-data-handling">General Recommendations for Data Handling</h2>
 <p>The most efficient workflow follows a clear hierarchy: prioritize <strong>Ephemeral Storage</strong>, fall back to <strong>Virtual SSDs</strong>, and use <strong>Direct Cloud Streaming</strong> only when necessary. Because ephemeral memory (local NVMe SSDs) is physically attached to the GPU instance, it offers the lowest latency and highest throughput. The recommended practice is to maintain your master dataset in cloud storage, such as Amazon S3, and perform a one-time transfer to the instance's ephemeral storage before training begins.</p>
 <p>For example, on an AWS DLAMI instance, you can use the AWS CLI to pull data from a bucket directly into the NVMe directory:</p>
-<pre><code class="language-bash">aws s3 cp s3://PATH_TO_DATA /opt/dlami/nvme/PATH_TO_DATA/ --recursive
-
+<pre class="highlight"><code class="language-bash">aws s3 cp s3://PATH_TO_DATA /opt/dlami/nvme/PATH_TO_DATA/ --recursive
 </code></pre>
 <p>This approach effectively treats the cloud as a long-term repository and the ephemeral drive as a high-speed local cache. By copying the data once at the start of the session, you avoid the repeated network overhead and I/O costs associated with pulling individual samples during every epoch. If your dataset is too large for the ephemeral drive, a mounted Virtual SSD serves as a middle ground—offering more persistence and capacity than ephemeral memory, though with slightly higher latency. Direct streaming from the cloud remains the final option, reserved exclusively for datasets so massive that they cannot fit on any volume attached to the compute instance.</p>
 <h2 id="handling-datasets-that-exceed-local-capacity">Handling Datasets That Exceed Local Capacity</h2>
@@ -192,10 +190,10 @@ It acts as a blueprint for reading a sample from storage (local disk or cloud st
 <li>It integrated well with my existing PyTorch data pipeline</li>
 <li>It has automatic failsafes for data loading, like retrying.</li>
 </ol>
-<p>I've created both a general example (<a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Bigger%20data%20in%20the%20cloud/data/example_cloud_access.py"><code>example_cloud_access.py</code></a>) and a use-case specific (<a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Bigger%20data%20in%20the%20cloud/data/usecase_cloud_access.py"><code>usecase_cloud_access.py</code></a>) implementation showing how to access data in the cloud efficiently </p>
+<p>I've created both a general example (<a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Bigger%20data%20in%20the%20cloud/data/example_cloud_access.py"><code>example_cloud_access.py</code></a>) and a use-case specific (<a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Bigger%20data%20in%20the%20cloud/data/usecase_cloud_access.py"><code>usecase_cloud_access.py</code></a>) implementation showing how to access data in the cloud efficiently</p>
 <h3 id="streaminglazy-loading-with-the-dataset-object">Streaming/Lazy Loading with the Dataset object</h3>
-<p>Now that we have access to the data, we can stream it into memory!  To be able to work with this (lazy-loaded) data from the cloud in your training pipeline, we need to wrap everything into a PyTorch dataset. I've implemented an example in <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Bigger%20data%20in%20the%20cloud/data/usecase_cloud_dataset.py"><code>usecase_cloud_dataset.py</code></a> that demonstrates how to create a custom Dataset class that handles cloud data access, lazy loading and converting it to a usable dataset. </p>
-<p>Note that this is still a simplified version. For my geospatial use case, I utilize libraries like Zarr, Dask and Xarray that provide optimizable, efficient lazy loading capabilities. I'll explain more about the general working of this in the <a href="part4.html">next chapter</a>. When working with Xarray, xbatcher is the most efficient way to use batch generation, but this is out of the scope of this guide. Feel free to ask any questions about this. </p>
+<p>Now that we have access to the data, we can stream it into memory!  To be able to work with this (lazy-loaded) data from the cloud in your training pipeline, we need to wrap everything into a PyTorch dataset. I've implemented an example in <a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/3.%20Bigger%20data%20in%20the%20cloud/data/usecase_cloud_dataset.py"><code>usecase_cloud_dataset.py</code></a> that demonstrates how to create a custom Dataset class that handles cloud data access, lazy loading and converting it to a usable dataset.</p>
+<p>Note that this is still a simplified version. For my geospatial use case, I utilize libraries like Zarr, Dask and Xarray that provide optimizable, efficient lazy loading capabilities. I'll explain more about the general working of this in the <a href="part4.html">next chapter</a>. When working with Xarray, xbatcher is the most efficient way to use batch generation, but this is out of the scope of this guide. Feel free to ask any questions about this.</p>
 <hr />
 <h3 id="quick-recap_1">Quick Recap:</h3>
 <p><strong>torch.utils.data.Dataloader</strong>:  A PyTorch DataLoader defines how to load (many) samples (efficiently) (batching, multiprocessing, shuffling, etc.). Basically the DataLoader keeps asking the Dataset (blueprint) for samples, and handles the rest. It:

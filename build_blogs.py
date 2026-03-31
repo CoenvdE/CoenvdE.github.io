@@ -33,7 +33,7 @@ def build():
 
     footer = str(soup.find('footer'))
 
-    md = markdown.Markdown(extensions=['tables', 'fenced_code', 'toc'])
+    md = markdown.Markdown(extensions=['tables', 'pymdownx.superfences', 'toc'])
 
     parts = glob.glob('_blogs/training-at-larger-scale/*.md')
     def sort_key(f):

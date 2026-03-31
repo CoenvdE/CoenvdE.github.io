@@ -151,8 +151,8 @@ This is an optional step that, if the code is implemented correctly, will probab
 <p><strong>Hardware</strong>: The specs of your GPU/TPU significantly impact processing time.</p>
 </li>
 </ul>
-<p>In my experiments, a single training step took around 0.4 seconds for moderate-sized models with a batch size of 32. This can vary widely - from milliseconds for small models to several seconds for larger architectures. I have seen 0.1 seconds as well with other models. For my model, the time it took to complete 1 step scaled around linearly with the batch size, which makes sense given that most operations scale linearly with the batch size (e.g. a dot product). </p>
-<pre><code>4. Optimizing the pipeline: Model/
+<p>In my experiments, a single training step took around 0.4 seconds for moderate-sized models with a batch size of 32. This can vary widely - from milliseconds for small models to several seconds for larger architectures. I have seen 0.1 seconds as well with other models. For my model, the time it took to complete 1 step scaled around linearly with the batch size, which makes sense given that most operations scale linearly with the batch size (e.g. a dot product).</p>
+<pre class="highlight"><code>4. Optimizing the pipeline: Model/
 ├── profiler.py
 ├── timing_benchmark.py
 ├── config/
@@ -168,8 +168,7 @@ This is an optional step that, if the code is implemented correctly, will probab
 │       └── pytorch_model.py
 ├── tests/
 │   └── test_lightning_parameters.py
-└── output/
-</code></pre>
+└── output/</code></pre>
 <h3 id="easy-timing-benchmark">Easy timing benchmark</h3>
 <p><a href="https://github.com/CoenvdE/Training-at-larger-scale-blog/blob/main/5.%20Optimizing%20the%20pipeline%3A%20Model/timing_benchmark.py">This</a> is a tool I made to benchmark a pipeline. It is designed to work with <strong>any</strong> PyTorch Lightning model module and data module, so you can also use it to benchmark your own model pipeline. It measures detailed timing information for each step of the training process:
   - Data loading time
@@ -181,17 +180,15 @@ This is an optional step that, if the code is implemented correctly, will probab
     - Any additional overhead between batches</p>
 <p>I find the timing summary printed at the end of the script particularly useful. It gives you a good overview of the time spent in each step of the pipeline.</p>
 <h2 id="usage">Usage</h2>
-<p>Replace the model and data classes with your own.</p>
-<pre><code class="language-python"># Import your model and data classes here
+<p>Replace the model and data classes with your own.
+<pre class="highlight"><code class="language-python"># Import your model and data classes here
 from src.model.lightning_module import AutoencoderModule as ModelClass
 from src.data.lightning_datamodule import DummyDataModule as DataModuleClass
 
 # Default model and data classes to use if not overridden by command line arguments
 DEFAULT_MODEL_CLASS = ModelClass
-DEFAULT_DATA_CLASS = DataModuleClass
-</code></pre>
-<pre><code class="language-bash">uv run python timing_benchmark.py -c config/cli_config.yaml
-</code></pre>
+DEFAULT_DATA_CLASS = DataModuleClass</code></pre></p>
+<pre class="highlight"><code class="language-bash">uv run python timing_benchmark.py -c config/cli_config.yaml</code></pre>
 <h3 id="required-arguments">Required Arguments</h3>
 <ul>
 <li><code>-c, --config</code>: Path to the YAML configuration file</li>
