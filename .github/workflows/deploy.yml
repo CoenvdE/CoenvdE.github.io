@@ -24,18 +24,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: '3.12'
+          version: "latest"
+          python-version: "3.12"
+          enable-cache: true
 
-      - name: Install dependencies
-        run: |
-          pip install markdown beautifulsoup4 pymdown-extensions
+      - name: Sync dependencies
+        run: uv sync --frozen
 
       - name: Build blogs
-        run: |
-          python build_blogs.py
+        run: uv run python build_blogs.py
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

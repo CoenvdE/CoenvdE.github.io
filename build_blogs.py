@@ -1,100 +1,122 @@
-import os
-import markdown
 import glob
-from bs4 import BeautifulSoup
+import markdown
+import os
 import re
+from bs4 import BeautifulSoup
+
+BLOG_CONFIGS = [
+    {
+        "out_dir": "blogs/training-at-larger-scale",
+        "glob_pattern": "_blogs/training-at-larger-scale/*.md",
+        "replacements": [
+            ("/images/training-blog/", "../../images/training-blog/"),
+        ],
+        "url_rewrite": (
+            r"\/blogs\/training-at-larger-scale\/([a-zA-Z0-9_-]+)\/",
+            r"\1.html",
+        ),
+    },
+    {
+        "out_dir": "blogs/rope",
+        "glob_pattern": "_blogs/rope/*.md",
+        "replacements": [
+            ("/images/rope/", "../../images/rope/"),
+        ],
+        "url_rewrite": (r"\/blogs\/rope\/([a-zA-Z0-9_-]+)\/", r"\1.html"),
+    },
+]
+
 
 def get_title(content):
     match = re.search(r'^title:\s*"(.*?)"', content, re.MULTILINE)
-    if match: return match.group(1)
+    if match:
+        return match.group(1)
 
-    match = re.search(r'^#\s+(.*)', content, re.MULTILINE)
-    if match: return match.group(1)
+    match = re.search(r"^#\s+(.*)", content, re.MULTILINE)
+    if match:
+        return match.group(1)
     return "Chapter"
 
-def build():
-    out_dir = 'blogs/training-at-larger-scale'
+
+def sort_key_path(path):
+    name = os.path.basename(path)
+    if name == "index.md":
+        return (0, 0)
+    match = re.search(r"part(\d+)", name)
+    return (1, int(match.group(1))) if match else (999, 0)
+
+
+def apply_content_transforms(content, config):
+    for old, new in config["replacements"]:
+        content = content.replace(old, new)
+    pattern, repl = config["url_rewrite"]
+    content = re.sub(pattern, repl, content)
+    return content
+
+
+def build_one_blog(config, head, nav_str, footer):
+    out_dir = config["out_dir"]
     os.makedirs(out_dir, exist_ok=True)
 
-    with open('index.html', 'r') as f:
-        html = f.read()
+    md = markdown.Markdown(extensions=["tables", "pymdownx.superfences", "toc"])
 
-    soup = BeautifulSoup(html, 'html.parser')
-
-    head = soup.head
-    for link in head.find_all('link'):
-        if link.get('href', '').startswith('assets/'):
-            link['href'] = '../../' + link['href']
-    head = str(head)
-
-    nav_str = str(soup.find('nav'))
-    nav_str = nav_str.replace('href="#', 'href="../../index.html#')
-    nav_str = nav_str.replace('href="index.html"', 'href="../../index.html"')
-
-    footer = str(soup.find('footer'))
-
-    md = markdown.Markdown(extensions=['tables', 'pymdownx.superfences', 'toc'])
-
-    parts = glob.glob('_blogs/training-at-larger-scale/*.md')
-    def sort_key(f):
-        name = os.path.basename(f)
-        if name == 'index.md': return 0
-        match = re.search(r'part(\d+)', name)
-        return int(match.group(1)) if match else 999
-
-    parts.sort(key=sort_key)
+    parts = glob.glob(config["glob_pattern"])
+    parts.sort(key=sort_key_path)
+    if not parts:
+        return
 
     chapters = []
     for part in parts:
-        with open(part, 'r') as f:
+        with open(part, "r") as f:
             content = f.read()
             title = get_title(content)
             basename = os.path.basename(part)
-            out_name = basename.replace('.md', '.html')
-            chapters.append({'path': part, 'out_name': out_name, 'title': title})
+            out_name = basename.replace(".md", ".html")
+            chapters.append({"path": part, "out_name": out_name, "title": title})
 
     for i, chapter in enumerate(chapters):
-        with open(chapter['path'], 'r') as f:
+        with open(chapter["path"], "r") as f:
             content = f.read()
-            if content.startswith('---'):
-                parts_split = content.split('---', 2)
+            if content.startswith("---"):
+                parts_split = content.split("---", 2)
                 if len(parts_split) > 2:
                     content = parts_split[2]
 
-            content = content.replace('/images/training-blog/', '../../images/training-blog/')
-            content = re.sub(r'\/blogs\/training-at-larger-scale\/([a-zA-Z0-9_-]+)\/', r'\1.html', content)
+            content = apply_content_transforms(content, config)
 
             html_content = md.convert(content)
+            md.reset()
 
-            nav_links = "<div class=\"flex justify-between items-center mt-12 pt-8 border-t border-slate-200\">"
+            nav_links = '<div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-200">'
             if i > 0:
-                prev_ch = chapters[i-1]
-                nav_links += f"<a href=\"{prev_ch['out_name']}\" class=\"text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors\">&larr; Previous Chapter: {prev_ch['title']}</a>"
+                prev_ch = chapters[i - 1]
+                nav_links += f'<a href="{prev_ch["out_name"]}" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">&larr; Previous Chapter: {prev_ch["title"]}</a>'
             else:
                 nav_links += "<div></div>"
 
             if i < len(chapters) - 1:
-                next_ch = chapters[i+1]
-                nav_links += f"<a href=\"{next_ch['out_name']}\" class=\"text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors\">Next Chapter: {next_ch['title']} &rarr;</a>"
+                next_ch = chapters[i + 1]
+                nav_links += f'<a href="{next_ch["out_name"]}" class="text-brand-600 hover:text-brand-500 font-medium text-lg px-4 py-2 border border-brand-200 rounded-lg shadow-sm bg-brand-50 hover:bg-brand-100 transition-colors">Next Chapter: {next_ch["title"]} &rarr;</a>'
             else:
                 nav_links += "<div></div>"
             nav_links += "</div>"
 
-            # Sidebar chapter list
-            sidebar = "<div class=\"md:col-span-1 hidden md:block\">\n"
-            sidebar += "<div class=\"sticky top-24 bg-white dark:bg-slate-800 shadow-xl rounded-lg p-6 border border-slate-100 dark:border-slate-700\">\n"
-            sidebar += "<h3 class=\"text-lg font-bold text-ocean-900 dark:text-brand-300 mb-4 border-b border-slate-200 dark:border-slate-700 pb-2\">Chapters</h3>\n"
-            sidebar += "<ul class=\"space-y-3\">\n"
+            sidebar = '<div class="md:col-span-1 hidden md:block">\n'
+            sidebar += '<div class="sticky top-24 bg-white dark:bg-slate-800 shadow-xl rounded-lg p-6 border border-slate-100 dark:border-slate-700">\n'
+            sidebar += '<h3 class="text-lg font-bold text-ocean-900 dark:text-brand-300 mb-4 border-b border-slate-200 dark:border-slate-700 pb-2">Chapters</h3>\n'
+            sidebar += '<ul class="space-y-3">\n'
             for j, ch in enumerate(chapters):
-                active_class = "text-brand-600 dark:text-brand-400 font-bold border-l-2 border-brand-500 pl-2" if i == j else "text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors"
-                sidebar += f"<li><a href=\"{ch['out_name']}\" class=\"text-sm block {active_class}\">{ch['title']}</a></li>\n"
+                active_class = (
+                    "text-brand-600 dark:text-brand-400 font-bold border-l-2 border-brand-500 pl-2"
+                    if i == j
+                    else "text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 pl-2 border-l-2 border-transparent transition-colors"
+                )
+                sidebar += f'<li><a href="{ch["out_name"]}" class="text-sm block {active_class}">{ch["title"]}</a></li>\n'
             sidebar += "</ul>\n</div>\n</div>"
 
-            # Main content wrapper
-            main_content = f"<div class=\"md:col-span-3 bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-lg p-8 prose prose-slate dark:prose-invert prose-brand max-w-none\">\n{html_content}\n{nav_links}\n</div>"
+            main_content = f'<div class="md:col-span-3 bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-lg p-8 prose prose-slate dark:prose-invert prose-brand max-w-none">\n{html_content}\n{nav_links}\n</div>'
 
-            # Put them together in a grid
-            blog_layout = f"<div class=\"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 mt-16\">\n<div class=\"grid grid-cols-1 md:grid-cols-4 gap-8\">\n{sidebar}\n{main_content}\n</div>\n</div>"
+            blog_layout = f'<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 mt-16">\n<div class="grid grid-cols-1 md:grid-cols-4 gap-8">\n{sidebar}\n{main_content}\n</div>\n</div>'
 
             final_html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -106,7 +128,9 @@ def build():
 
 </body>
 </html>"""
-            final_html = final_html.replace('</body>', '''<script>
+            final_html = final_html.replace(
+                "</body>",
+                """<script>
         function setupThemeToggle(btnId, darkIconId, lightIconId) {
             var themeToggleBtn = document.getElementById(btnId);
             var themeToggleDarkIcon = document.getElementById(darkIconId);
@@ -150,9 +174,15 @@ def build():
         setupThemeToggle('theme-toggle', 'theme-toggle-dark-icon', 'theme-toggle-light-icon');
         setupThemeToggle('theme-toggle-mobile', 'theme-toggle-dark-icon-mobile', 'theme-toggle-light-icon-mobile');
     </script>
-</body>''')
-            final_html = final_html.replace('<script src="https://cdn.tailwindcss.com"></script>', '<script src="https://cdn.tailwindcss.com?plugins=typography"></script>')
-            final_html = final_html.replace('</head>', '''<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</body>""",
+            )
+            final_html = final_html.replace(
+                '<script src="https://cdn.tailwindcss.com"></script>',
+                '<script src="https://cdn.tailwindcss.com?plugins=typography"></script>',
+            )
+            final_html = final_html.replace(
+                "</head>",
+                """<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script>hljs.highlightAll();</script>
 <style>
@@ -179,10 +209,34 @@ def build():
         color: inherit;
     }
 </style>
-</head>''')
+</head>""",
+            )
 
-            out_path = os.path.join(out_dir, chapter['out_name'])
-            with open(out_path, 'w') as out_f:
+            out_path = os.path.join(out_dir, chapter["out_name"])
+            with open(out_path, "w") as out_f:
                 out_f.write(final_html)
+
+
+def build():
+    with open("index.html", "r") as f:
+        html = f.read()
+
+    soup = BeautifulSoup(html, "html.parser")
+
+    head = soup.head
+    for link in head.find_all("link"):
+        if link.get("href", "").startswith("assets/"):
+            link["href"] = "../../" + link["href"]
+    head = str(head)
+
+    nav_str = str(soup.find("nav"))
+    nav_str = nav_str.replace('href="#', 'href="../../index.html#')
+    nav_str = nav_str.replace('href="index.html"', 'href="../../index.html"')
+
+    footer = str(soup.find("footer"))
+
+    for config in BLOG_CONFIGS:
+        build_one_blog(config, head, nav_str, footer)
+
 
 build()
