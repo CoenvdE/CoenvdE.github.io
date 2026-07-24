@@ -24,6 +24,22 @@ BLOG_CONFIGS = [
         ],
         "url_rewrite": (r"\/blogs\/rope\/([a-zA-Z0-9_-]+)\/", r"\1.html"),
     },
+    {
+        "out_dir": "blogs/claude-workflow",
+        "glob_pattern": "_blogs/claude-workflow/*.md",
+        "replacements": [
+            ("/blogs/research-template/index/", "../research-template/index.html"),
+        ],
+        "url_rewrite": (r"\/blogs\/claude-workflow\/([a-zA-Z0-9_-]+)\/", r"\1.html"),
+    },
+    {
+        "out_dir": "blogs/research-template",
+        "glob_pattern": "_blogs/research-template/*.md",
+        "replacements": [
+            ("/blogs/claude-workflow/index/", "../claude-workflow/index.html"),
+        ],
+        "url_rewrite": (r"\/blogs\/research-template\/([a-zA-Z0-9_-]+)\/", r"\1.html"),
+    },
 ]
 
 
