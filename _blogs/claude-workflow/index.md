@@ -15,7 +15,7 @@ display_chapters: false
 
 I use Claude Code daily, across very different kinds of work: ML research (PyTorch, uv, zarr, SLURM clusters) and web apps (TypeScript, pnpm, Supabase, iOS via Capacitor). For a long time my setup was the default one: a growing instruction file, permissions approved ad hoc, and knowledge about my projects living only in my head or in stale READMEs.
 
-This post describes the setup I landed on after deliberately auditing and rebuilding the whole thing. The goal is fast iteration without losing reproducibility, and an agent that gets *more* useful over time instead of drifting. Everything here is plain files you can copy: no products, no magic.
+This post describes the setup I landed on after deliberately auditing and rebuilding the whole thing. The goal is fast iteration without losing reproducibility, and an agent that gets *more* useful over time instead of drifting. Everything here is plain files you can copy: no products, no magic. All of it is on GitHub in [CoenvdE/claude-code-setup](https://github.com/CoenvdE/claude-code-setup) (rules, skills, hooks, an example CLAUDE.md and settings), and the research side has its own repo at [CoenvdE/research-template](https://github.com/CoenvdE/research-template).
 
 The core insight that shaped all of it: **context is expensive and advisory, execution is cheap and guaranteed.** Instructions in a CLAUDE.md are read every session and followed most of the time. A hook is executed by the harness every time, no exceptions. Knowing which mechanism to use for which job is most of the game.
 
@@ -46,24 +46,35 @@ paths:
 - Deep-learning training: prefer PyTorch Lightning + LightningCLI with YAML configs...
 ```
 
-The rule loads only when Claude reads a matching file. My CLAUDE.md carries a two-line summary of both modes plus one hard rule: never carry conventions across modes (no npm advice in a Python repo, ever). One caveat worth knowing: path-scoped rules trigger on *read*, not write, so a brand-new project may not load them until a file exists. The CLAUDE.md summary covers that gap.
+The rule loads only when Claude reads a matching file. My CLAUDE.md carries a two-line summary of both modes plus one hard rule: never carry conventions across modes (no npm advice in a Python repo, ever). One caveat worth knowing: path-scoped rules trigger on *read*, not write, so a brand-new project may not load them until a file exists. The CLAUDE.md summary covers that gap. Both rule files are in the repo: [python-research.md](https://github.com/CoenvdE/claude-code-setup/blob/master/rules/python-research.md) and [web-app.md](https://github.com/CoenvdE/claude-code-setup/blob/master/rules/web-app.md).
 
 ### Skills: procedures, loaded on demand
 
-Skills are folders with a `SKILL.md` whose description tells Claude when to invoke them. Mine, roughly in order of how much they earn:
+Skills are folders with a `SKILL.md` whose description tells Claude when to invoke them. Mine, roughly in order of how much they earn (each links to its copyable source in [the repo](https://github.com/CoenvdE/claude-code-setup/tree/master/skills)):
 
-- **`new-research-project`**: instantiates my [research template](https://github.com/CoenvdE/research-template) for a new project, or retrofits its guardrails into an existing repo. This one gets its own blog post.
-- **`anti-drift-setup`**: installs the documentation anti-drift system into a repo (below).
-- **`dataset-overview` / `database-overview`**: maintain a living `docs/DATASETS.md` (research) or schema doc (web) by inspecting the *real* data, never guessing.
-- **`close`**: end-of-session ritual: propose a commit, append to a SESSION_LOG, print a session rename.
-- **`commit`**: drafts one Conventional Commits message from the actual staged diff and always asks before committing.
-- **`karpathy-guidelines`**: behavioral guardrails against classic LLM coding failure modes (overcomplication, non-surgical edits, silent assumptions).
+- **[`karpathy-guidelines`](https://github.com/CoenvdE/claude-code-setup/blob/master/skills/karpathy-guidelines/SKILL.md)**: behavioral guardrails for every line of code the agent writes. More on this one below, because it might be the highest-leverage file in the whole setup.
+- **[`new-research-project`](https://github.com/CoenvdE/claude-code-setup/blob/master/skills/new-research-project/SKILL.md)**: instantiates my [research template](https://github.com/CoenvdE/research-template) for a new project, or retrofits its guardrails into an existing repo. This one gets its own blog post.
+- **[`anti-drift-setup`](https://github.com/CoenvdE/claude-code-setup/blob/master/skills/anti-drift-setup/SKILL.md)**: installs the documentation anti-drift system into a repo (below).
+- **[`dataset-overview`](https://github.com/CoenvdE/claude-code-setup/blob/master/skills/dataset-overview/SKILL.md) / [`database-overview`](https://github.com/CoenvdE/claude-code-setup/blob/master/skills/database-overview/SKILL.md)**: maintain a living `docs/DATASETS.md` (research) or schema doc (web) by inspecting the *real* data, never guessing.
+- **[`close`](https://github.com/CoenvdE/claude-code-setup/blob/master/skills/close/SKILL.md)**: end-of-session ritual: propose a commit, append to a SESSION_LOG, print a session rename.
+- **[`commit`](https://github.com/CoenvdE/claude-code-setup/blob/master/commands/commit.md)**: drafts one Conventional Commits message from the actual staged diff and always asks before committing.
 
 The rule I hold myself to: skills live globally in `~/.claude/skills/` and are available everywhere automatically. A skill only gets *copied into* a repo when the point is sharing it with collaborators through git.
 
+### The karpathy-guidelines deserve special mention
+
+Most of the pieces in this post shape *what* the agent works on. This skill shapes *how it writes code*, which makes it the one that fires on nearly every task, in both of my work modes. It distills Andrej Karpathy's observations on where LLM coding goes wrong into four enforced habits:
+
+1. **Think before coding**: surface assumptions and ambiguities instead of silently picking an interpretation; push back when a simpler approach exists.
+2. **Simplicity first**: minimum code that solves the problem. No speculative flexibility, no abstractions for single-use code, no error handling for impossible scenarios.
+3. **Surgical changes**: touch only what the request requires, match existing style, clean up your own orphans and nobody else's.
+4. **Goal-driven execution**: transform vague tasks into verifiable goals ("fix the bug" becomes "write a test that reproduces it, then make it pass") so the agent can loop independently against real success criteria.
+
+If you copy one skill from my setup, copy this one. It is the difference between an agent that produces impressive-looking diffs and one that produces mergeable ones.
+
 ### Hooks: when "please always" becomes "always"
 
-I have a writing rule: no em dashes, anywhere. It lived in CLAUDE.md and was violated regularly, because context is advisory. Now it is a 40-line PostToolUse hook: after every file write or edit, a script greps `.md` and `.tex` files for the forbidden patterns and, on a hit, feeds a correction straight back to the model, which fixes it immediately.
+I have a writing rule: no em dashes, anywhere. It lived in CLAUDE.md and was violated regularly, because context is advisory. Now it is a 40-line PostToolUse hook ([no-dashes.sh](https://github.com/CoenvdE/claude-code-setup/blob/master/hooks/no-dashes.sh)): after every file write or edit, a script greps `.md` and `.tex` files for the forbidden patterns and, on a hit, feeds a correction straight back to the model, which fixes it immediately. It has already caught Claude mid-session, including while writing the very repo this post links to.
 
 That is the general principle: anything phrased as "always do X" or "never do Y" that can be checked mechanically should be a hook, not a sentence. Sentences drift; scripts do not.
 
@@ -102,4 +113,6 @@ Two lessons from auditing my own settings, both embarrassing and both common:
 
 ### Takeaways
 
-If I could only keep three pieces: the tiny CLAUDE.md (RAM discipline), the anti-drift system (docs that stay true), and hooks for hard rules (guaranteed, not hoped). Everything else is refinement. The companion post shows what this looks like when it meets an actual research codebase: [a solid research template](/blogs/research-template/index/).
+If I could only keep three pieces: the tiny CLAUDE.md (RAM discipline), the anti-drift system (docs that stay true), and hooks for hard rules (guaranteed, not hoped). Everything else is refinement.
+
+Everything described here is copyable from [CoenvdE/claude-code-setup](https://github.com/CoenvdE/claude-code-setup), including an example CLAUDE.md and settings file to start from. The companion post shows what this looks like when it meets an actual research codebase: [a solid research template](/blogs/research-template/index/), with its code at [CoenvdE/research-template](https://github.com/CoenvdE/research-template).
