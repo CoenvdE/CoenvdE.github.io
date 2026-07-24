@@ -1,12 +1,12 @@
 ---
 layout: blog_collection
-title: "A Claude Code setup for fast research iteration"
-description: "How I configured Claude Code as a research collaborator: a small global CLAUDE.md, path-scoped rules for two work modes, on-demand skills, deterministic hooks, and an anti-drift system that keeps documentation honest."
+title: "A Claude Code setup for fast building and research"
+description: "How I configured Claude Code for both web/app development and ML research: a small global CLAUDE.md, path-scoped rules for two work modes, on-demand skills, deterministic hooks, and an anti-drift system that keeps documentation honest."
 collection_id: claude-workflow
 display_chapters: false
 ---
 
-# A Claude Code setup for fast research iteration
+# A Claude Code setup for fast building and research
 *By [Coen van den Elsen](https://coenvde.github.io/)*
 
 ---
@@ -102,4 +102,4 @@ Two lessons from auditing my own settings, both embarrassing and both common:
 
 ### Takeaways
 
-If I could only keep three pieces: the tiny CLAUDE.md (RAM discipline), the anti-drift system (docs that stay true), and hooks for hard rules (guaranteed, not hoped). Everything else is refinement. The companion post shows what this looks like when it meets an actual research codebase: [a research template that is hard to fool](/blogs/research-template/index/).
+If I could only keep three pieces: the tiny CLAUDE.md (RAM discipline), the anti-drift system (docs that stay true), and hooks for hard rules (guaranteed, not hoped). Everything else is refinement. The companion post shows what this looks like when it meets an actual research codebase: [a solid research template](/blogs/research-template/index/).

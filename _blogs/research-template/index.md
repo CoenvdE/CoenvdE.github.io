@@ -1,12 +1,12 @@
 ---
 layout: blog_collection
-title: "A research template that is hard to fool"
-description: "A PyTorch Lightning template with the guardrail tests top labs are paranoid about: overfit-one-batch, resume equality, data-leakage asserts, input contracts, plus timing, FLOPs/MFU and provenance callbacks, wired for collaboration with Claude Code."
+title: "A solid research template"
+description: "A PyTorch Lightning template for efficient, trustworthy ML research: guardrail tests (overfit-one-batch, resume equality, data-leakage asserts, input contracts), timing, FLOPs/MFU and provenance callbacks, wired for collaboration with Claude Code."
 collection_id: research-template
 display_chapters: false
 ---
 
-# A research template that is hard to fool
+# A solid research template
 *By [Coen van den Elsen](https://coenvde.github.io/)*
 
 ---
@@ -15,7 +15,7 @@ display_chapters: false
 
 Two bugs cost me the most GPU hours of my research career so far. The first: coordinates entered my model in degrees instead of radians. Nothing crashed; the model just trained worse, and it took embarrassingly long to find out why. The second: cluster jobs got preempted, and after rerunning them the loss would spike, forcing full reruns. Also silent, also expensive.
 
-Neither bug is exotic. Every ML researcher I know has their own version. What struck me is that both are *mechanically detectable*, and that the standard academic repo detects neither. So I built a template that starts every project with the paranoia built in: [github.com/CoenvdE/research-template](https://github.com/CoenvdE/research-template).
+Neither bug is exotic. Every ML researcher I know has their own version. What struck me is that both are *mechanically detectable*, and that the standard academic repo detects neither. So I built a template that starts every project with the paranoia built in, and with the efficiency tooling (timing, throughput, schedulers, config discipline) that makes iteration fast rather than just safe: [github.com/CoenvdE/research-template](https://github.com/CoenvdE/research-template).
 
 Two design rules shaped it. First, **guardrails are tests and callbacks, not discipline**: anything that relies on me remembering to check will eventually not get checked. Second, **everything runs CPU-only on a synthetic dataset shipped with the repo**, so the full suite passes on any laptop and in CI with no data download. The synthetic set never gets deleted, even after real data arrives; it is what keeps the tests runnable everywhere.
 

@@ -124,17 +124,17 @@
 <div class="sticky top-24 bg-white dark:bg-slate-800 shadow-xl rounded-lg p-6 border border-slate-100 dark:border-slate-700">
 <h3 class="text-lg font-bold text-ocean-900 dark:text-brand-300 mb-4 border-b border-slate-200 dark:border-slate-700 pb-2">Chapters</h3>
 <ul class="space-y-3">
-<li><a href="index.html" class="text-sm block text-brand-600 dark:text-brand-400 font-bold border-l-2 border-brand-500 pl-2">A research template that is hard to fool</a></li>
+<li><a href="index.html" class="text-sm block text-brand-600 dark:text-brand-400 font-bold border-l-2 border-brand-500 pl-2">A solid research template</a></li>
 </ul>
 </div>
 </div>
 <div class="md:col-span-3 bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-lg p-8 prose prose-slate dark:prose-invert prose-brand max-w-none">
-<h1 id="a-research-template-that-is-hard-to-fool">A research template that is hard to fool</h1>
+<h1 id="a-solid-research-template">A solid research template</h1>
 <p><em>By <a href="https://coenvde.github.io/">Coen van den Elsen</a></em></p>
 <hr />
 <h3 id="why-am-i-writing-this">Why am I writing this?</h3>
 <p>Two bugs cost me the most GPU hours of my research career so far. The first: coordinates entered my model in degrees instead of radians. Nothing crashed; the model just trained worse, and it took embarrassingly long to find out why. The second: cluster jobs got preempted, and after rerunning them the loss would spike, forcing full reruns. Also silent, also expensive.</p>
-<p>Neither bug is exotic. Every ML researcher I know has their own version. What struck me is that both are <em>mechanically detectable</em>, and that the standard academic repo detects neither. So I built a template that starts every project with the paranoia built in: <a href="https://github.com/CoenvdE/research-template">github.com/CoenvdE/research-template</a>.</p>
+<p>Neither bug is exotic. Every ML researcher I know has their own version. What struck me is that both are <em>mechanically detectable</em>, and that the standard academic repo detects neither. So I built a template that starts every project with the paranoia built in, and with the efficiency tooling (timing, throughput, schedulers, config discipline) that makes iteration fast rather than just safe: <a href="https://github.com/CoenvdE/research-template">github.com/CoenvdE/research-template</a>.</p>
 <p>Two design rules shaped it. First, <strong>guardrails are tests and callbacks, not discipline</strong>: anything that relies on me remembering to check will eventually not get checked. Second, <strong>everything runs CPU-only on a synthetic dataset shipped with the repo</strong>, so the full suite passes on any laptop and in CI with no data download. The synthetic set never gets deleted, even after real data arrives; it is what keeps the tests runnable everywhere.</p>
 <h3 id="the-guardrail-tests">The guardrail tests</h3>
 <p><strong>Overfit one batch.</strong> Train on a single small batch and assert the loss collapses to ~0. The most diagnostic smoke test there is: a model that cannot memorize eight samples has a broken loss, data pipeline, or optimizer wiring. Seconds to run, catches entire categories of bugs.</p>
