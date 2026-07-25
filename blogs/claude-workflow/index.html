@@ -184,7 +184,7 @@ paths:
 <p>The most valuable piece of the whole setup. The problem: docs describe code, code changes, docs rot, and then the agent confidently acts on stale information, which is worse than no docs at all.</p>
 <p>The fix is three small parts, per repo:</p>
 <ol>
-<li><strong>A knowledge map</strong> (<code>.claude/knowledge-map.json</code>): a list of <code>{match, doc, nudge}</code> entries connecting code paths to the docs that describe them.</li>
+<li><strong>A knowledge map</strong> (<code>.claude/knowledge-map.json</code>): a list of <code>{match, doc, nudge}</code> entries connecting file paths to the docs that describe them. Usually the paths are code (migrations pointing at a schema skill, data loaders pointing at a datasets doc), but any path works: my maps also watch eval outputs (nudging an experiment-log entry) and even Claude's own memory folder (more on that in the memory section).</li>
 <li><strong>A drift hook</strong>: after every write/edit, a shell script checks the edited path against the map. On a match it injects a one-line nudge into the session ("migration changed: update the schema skill"). On no match it emits nothing, costing zero tokens. Crucially, the nudge lands in the session that <em>just made the change</em>, which has all the context needed to update the doc correctly right now.</li>
 <li><strong>An audit script</strong>: each documented skill carries <code>sources:</code> (which code it describes) and <code>last_validated:</code> frontmatter. A deterministic shell script compares those against git history and flags docs whose sources changed after their last validation.</li>
 </ol>

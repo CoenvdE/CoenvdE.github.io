@@ -84,7 +84,7 @@ The most valuable piece of the whole setup. The problem: docs describe code, cod
 
 The fix is three small parts, per repo:
 
-1. **A knowledge map** (`.claude/knowledge-map.json`): a list of `{match, doc, nudge}` entries connecting code paths to the docs that describe them.
+1. **A knowledge map** (`.claude/knowledge-map.json`): a list of `{match, doc, nudge}` entries connecting file paths to the docs that describe them. Usually the paths are code (migrations pointing at a schema skill, data loaders pointing at a datasets doc), but any path works: my maps also watch eval outputs (nudging an experiment-log entry) and even Claude's own memory folder (more on that in the memory section).
 2. **A drift hook**: after every write/edit, a shell script checks the edited path against the map. On a match it injects a one-line nudge into the session ("migration changed: update the schema skill"). On no match it emits nothing, costing zero tokens. Crucially, the nudge lands in the session that *just made the change*, which has all the context needed to update the doc correctly right now.
 3. **An audit script**: each documented skill carries `sources:` (which code it describes) and `last_validated:` frontmatter. A deterministic shell script compares those against git history and flags docs whose sources changed after their last validation.
 
