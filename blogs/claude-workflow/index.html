@@ -189,6 +189,20 @@ paths:
 <li><strong>An audit script</strong>: each documented skill carries <code>sources:</code> (which code it describes) and <code>last_validated:</code> frontmatter. A deterministic shell script compares those against git history and flags docs whose sources changed after their last validation.</li>
 </ol>
 <p>No LLM calls anywhere in the machinery. The agent only spends tokens when something actually drifted.</p>
+<h4 id="one-firing-end-to-end">One firing, end to end</h4>
+<p>Here is what a single drift-catch actually looks like. The repo's map contains this entry:</p>
+<pre class="highlight"><code class="language-json">{
+  "match": "src/data/",
+  "doc": "docs/DATASETS.md",
+  "nudge": "Data-loading code changed: check docs/DATASETS.md still matches (variables, shapes, preprocessing)."
+}</code></pre>
+<ol>
+<li>I ask Claude to add a new variable to the data pipeline. It edits <code>src/data/era5.py</code>.</li>
+<li>The harness runs the hook after that edit, piping it a JSON payload containing the edited file path. The hook (plain bash + jq) tests the path against every <code>match</code> regex in the map. <code>src/data/era5.py</code> matches <code>src/data/</code>.</li>
+<li>The hook prints the nudge, which the harness injects into the session as extra context. Claude, still holding everything about the change it just made, opens <code>docs/DATASETS.md</code>, updates the variable list with the dims and dtype it just implemented, and bumps the doc's <code>last_validated</code> date to today.</li>
+<li>Weeks later I run the audit script. For each documented skill it compares the <code>sources:</code> paths against git history. If some other data change slipped past the nudge, that doc shows up flagged as <code>src-changed</code>, and I revalidate it.</li>
+</ol>
+<p>Steps 2 and 3 cost nothing when nothing matches, which is almost always. The whole system only speaks up at the moment a doc probably became wrong, to the one agent best placed to fix it.</p>
 <h3 id="memory-how-it-works-and-how-it-rots">Memory: how it works, and how it rots</h3>
 <p>Claude Code has two complementary memories, and it pays to keep them straight. CLAUDE.md and skills are what <em>you</em> curate and commit. <strong>Auto memory</strong> is what Claude writes for itself: as it works, it saves learnings (build quirks, your corrections, debugging insights) as plain markdown files, without you asking.</p>
 <p>The mechanics are worth knowing. Memory lives per project, in <code>~/.claude/projects/&lt;project&gt;/memory/</code>, where <code>&lt;project&gt;</code> is derived from the git repository, so all worktrees and subdirectories of one repo share one memory. A <code>MEMORY.md</code> index (its first ~200 lines) is loaded into every session; detailed topic files load on demand when relevant. Everything is plain markdown you can read, edit, or delete, and the <code>/memory</code> command opens it directly. When you see "Saved 2 memories" in the interface, this is what's happening.</p>
@@ -203,6 +217,14 @@ paths:
 <li><strong>Against staleness</strong>: a memory-hygiene rule in CLAUDE.md says only <em>confirmed, final</em> facts get persisted, never speculative ideas or abandoned approaches, so the memory pool starts cleaner. This governs memory automatically, with no extra wiring, because memories are written <em>by Claude itself</em> mid-session, and CLAUDE.md is in its context at exactly that moment: the writer of memory is the reader of the rule. The durable tier for facts that must stay true is not memory but committed docs and skills, which the anti-drift system actively revalidates. Memory is the scratch tier; docs are the audited tier.</li>
 <li><strong>Against the blended bucket</strong>: the launch-in-the-repo habit (below) gives every repo its own correctly scoped memory.</li>
 <li><strong>Against the silo</strong>: the drift map's bridge entry. The drift hook exists for code-to-docs sync, but its mechanism is generic: it fires after <em>every</em> file write and matches the written path against regexes. A memory save is an ordinary file write, so one map entry whose regex matches the memory directory (instead of a code path) catches it and fires a nudge: "if this fact is shareable and non-secret, promote it to CLAUDE.md or a skill." Private learnings become versioned team knowledge deliberately, not never.</li>
+</ul>
+<h4 id="memory-drifts-too-so-plan-for-it">Memory drifts too, so plan for it</h4>
+<p>Docs are not the only thing that rots; the memory pool itself drifts. A fact can be genuinely <em>final</em> in one session ("tests need a local Redis") and superseded three weeks later ("we mocked Redis, they don't anymore"). Since memory sits below the anti-drift system's radar of committed files, it needs its own counters, and they exist:</p>
+<ul>
+<li><strong>Update, don't duplicate.</strong> Claude's own memory instructions tell it to check for an existing memory covering a fact before saving, to edit that file when the fact changed, and to delete memories that turned out wrong. When a session establishes something that contradicts a stored memory, the expected outcome is a corrected file, not two conflicting ones. Recent Claude Code versions also stamp each memory with a <code>modified</code> timestamp, so recalled facts carry their age.</li>
+<li><strong>A periodic consolidation pass.</strong> Update-on-conflict only works when the conflict gets noticed, so every so often I run a consolidate-memory pass over a project: merge near-duplicates, fix or delete stale facts, prune the index. It is the memory-tier analog of the docs audit script: the deliberate sweep that catches what the automatic behavior missed.</li>
+<li><strong>Manual audit via <code>/memory</code>.</strong> Everything is plain markdown; the <code>/memory</code> command lists every memory file and opens it in your editor. When a "Recalled 2 memories" moment surfaces something that feels off, the fix is thirty seconds of reading and deleting.</li>
+<li><strong>Promotion out of the drift zone.</strong> The most important counter is structural: facts that must <em>stay</em> true don't belong in memory at all. The silo nudge above pushes them up into CLAUDE.md or a skill, where the anti-drift system actively revalidates them. Memory drift is tolerable precisely because memory is the scratch tier.</li>
 </ul>
 <h3 id="permissions-hygiene">Permissions hygiene</h3>
 <p>Two lessons from auditing my own settings, both embarrassing and both common:</p>
