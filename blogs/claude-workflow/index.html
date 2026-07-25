@@ -189,8 +189,21 @@ paths:
 <li><strong>An audit script</strong>: each documented skill carries <code>sources:</code> (which code it describes) and <code>last_validated:</code> frontmatter. A deterministic shell script compares those against git history and flags docs whose sources changed after their last validation.</li>
 </ol>
 <p>No LLM calls anywhere in the machinery. The agent only spends tokens when something actually drifted.</p>
-<h3 id="memory-vs-claudemd">Memory vs CLAUDE.md</h3>
-<p>Claude Code has two complementary memories and it pays to keep them straight. Auto memory is what Claude writes for itself: machine-local notes from your corrections. CLAUDE.md and skills are what <em>you</em> curate and commit. My drift map includes one entry that bridges them: when a memory file is written, the hook nudges "if this fact is shareable and non-secret, promote it to CLAUDE.md or a skill." Private learnings become team knowledge deliberately, not never.</p>
+<h3 id="memory-how-it-works-and-how-it-rots">Memory: how it works, and how it rots</h3>
+<p>Claude Code has two complementary memories, and it pays to keep them straight. CLAUDE.md and skills are what <em>you</em> curate and commit. <strong>Auto memory</strong> is what Claude writes for itself: as it works, it saves learnings (build quirks, your corrections, debugging insights) as plain markdown files, without you asking.</p>
+<p>The mechanics are worth knowing. Memory lives per project, in <code>~/.claude/projects/&lt;project&gt;/memory/</code>, where <code>&lt;project&gt;</code> is derived from the git repository, so all worktrees and subdirectories of one repo share one memory. A <code>MEMORY.md</code> index (its first ~200 lines) is loaded into every session; detailed topic files load on demand when relevant. Everything is plain markdown you can read, edit, or delete, and the <code>/memory</code> command opens it directly. When you see "Saved 2 memories" in the interface, this is what's happening.</p>
+<p>Useful, but it has three failure modes that nothing in the default setup guards against:</p>
+<ol>
+<li><strong>Stale facts.</strong> A memory records what was true when it was written. Code moves on; the memory doesn't. Unlike committed docs, nothing ever revalidates it, and a confidently recalled stale fact is worse than no memory at all.</li>
+<li><strong>The blended bucket.</strong> The project key comes from where you <em>launch</em> the session. Start Claude from a parent folder holding ten unrelated repos and all ten share one memory: web-app learnings surface during thesis work and vice versa.</li>
+<li><strong>The private silo.</strong> Memory is machine-local and personal. A learning that the whole team (or your future self on another machine) needs will sit in a local file forever unless something actively moves it out.</li>
+</ol>
+<p>My setup addresses each one:</p>
+<ul>
+<li><strong>Against staleness</strong>: a memory-hygiene rule in CLAUDE.md says only <em>confirmed, final</em> facts get persisted, never speculative ideas or abandoned approaches, so the memory pool starts cleaner. The durable tier for facts that must stay true is not memory but committed docs and skills, which the anti-drift system actively revalidates. Memory is the scratch tier; docs are the audited tier.</li>
+<li><strong>Against the blended bucket</strong>: the launch-in-the-repo habit (below) gives every repo its own correctly scoped memory.</li>
+<li><strong>Against the silo</strong>: the drift map's bridge entry. When a memory file is written, the hook fires a nudge: "if this fact is shareable and non-secret, promote it to CLAUDE.md or a skill." Private learnings become versioned team knowledge deliberately, not never.</li>
+</ul>
 <h3 id="permissions-hygiene">Permissions hygiene</h3>
 <p>Two lessons from auditing my own settings, both embarrassing and both common:</p>
 <ol>
