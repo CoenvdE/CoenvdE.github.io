@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coen van den Elsen - AI Research Engineer</title>
+    <meta name="description" content="AI Research Engineer and Machine Learning Scientist building AI for science, nature, and society. Projects, experience, and blogs on ML research practice and agentic developer tooling.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -86,12 +87,39 @@
                         <i id="theme-toggle-light-icon-mobile" class="fas fa-sun hidden text-lg"></i>
                     </button>
                     <!-- Mobile menu button -->
-                    <button type="button" class="text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 focus:outline-none">
+                    <button id="mobile-menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu" class="text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 focus:outline-none">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                 </div>
             </div>
         </div>
+        <!-- Mobile menu panel (lives inside <nav> so blog pages inherit it via build_blogs.py) -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 pt-2 pb-4 space-y-1">
+            <a href="#about" class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">About</a>
+            <a href="#experience" class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Experience</a>
+            <a href="#education" class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Education</a>
+            <a href="#projects" class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Projects</a>
+            <a href="#blogs" class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Blogs</a>
+        </div>
+        <script>
+        (function () {
+            var btn = document.getElementById('mobile-menu-button');
+            var menu = document.getElementById('mobile-menu');
+            if (!btn || !menu) return;
+            btn.addEventListener('click', function () {
+                var open = menu.classList.toggle('hidden') === false;
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                btn.querySelector('i').className = open ? 'fas fa-times text-xl' : 'fas fa-bars text-xl';
+            });
+            menu.querySelectorAll('a').forEach(function (a) {
+                a.addEventListener('click', function () {
+                    menu.classList.add('hidden');
+                    btn.setAttribute('aria-expanded', 'false');
+                    btn.querySelector('i').className = 'fas fa-bars text-xl';
+                });
+            });
+        })();
+        </script>
     </nav>
 
     <!-- Main Content Here -->

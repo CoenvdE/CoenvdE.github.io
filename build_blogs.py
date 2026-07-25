@@ -54,6 +54,11 @@ def get_title(content):
     return "Chapter"
 
 
+def get_description(content):
+    match = re.search(r'^description:\s*"(.*?)"', content, re.MULTILINE | re.DOTALL)
+    return match.group(1).replace("\n", " ").strip() if match else None
+
+
 def sort_key_path(path):
     name = os.path.basename(path)
     if name == "index.md":
@@ -93,6 +98,7 @@ def build_one_blog(config, head, nav_str, footer):
     for i, chapter in enumerate(chapters):
         with open(chapter["path"], "r") as f:
             content = f.read()
+            description = get_description(content)
             if content.startswith("---"):
                 parts_split = content.split("---", 2)
                 if len(parts_split) > 2:
@@ -227,6 +233,19 @@ def build_one_blog(config, head, nav_str, footer):
 </style>
 </head>""",
             )
+
+            final_html = re.sub(
+                r"<title>.*?</title>",
+                f"<title>{chapter['title']} | Coen van den Elsen</title>",
+                final_html,
+                count=1,
+            )
+            if description:
+                final_html = final_html.replace(
+                    "</head>",
+                    f'<meta name="description" content="{description}">\n</head>',
+                    1,
+                )
 
             out_path = os.path.join(out_dir, chapter["out_name"])
             with open(out_path, "w") as out_f:
