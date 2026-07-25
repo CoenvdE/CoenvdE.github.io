@@ -200,9 +200,9 @@ paths:
 </ol>
 <p>My setup addresses each one:</p>
 <ul>
-<li><strong>Against staleness</strong>: a memory-hygiene rule in CLAUDE.md says only <em>confirmed, final</em> facts get persisted, never speculative ideas or abandoned approaches, so the memory pool starts cleaner. The durable tier for facts that must stay true is not memory but committed docs and skills, which the anti-drift system actively revalidates. Memory is the scratch tier; docs are the audited tier.</li>
+<li><strong>Against staleness</strong>: a memory-hygiene rule in CLAUDE.md says only <em>confirmed, final</em> facts get persisted, never speculative ideas or abandoned approaches, so the memory pool starts cleaner. This governs memory automatically, with no extra wiring, because memories are written <em>by Claude itself</em> mid-session, and CLAUDE.md is in its context at exactly that moment: the writer of memory is the reader of the rule. The durable tier for facts that must stay true is not memory but committed docs and skills, which the anti-drift system actively revalidates. Memory is the scratch tier; docs are the audited tier.</li>
 <li><strong>Against the blended bucket</strong>: the launch-in-the-repo habit (below) gives every repo its own correctly scoped memory.</li>
-<li><strong>Against the silo</strong>: the drift map's bridge entry. When a memory file is written, the hook fires a nudge: "if this fact is shareable and non-secret, promote it to CLAUDE.md or a skill." Private learnings become versioned team knowledge deliberately, not never.</li>
+<li><strong>Against the silo</strong>: the drift map's bridge entry. The drift hook exists for code-to-docs sync, but its mechanism is generic: it fires after <em>every</em> file write and matches the written path against regexes. A memory save is an ordinary file write, so one map entry whose regex matches the memory directory (instead of a code path) catches it and fires a nudge: "if this fact is shareable and non-secret, promote it to CLAUDE.md or a skill." Private learnings become versioned team knowledge deliberately, not never.</li>
 </ul>
 <h3 id="permissions-hygiene">Permissions hygiene</h3>
 <p>Two lessons from auditing my own settings, both embarrassing and both common:</p>

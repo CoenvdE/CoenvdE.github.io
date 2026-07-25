@@ -104,9 +104,9 @@ Useful, but it has three failure modes that nothing in the default setup guards 
 
 My setup addresses each one:
 
-- **Against staleness**: a memory-hygiene rule in CLAUDE.md says only *confirmed, final* facts get persisted, never speculative ideas or abandoned approaches, so the memory pool starts cleaner. The durable tier for facts that must stay true is not memory but committed docs and skills, which the anti-drift system actively revalidates. Memory is the scratch tier; docs are the audited tier.
+- **Against staleness**: a memory-hygiene rule in CLAUDE.md says only *confirmed, final* facts get persisted, never speculative ideas or abandoned approaches, so the memory pool starts cleaner. This governs memory automatically, with no extra wiring, because memories are written *by Claude itself* mid-session, and CLAUDE.md is in its context at exactly that moment: the writer of memory is the reader of the rule. The durable tier for facts that must stay true is not memory but committed docs and skills, which the anti-drift system actively revalidates. Memory is the scratch tier; docs are the audited tier.
 - **Against the blended bucket**: the launch-in-the-repo habit (below) gives every repo its own correctly scoped memory.
-- **Against the silo**: the drift map's bridge entry. When a memory file is written, the hook fires a nudge: "if this fact is shareable and non-secret, promote it to CLAUDE.md or a skill." Private learnings become versioned team knowledge deliberately, not never.
+- **Against the silo**: the drift map's bridge entry. The drift hook exists for code-to-docs sync, but its mechanism is generic: it fires after *every* file write and matches the written path against regexes. A memory save is an ordinary file write, so one map entry whose regex matches the memory directory (instead of a code path) catches it and fires a nudge: "if this fact is shareable and non-secret, promote it to CLAUDE.md or a skill." Private learnings become versioned team knowledge deliberately, not never.
 
 ### Permissions hygiene
 
