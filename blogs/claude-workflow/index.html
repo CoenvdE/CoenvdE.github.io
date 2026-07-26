@@ -171,6 +171,7 @@
 <li><strong>CLAUDE.md</strong> (~60 lines): who I am, how my code is organized, my two work modes, a few hard working-style rules. Nothing that only matters sometimes.</li>
 <li><strong>Rules</strong> (<code>~/.claude/rules/</code>): conventions that load only when relevant files are touched.</li>
 <li><strong>Skills</strong> (<code>~/.claude/skills/</code>): multi-step procedures that load only when invoked or matched.</li>
+<li><strong>Subagents</strong> (<code>~/.claude/agents/</code>): separate roles with their own context window and tool access.</li>
 <li><strong>Hooks</strong>: shell scripts the harness runs at fixed lifecycle events, for rules that must <em>always</em> hold.</li>
 </ul>
 <p>The docs recommend keeping CLAUDE.md under 200 lines. Mine is a third of that, and adherence is noticeably better than when it was long.</p>
@@ -194,7 +195,7 @@ paths:
 <li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/skills/new-research-project/SKILL.md"><code>new-research-project</code></a></strong>: instantiates my <a href="https://github.com/CoenvdE/research-template">research template</a> for a new project, or retrofits its guardrails into an existing repo. This one gets its own blog post.</li>
 <li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/skills/anti-drift-setup/SKILL.md"><code>anti-drift-setup</code></a></strong>: installs the documentation anti-drift system into a repo (below).</li>
 <li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/skills/dataset-overview/SKILL.md"><code>dataset-overview</code></a> / <a href="https://github.com/CoenvdE/claude-code-setup/blob/master/skills/database-overview/SKILL.md"><code>database-overview</code></a></strong>: maintain a living <code>docs/DATASETS.md</code> (research) or schema doc (web) by inspecting the <em>real</em> data, never guessing.</li>
-<li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/skills/claude-setup-audit/SKILL.md"><code>claude-setup-audit</code></a></strong>: re-grounds this entire setup against the current official docs, because Claude Code ships behavior changes fast and a config built six months ago encodes assumptions that may no longer hold. It reports version gaps, changed behavior, size and permission problems, and newly possible capabilities. It proposes; it never rewrites your config on its own.</li>
+<li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/skills/claude-setup-audit/SKILL.md"><code>claude-setup-audit</code></a></strong>: re-grounds this entire setup against the current official docs, because Claude Code ships behavior changes fast and a config built six months ago encodes assumptions that may no longer hold. It reports version gaps, changed behavior, size and permission problems, and newly possible capabilities. It proposes; it never rewrites your config on its own. Run it by asking ("audit my Claude setup") or explicitly with <code>/claude-setup-audit</code>, ideally right after updating Claude Code.</li>
 <li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/skills/close/SKILL.md"><code>close</code></a></strong>: end-of-session ritual: propose a commit, append to a SESSION_LOG, print a session rename.</li>
 <li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/commands/commit.md"><code>commit</code></a></strong>: drafts one Conventional Commits message from the actual staged diff and always asks before committing.</li>
 </ul>
@@ -208,6 +209,21 @@ paths:
 <li><strong>Goal-driven execution</strong>: transform vague tasks into verifiable goals ("fix the bug" becomes "write a test that reproduces it, then make it pass") so the agent can loop independently against real success criteria.</li>
 </ol>
 <p>If you copy one skill from my setup, copy this one. It is the difference between an agent that produces impressive-looking diffs and one that produces mergeable ones.</p>
+<h3 id="subagents-roles-not-just-procedures">Subagents: roles, not just procedures</h3>
+<p>A skill loads instructions into the session you are already in. A subagent is a
+separate worker with its own context window, its own tool allowlist, and
+optionally its own model. That difference matters in two situations: when a job
+would flood your main context with material you do not want to keep (reading a
+40-page PDF, sweeping a large codebase), and when a job should be <em>restricted</em>
+in what it can touch.</p>
+<p>Two of mine, at opposite ends:</p>
+<ul>
+<li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/agents/paper-reader.md"><code>paper-reader</code></a></strong>: finds a paper in my local library, reads it in page ranges, and returns a structured brief (problem, method, results, limitations, relevance to my work). Read-only tools, and a cheaper model, because summarization does not need the expensive one. The 40 pages stay in its context, and only the brief comes back to mine.</li>
+<li><strong><code>model-sparring</code></strong>: a design-review partner for model work, which ships with my <a href="https://github.com/CoenvdE/research-template">research template</a> rather than my global config, because it is domain-specific. Its restrictions are the interesting part: it may write tests and experiment TODO rows but never the model, config, or data. It proposes, I decide.</li>
+</ul>
+<p>The design rule I have converged on: give an agent the narrowest tool set that
+lets it finish, and be explicit in its prompt about what it may write. An agent
+that can edit the thing it is reviewing will eventually review its own edits.</p>
 <h3 id="hooks-when-please-always-becomes-always">Hooks: when "please always" becomes "always"</h3>
 <p>I have a writing rule: no em dashes, anywhere. It lived in CLAUDE.md and was violated regularly, because context is advisory. Now it is a 40-line PostToolUse hook (<a href="https://github.com/CoenvdE/claude-code-setup/blob/master/hooks/no-dashes.sh">no-dashes.sh</a>): after every file write or edit, a script greps <code>.md</code> and <code>.tex</code> files for the forbidden patterns and, on a hit, feeds a correction straight back to the model, which fixes it immediately. It has already caught Claude mid-session, including while writing the very repo this post links to.</p>
 <p>That is the general principle: anything phrased as "always do X" or "never do Y" that can be checked mechanically should be a hook, not a sentence. Sentences drift; scripts do not.</p>

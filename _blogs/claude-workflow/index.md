@@ -26,6 +26,7 @@ Claude Code loads your global `~/.claude/CLAUDE.md` into every single session. T
 - **CLAUDE.md** (~60 lines): who I am, how my code is organized, my two work modes, a few hard working-style rules. Nothing that only matters sometimes.
 - **Rules** (`~/.claude/rules/`): conventions that load only when relevant files are touched.
 - **Skills** (`~/.claude/skills/`): multi-step procedures that load only when invoked or matched.
+- **Subagents** (`~/.claude/agents/`): separate roles with their own context window and tool access.
 - **Hooks**: shell scripts the harness runs at fixed lifecycle events, for rules that must *always* hold.
 
 The docs recommend keeping CLAUDE.md under 200 lines. Mine is a third of that, and adherence is noticeably better than when it was long.
@@ -58,7 +59,7 @@ Skills are folders with a `SKILL.md` whose description tells Claude when to invo
 - **[`new-research-project`](https://github.com/CoenvdE/claude-code-setup/blob/master/skills/new-research-project/SKILL.md)**: instantiates my [research template](https://github.com/CoenvdE/research-template) for a new project, or retrofits its guardrails into an existing repo. This one gets its own blog post.
 - **[`anti-drift-setup`](https://github.com/CoenvdE/claude-code-setup/blob/master/skills/anti-drift-setup/SKILL.md)**: installs the documentation anti-drift system into a repo (below).
 - **[`dataset-overview`](https://github.com/CoenvdE/claude-code-setup/blob/master/skills/dataset-overview/SKILL.md) / [`database-overview`](https://github.com/CoenvdE/claude-code-setup/blob/master/skills/database-overview/SKILL.md)**: maintain a living `docs/DATASETS.md` (research) or schema doc (web) by inspecting the *real* data, never guessing.
-- **[`claude-setup-audit`](https://github.com/CoenvdE/claude-code-setup/blob/master/skills/claude-setup-audit/SKILL.md)**: re-grounds this entire setup against the current official docs, because Claude Code ships behavior changes fast and a config built six months ago encodes assumptions that may no longer hold. It reports version gaps, changed behavior, size and permission problems, and newly possible capabilities. It proposes; it never rewrites your config on its own.
+- **[`claude-setup-audit`](https://github.com/CoenvdE/claude-code-setup/blob/master/skills/claude-setup-audit/SKILL.md)**: re-grounds this entire setup against the current official docs, because Claude Code ships behavior changes fast and a config built six months ago encodes assumptions that may no longer hold. It reports version gaps, changed behavior, size and permission problems, and newly possible capabilities. It proposes; it never rewrites your config on its own. Run it by asking ("audit my Claude setup") or explicitly with `/claude-setup-audit`, ideally right after updating Claude Code.
 - **[`close`](https://github.com/CoenvdE/claude-code-setup/blob/master/skills/close/SKILL.md)**: end-of-session ritual: propose a commit, append to a SESSION_LOG, print a session rename.
 - **[`commit`](https://github.com/CoenvdE/claude-code-setup/blob/master/commands/commit.md)**: drafts one Conventional Commits message from the actual staged diff and always asks before committing.
 
@@ -74,6 +75,24 @@ Most of the pieces in this post shape *what* the agent works on. This skill shap
 4. **Goal-driven execution**: transform vague tasks into verifiable goals ("fix the bug" becomes "write a test that reproduces it, then make it pass") so the agent can loop independently against real success criteria.
 
 If you copy one skill from my setup, copy this one. It is the difference between an agent that produces impressive-looking diffs and one that produces mergeable ones.
+
+### Subagents: roles, not just procedures
+
+A skill loads instructions into the session you are already in. A subagent is a
+separate worker with its own context window, its own tool allowlist, and
+optionally its own model. That difference matters in two situations: when a job
+would flood your main context with material you do not want to keep (reading a
+40-page PDF, sweeping a large codebase), and when a job should be *restricted*
+in what it can touch.
+
+Two of mine, at opposite ends:
+
+- **[`paper-reader`](https://github.com/CoenvdE/claude-code-setup/blob/master/agents/paper-reader.md)**: finds a paper in my local library, reads it in page ranges, and returns a structured brief (problem, method, results, limitations, relevance to my work). Read-only tools, and a cheaper model, because summarization does not need the expensive one. The 40 pages stay in its context, and only the brief comes back to mine.
+- **`model-sparring`**: a design-review partner for model work, which ships with my [research template](https://github.com/CoenvdE/research-template) rather than my global config, because it is domain-specific. Its restrictions are the interesting part: it may write tests and experiment TODO rows but never the model, config, or data. It proposes, I decide.
+
+The design rule I have converged on: give an agent the narrowest tool set that
+lets it finish, and be explicit in its prompt about what it may write. An agent
+that can edit the thing it is reviewing will eventually review its own edits.
 
 ### Hooks: when "please always" becomes "always"
 
