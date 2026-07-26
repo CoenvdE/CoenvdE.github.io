@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>A solid research template | Coen van den Elsen</title>
+<meta content="AI Research Engineer and Machine Learning Scientist building AI for science, nature, and society. Projects, experience, and blogs on ML research practice and agentic developer tooling." name="description"/>
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                            950: '#042f2e',
+                        },
+                        ocean: {
+                            800: '#0c4a6e',
+                            900: '#082f49',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+        }
+        .bg-ocean-gradient {
+            background: linear-gradient(135deg, #082f49 0%, #134e4a 100%);
+        }
+    </style>
+<script>
+        // Check for saved theme preference or use system preference
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<style>
+    .prose :where(code):not(:where([class~="not-prose"] *)) {
+        background-color: theme('colors.slate.100');
+        padding: 0.2em 0.4em;
+        border-radius: 0.25rem;
+        font-weight: 600;
+    }
+    .prose :where(code):not(:where([class~="not-prose"] *))::before {
+        content: "" !important;
+    }
+    .prose :where(code):not(:where([class~="not-prose"] *))::after {
+        content: "" !important;
+    }
+    .dark .prose :where(code):not(:where([class~="not-prose"] *)) {
+        background-color: theme('colors.slate.800');
+        color: theme('colors.brand.300');
+    }
+    .prose :where(pre code):not(:where([class~="not-prose"] *)) {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        color: inherit;
+    }
+</style>
+<meta name="description" content="A PyTorch Lightning template for efficient, trustworthy ML research: guardrail tests (overfit-one-batch, resume equality, data-leakage asserts, input contracts), timing, FLOPs/MFU and provenance callbacks, wired for collaboration with Claude Code.">
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 antialiased selection:bg-brand-500 selection:text-white transition-colors duration-300">
+    <nav class="fixed top-0 w-full z-[9999] bg-white dark:bg-slate-800/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 dark:border-slate-800 transition-colors duration-300">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16 items-center">
+<a class="flex-shrink-0 font-serif font-bold text-xl text-ocean-900 dark:text-brand-300 dark:text-brand-400 hover:text-brand-600 dark:hover:text-brand-300 transition-colors" href="../../index.html">
+                    Coen van den Elsen
+                </a>
+<div class="hidden md:flex space-x-8 items-center">
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#about">About</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#experience">Experience</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#education">Education</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#projects">Projects</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#blogs">Blogs</a>
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 focus:outline-none rounded-lg text-sm p-2.5 transition-colors" id="theme-toggle" type="button">
+<i class="fas fa-moon hidden text-lg" id="theme-toggle-dark-icon"></i>
+<i class="fas fa-sun hidden text-lg" id="theme-toggle-light-icon"></i>
+</button>
+</div>
+<div class="md:hidden flex items-center space-x-4">
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 focus:outline-none rounded-lg text-sm p-2.5 transition-colors" id="theme-toggle-mobile" type="button">
+<i class="fas fa-moon hidden text-lg" id="theme-toggle-dark-icon-mobile"></i>
+<i class="fas fa-sun hidden text-lg" id="theme-toggle-light-icon-mobile"></i>
+</button>
+<!-- Mobile menu button -->
+<button aria-controls="mobile-menu" aria-expanded="false" aria-label="Open menu" class="text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 focus:outline-none" id="mobile-menu-button" type="button">
+<i class="fas fa-bars text-xl"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Mobile menu panel (lives inside <nav> so blog pages inherit it via build_blogs.py) -->
+<div class="hidden md:hidden border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 pt-2 pb-4 space-y-1" id="mobile-menu">
+<a class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#about">About</a>
+<a class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#experience">Experience</a>
+<a class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#education">Education</a>
+<a class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#projects">Projects</a>
+<a class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#blogs">Blogs</a>
+</div>
+<script>
+        (function () {
+            var btn = document.getElementById('mobile-menu-button');
+            var menu = document.getElementById('mobile-menu');
+            if (!btn || !menu) return;
+            btn.addEventListener('click', function () {
+                var open = menu.classList.toggle('hidden') === false;
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                btn.querySelector('i').className = open ? 'fas fa-times text-xl' : 'fas fa-bars text-xl';
+            });
+            menu.querySelectorAll('a').forEach(function (a) {
+                a.addEventListener('click', function () {
+                    menu.classList.add('hidden');
+                    btn.setAttribute('aria-expanded', 'false');
+                    btn.querySelector('i').className = 'fas fa-bars text-xl';
+                });
+            });
+        })();
+        </script>
+</nav>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 mt-16">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<div class="md:col-span-1 hidden md:block">
+<div class="sticky top-24 bg-white dark:bg-slate-800 shadow-xl rounded-lg p-6 border border-slate-100 dark:border-slate-700">
+<h3 class="text-lg font-bold text-ocean-900 dark:text-brand-300 mb-4 border-b border-slate-200 dark:border-slate-700 pb-2">Chapters</h3>
+<ul class="space-y-3">
+<li><a href="index.html" class="text-sm block text-brand-600 dark:text-brand-400 font-bold border-l-2 border-brand-500 pl-2">A solid research template</a></li>
+</ul>
+</div>
+</div>
+<div class="md:col-span-3 bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-lg p-8 prose prose-slate dark:prose-invert prose-brand max-w-none">
+<h1 id="a-solid-research-template">A solid research template</h1>
+<p><em>By <a href="https://coenvde.github.io/">Coen van den Elsen</a></em></p>
+<hr />
+<h3 id="why-am-i-writing-this">Why am I writing this?</h3>
+<p>Two bugs cost me the most GPU hours of my research career so far. The first: coordinates entered my model in degrees instead of radians. Nothing crashed; the model just trained worse, and it took embarrassingly long to find out why. The second: cluster jobs got preempted, and after rerunning them the loss would spike, forcing full reruns. Also silent, also expensive.</p>
+<p>Neither bug is exotic. Every ML researcher I know has their own version. What struck me is that both are <em>mechanically detectable</em>, and that the standard academic repo detects neither. So I built a template that starts every project with the paranoia built in, and with the efficiency tooling (timing, throughput, schedulers, config discipline) that makes iteration fast rather than just safe: <a href="https://github.com/CoenvdE/research-template">github.com/CoenvdE/research-template</a>.</p>
+<p>Two design rules shaped it. First, <strong>guardrails are tests and callbacks, not discipline</strong>: anything that relies on me remembering to check will eventually not get checked. Second, <strong>everything runs CPU-only on a synthetic dataset shipped with the repo</strong>, so the full suite passes on any laptop and in CI with no data download. The synthetic set never gets deleted, even after real data arrives; it is what keeps the tests runnable everywhere.</p>
+<h3 id="the-guardrail-tests">The guardrail tests</h3>
+<p><strong>Overfit one batch.</strong> Train on a single small batch and assert the loss collapses to ~0. The most diagnostic smoke test there is: a model that cannot memorize eight samples has a broken loss, data pipeline, or optimizer wiring. Seconds to run, catches entire categories of bugs.</p>
+<p><strong>Initial loss sanity.</strong> A freshly initialized model should score its theoretical know-nothing loss. For MSE the best constant prediction is the target mean, and the resulting error is by definition Var(y), which is ~1.0 for standardized targets; for classification it is ln(C). Assert the init loss is near that value, and a <em>first epoch</em> far below should make you suspect leakage.</p>
+<p>Worth being precise about what this catches, because I got it wrong once already. A model at init outputs near zero, so its loss is E[y²] = Var(y) + mean(y)², while the theoretical value is Var(y). Targets left in raw physical units (Kelvin, Pascals, counts) have a large mean, so the ratio explodes and the check fires hard. But rescaling <em>centered</em> targets moves Var(y) and E[y²] together, so the ratio stays at 1 and this check is blind to it. That blind spot is covered by <code>assert_standardized</code> instead, and it is asserted in the test suite so it stays documented rather than becoming folklore.</p>
+<p><strong>Resume equals uninterrupted.</strong> This is the loss-spike killer. The test trains N steps in one go, then separately trains, interrupts, resumes from the checkpoint, and asserts the two runs end with identical weights, identical EMA state, and identical learning rate. It catches weights-only checkpoints (Adam's moment estimates reset and the first resumed steps are badly scaled: the classic post-resume spike), schedulers that restart warmup, and any stateful callback that forgot to implement <code>state_dict</code>. This test caught a real bug during the template's own construction: EMA state restored from a checkpoint landed on CPU while the model trained on GPU.</p>
+<p><strong>Unused parameters.</strong> After one backward pass, every trainable parameter must have received a gradient; anything without one is a disconnected part of the graph. The suite also includes a <em>planted-bug</em> negative test: it deliberately attaches a layer that forward never calls and asserts the detector reports it. A test of the test, like a positive control in a lab assay: it proves the check cannot silently become vacuous. Bonus: a guaranteed fully-connected graph is what makes DDP's <code>find_unused_parameters=False</code> fast path valid.</p>
+<p><strong>Data-leakage asserts.</strong> Plain pytest over the split <em>definition</em>: train/val/test sample ids are disjoint; for time series, validation starts after training ends plus a gap at least as long as your input window and lead time (otherwise windows straddle the boundary); and normalization statistics were computed on the training range only. That last one is the sneakiest leak in practice.</p>
+<p><strong>Dataloader determinism.</strong> Same seed gives byte-identical batches, with <code>num_workers=0</code> and <code>num_workers=2</code>. Irreproducibility from seeding bugs is invisible until you need to reproduce a result, which is exactly when you cannot afford it.</p>
+<p><strong>Input contracts.</strong> One checker per physical convention the data must satisfy: <code>assert_radians</code> (the degrees bug, caught at load time), <code>assert_in_range</code> for hard physical bounds (sea-ice concentration in [0, 1]; Celsius sneaking into a Kelvin pipeline trips the [180, 340] K bound), <code>assert_standardized</code> (raw Pascals at ~1e5 fail instantly with "was normalization applied?"), and <code>assert_absmax</code> against gradient-destabilizing magnitudes.</p>
+<p><strong>Config smoke test.</strong> One <code>fast_dev_run</code> batch through the <em>committed</em> config, every callback included. The moment a rename breaks a <code>class_path</code>, CI goes red instead of your next cluster job.</p>
+<h3 id="tests-of-the-tests">Tests of the tests</h3>
+<p>Here is the failure mode that worries me more than any bug: a test suite that is green because it cannot fail. It happens quietly and in ordinary ways. An expected value gets recorded from the code under test, so the test asserts the bug. A tolerance gets loosened until things pass. A property gets checked that a model ignoring its inputs would satisfy anyway. Nothing announces itself, and afterwards you trust the model <em>more</em> than before, which is the expensive part.</p>
+<p>This risk gets sharper when an agent writes the tests, because "make the tests pass" and "check the model is correct" are different goals that look identical from the outside, and the first one is much easier.</p>
+<p>So the template treats it as a first-class concern, in three layers.</p>
+<p><strong>A stated policy</strong>, in CLAUDE.md and in the research rules, so it loads into every session that touches this code. Never weaken a test to make it pass: a failing test is a finding to report, not a number to adjust. Expected values come from theory, a reference implementation, or a property that must hold, never from recording current output. Tolerances get derived from dtype precision, not tuned until green. Never assume a convention you did not read, because a wrong assumption that produces a pass is invisible.</p>
+<p><strong>Paired negative controls.</strong> Every guardrail ships with a demonstration that it can fail. The equivariance examples pair each symmetry with a transformation the function must <em>not</em> respect. The unused-parameter test plants a layer that forward never calls. The input contracts plant degrees, raw Pascals, and Celsius.</p>
+<p><strong>A meta-test that plants defects</strong>, <code>tests/test_guardrails_detect_bugs.py</code>, which asserts the suite goes red when it should. It runs a model with a learning rate of zero and asserts that the overfit-one-batch criterion is <em>not</em> satisfied, proving that criterion discriminates. It scales an init by 50x and asserts the initial-loss check raises. And it verifies the two premises the resume test silently depends on: that fixed seeds give bit-identical results, and that genuinely different runs do not compare equal at the tolerance used, because otherwise the resume guarantee is unfalsifiable.</p>
+<p>That last one is the pattern worth stealing. Ask of any check: what defect would this catch, and would it still pass if the model were subtly wrong? If the answer is uncomfortable, the check is decoration.</p>
+<h3 id="the-callbacks">The callbacks</h3>
+<ul>
+<li><strong>Timing</strong>: splits step time into dataloader-wait vs forward vs backward. One logged number, <code>time/data_frac</code>, answers the eternal question "is my dataloader the bottleneck?"</li>
+<li><strong>FLOPs + params</strong>: one generic callback measuring forward FLOPs on a real batch (I previously had five near-identical per-model copies; consolidation was overdue).</li>
+<li><strong>Throughput + MFU</strong>: samples/sec, GPU memory, and Model FLOPs Utilization: the fraction of the card's peak math you actually use. Comparable across models and GPUs, so it directly answers "should I optimize or accept this?"</li>
+<li><strong>Input stats guard</strong>: the runtime sibling of the input contracts. Checks the first three batches of every run (a broken pipeline dies in seconds, not after an hour) and periodically after, logging stats always and raising on violations.</li>
+<li><strong>Activation monitor</strong>: activation RMS per layer via forward hooks. Inputs can be clean while a bad init grows activations layer by layer; this catches explosions <em>inside</em> the net.</li>
+<li><strong>Gradient norm</strong>: total and top-k per-layer norms, the early-warning signal for instability.</li>
+<li><strong>EMA</strong>: exponential moving average weights, swapped in for validation, checkpoint-safe by construction (the resume test enforces it).</li>
+<li><strong>Visualization</strong>: plots the <em>same</em> fixed validation batch every epoch, so panels are comparable across a run.</li>
+<li><strong>Provenance</strong>: logs git SHA and a dirty flag to every run. Any result traces back to exact code and config; no more archaeology through config files named <code>bigger_no_early_stop_lower_lr_good_ds.yaml</code> (a real filename from my past).</li>
+</ul>
+<p>Schedulers round it out: WSD (warmup-stable-decay) and warmup-cosine, specified in <em>fractions</em> of the run so the same config works for any length, resolved through Lightning so step-based and epoch-based training both work and resumes stay consistent.</p>
+<h3 id="resume-done-properly">Resume, done properly</h3>
+<p>The template's rules: <code>last.ckpt</code> is saved periodically and is a <em>full</em> checkpoint (optimizer moments, scheduler, precision state, callback states). Resume via <code>--ckpt_path</code> with unchanged <code>max_steps</code>. And wandb resumes into the <em>same run</em> using a persisted run id with <code>resume="must"</code>, which fails loudly rather than silently creating a duplicate run the way the default does. On SLURM, <code>#SBATCH --signal=SIGUSR1@90</code> gives Lightning a 90-second warning to checkpoint and requeue before the job is killed; the periodic checkpoint remains the real safety net.</p>
+<h3 id="the-claude-layer">The Claude layer</h3>
+<p>The template is also configured as a collaborator-ready workspace for Claude Code (the setup itself is the subject of <a href="../claude-workflow/index.html">the companion post</a>):</p>
+<ul>
+<li><strong>A committed CLAUDE.md</strong> with the conventions <em>and</em> an adaptation guide: what to KEEP always (the guardrails, the synthetic data, config discipline), what to REPLACE per project (model, data, thresholds), what to DELETE if unused (the equivariance harness when no symmetry is claimed).</li>
+<li><strong>An anti-drift map</strong>: editing data code nudges the agent to update <code>docs/DATASETS.md</code> in the same session; writing eval outputs nudges a one-line entry in the experiment ledger.</li>
+<li><strong>EXPERIMENTS.md as the human-agent interface</strong>: a TODO table (hypothesis, config, status) and a DONE table (run, wandb link, key metric, one-line conclusion). Plans go in as TODO rows and come out as DONE rows.</li>
+<li><strong>A scaffolding skill</strong>: "start a new research project called X" clones the template from GitHub, tailors it, and verifies the suite is green before the first commit. Improvements made in projects get ported back to the template, so it compounds instead of forking.</li>
+<li><strong>A <code>model-sparring</code> agent</strong>: the design review a good lab runs before anyone burns GPU hours. It reads the model code, the measured metrics and the experiment ledger, then reports correctness findings, a cost profile, and ranked proposals. Its rules are what separate it from a listicle generator: no suggestion without a measurement or a code citation, every proposal must state whether it preserves the model's claimed invariances (half the fashionable tricks break equivariance, and a proposal that quietly does is worse than no proposal), no proposing an ablation that <code>EXPERIMENTS.md</code> already concluded, and it may write tests and TODO rows but never the model itself. It proposes; you decide.</li>
+</ul>
+<h3 id="closing">Closing</h3>
+<p>None of the individual pieces is novel; most exist scattered across big-lab codebases and hard-won personal scripts. The value is having them <em>start present</em> in every project, verified by CI, so the paranoid checks run whether or not you remember to be paranoid. The repo is public and marked as a GitHub template: <a href="https://github.com/CoenvdE/research-template">CoenvdE/research-template</a>. Questions and improvements welcome.</p>
+<div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-200"><div></div><div></div></div>
+</div>
+</div>
+</div>
+    <footer class="bg-ocean-900 text-slate-300 py-12 border-t border-ocean-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+<div class="mb-4 md:mb-0">
+<span class="font-serif font-bold text-xl text-white">Coen van den Elsen</span>
+<p class="text-sm text-ocean-200 mt-2">© 2025 Coen van den Elsen. AI for a better world.</p>
+</div>
+<div class="flex space-x-6">
+<a class="text-ocean-200 hover:text-white transition-colors" href="mailto:coen@vandenelsen.nu">
+<span class="sr-only">Email</span>
+<i class="fas fa-envelope text-xl"></i>
+</a>
+<a class="text-ocean-200 hover:text-white transition-colors" href="https://github.com/CoenvdE" target="_blank">
+<span class="sr-only">GitHub</span>
+<i class="fab fa-github text-xl"></i>
+</a>
+<a class="text-ocean-200 hover:text-white transition-colors" href="https://linkedin.com/in/coen-van-den-elsen" target="_blank">
+<span class="sr-only">LinkedIn</span>
+<i class="fab fa-linkedin text-xl"></i>
+</a>
+</div>
+</div>
+</footer>
+
+<script>
+        function setupThemeToggle(btnId, darkIconId, lightIconId) {
+            var themeToggleBtn = document.getElementById(btnId);
+            var themeToggleDarkIcon = document.getElementById(darkIconId);
+            var themeToggleLightIcon = document.getElementById(lightIconId);
+
+            if (!themeToggleBtn) return;
+
+            // Change the icons inside the button based on previous settings
+            if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                themeToggleLightIcon.classList.remove('hidden');
+            } else {
+                themeToggleDarkIcon.classList.remove('hidden');
+            }
+
+            themeToggleBtn.addEventListener('click', function() {
+                // toggle icons inside button
+                themeToggleDarkIcon.classList.toggle('hidden');
+                themeToggleLightIcon.classList.toggle('hidden');
+
+                // if set via local storage previously
+                if (localStorage.getItem('color-theme')) {
+                    if (localStorage.getItem('color-theme') === 'light') {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    }
+                // if NOT set via local storage previously
+                } else {
+                    if (document.documentElement.classList.contains('dark')) {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    } else {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    }
+                }
+            });
+        }
+        setupThemeToggle('theme-toggle', 'theme-toggle-dark-icon', 'theme-toggle-light-icon');
+        setupThemeToggle('theme-toggle-mobile', 'theme-toggle-dark-icon-mobile', 'theme-toggle-light-icon-mobile');
+    </script>
+</body>
+</html>
