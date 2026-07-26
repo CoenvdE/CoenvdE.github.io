@@ -355,7 +355,9 @@
                         </a>
                     </h3>
                     <p class="text-slate-600 dark:text-slate-300 mb-4 text-sm leading-relaxed">
-                        <strong>Platonic-Erwin</strong>: a transformer combining linearly-scaling hierarchical ball-tree attention with Platonic-solid weight sharing, for roto-translation equivariance without sacrificing scalability. Validated on protein molecular dynamics (state of the art among the compared baselines) and on global ERA5 forecasting, where scale buys deterministic skill while the geometric inductive bias buys spectral fidelity, calibration and parameter efficiency.
+                        Machine learning weather models increasingly match numerical weather prediction in skill, but not in <em>physical</em> fidelity. This thesis asks how a model's treatment of geometry shapes either, isolating one design choice at a time on global ERA5: grid topology, vector-valued wind losses, 2D vs. 3D modelling, positional-encoding design, and equivariance.
+                        <br><br>
+                        It introduces <strong>Platonic-Erwin</strong>, a transformer combining linearly-scaling hierarchical ball-tree attention with principled weight-sharing, giving roto-translation equivariance without sacrificing scalability, which outperforms prior equivariant and non-equivariant baselines on a large-scale molecular-dynamics benchmark. Every geometric choice measurably shifts deterministic skill, spectral fidelity, or both: symmetry proves valuable as an inductive bias but not as a hard constraint, learned symmetry-breaking features recover physically recognisable structure, and under scaling, size buys deterministic skill while the geometric bias buys kinetic-energy spectral fidelity, calibration, and parameter efficiency.
                         <br><br>
                         <strong>Supervisor:</strong> David Wessels. <strong>Examiner:</strong> Erik Bekkers.
                     </p>
