@@ -7,8 +7,8 @@ Usage:
     uv run python build_blogs.py
 """
 
+import os
 import re
-import shutil
 import subprocess
 import tempfile
 
@@ -74,6 +74,7 @@ def import_one(cfg):
     front += "display_chapters: false\n"
     front += "---\n\n"
 
+    os.makedirs(os.path.dirname(cfg["dest"]), exist_ok=True)
     with open(cfg["dest"], "w") as f:
         f.write(front + text)
     print(f"synced {cfg['repo']} -> {cfg['dest']}")

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>A Claude Code setup for fast building and research | Coen van den Elsen</title>
+<meta content="AI Research Engineer and Machine Learning Scientist building AI for science, nature, and society. Projects, experience, and blogs on ML research practice and agentic developer tooling." name="description"/>
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                            950: '#042f2e',
+                        },
+                        ocean: {
+                            800: '#0c4a6e',
+                            900: '#082f49',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+        }
+        .bg-ocean-gradient {
+            background: linear-gradient(135deg, #082f49 0%, #134e4a 100%);
+        }
+    </style>
+<script>
+        // Check for saved theme preference or use system preference
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<style>
+    .prose :where(code):not(:where([class~="not-prose"] *)) {
+        background-color: theme('colors.slate.100');
+        padding: 0.2em 0.4em;
+        border-radius: 0.25rem;
+        font-weight: 600;
+    }
+    .prose :where(code):not(:where([class~="not-prose"] *))::before {
+        content: "" !important;
+    }
+    .prose :where(code):not(:where([class~="not-prose"] *))::after {
+        content: "" !important;
+    }
+    .dark .prose :where(code):not(:where([class~="not-prose"] *)) {
+        background-color: theme('colors.slate.800');
+        color: theme('colors.brand.300');
+    }
+    .prose :where(pre code):not(:where([class~="not-prose"] *)) {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        color: inherit;
+    }
+</style>
+<meta name="description" content="How I configured Claude Code for both web/app development and ML research: a small global CLAUDE.md, path-scoped rules for two work modes, on-demand skills, deterministic hooks, and an anti-drift system that keeps documentation honest.">
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 antialiased selection:bg-brand-500 selection:text-white transition-colors duration-300">
+    <nav class="fixed top-0 w-full z-[9999] bg-white dark:bg-slate-800/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 dark:border-slate-800 transition-colors duration-300">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16 items-center">
+<a class="flex-shrink-0 font-serif font-bold text-xl text-ocean-900 dark:text-brand-300 dark:text-brand-400 hover:text-brand-600 dark:hover:text-brand-300 transition-colors" href="../../index.html">
+                    Coen van den Elsen
+                </a>
+<div class="hidden md:flex space-x-8 items-center">
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#about">About</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#experience">Experience</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#education">Education</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#projects">Projects</a>
+<a class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#blogs">Blogs</a>
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 focus:outline-none rounded-lg text-sm p-2.5 transition-colors" id="theme-toggle" type="button">
+<i class="fas fa-moon hidden text-lg" id="theme-toggle-dark-icon"></i>
+<i class="fas fa-sun hidden text-lg" id="theme-toggle-light-icon"></i>
+</button>
+</div>
+<div class="md:hidden flex items-center space-x-4">
+<button class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 focus:outline-none rounded-lg text-sm p-2.5 transition-colors" id="theme-toggle-mobile" type="button">
+<i class="fas fa-moon hidden text-lg" id="theme-toggle-dark-icon-mobile"></i>
+<i class="fas fa-sun hidden text-lg" id="theme-toggle-light-icon-mobile"></i>
+</button>
+<!-- Mobile menu button -->
+<button aria-controls="mobile-menu" aria-expanded="false" aria-label="Open menu" class="text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 focus:outline-none" id="mobile-menu-button" type="button">
+<i class="fas fa-bars text-xl"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Mobile menu panel (lives inside <nav> so blog pages inherit it via build_blogs.py) -->
+<div class="hidden md:hidden border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 pt-2 pb-4 space-y-1" id="mobile-menu">
+<a class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#about">About</a>
+<a class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#experience">Experience</a>
+<a class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#education">Education</a>
+<a class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#projects">Projects</a>
+<a class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" href="../../index.html#blogs">Blogs</a>
+</div>
+<script>
+        (function () {
+            var btn = document.getElementById('mobile-menu-button');
+            var menu = document.getElementById('mobile-menu');
+            if (!btn || !menu) return;
+            btn.addEventListener('click', function () {
+                var open = menu.classList.toggle('hidden') === false;
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                btn.querySelector('i').className = open ? 'fas fa-times text-xl' : 'fas fa-bars text-xl';
+            });
+            menu.querySelectorAll('a').forEach(function (a) {
+                a.addEventListener('click', function () {
+                    menu.classList.add('hidden');
+                    btn.setAttribute('aria-expanded', 'false');
+                    btn.querySelector('i').className = 'fas fa-bars text-xl';
+                });
+            });
+        })();
+        </script>
+</nav>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 mt-16">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<div class="md:col-span-1 hidden md:block">
+<div class="sticky top-24 bg-white dark:bg-slate-800 shadow-xl rounded-lg p-6 border border-slate-100 dark:border-slate-700">
+<h3 class="text-lg font-bold text-ocean-900 dark:text-brand-300 mb-4 border-b border-slate-200 dark:border-slate-700 pb-2">Chapters</h3>
+<ul class="space-y-3">
+<li><a href="index.html" class="text-sm block text-brand-600 dark:text-brand-400 font-bold border-l-2 border-brand-500 pl-2">A Claude Code setup for fast building and research</a></li>
+</ul>
+</div>
+</div>
+<div class="md:col-span-3 bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 rounded-lg p-8 prose prose-slate dark:prose-invert prose-brand max-w-none">
+<h1 id="a-claude-code-setup-for-fast-building-and-research">A Claude Code setup for fast building and research</h1>
+<p><em>By <a href="https://coenvde.github.io/">Coen van den Elsen</a></em></p>
+<hr />
+<h3 id="why-am-i-writing-this">Why am I writing this?</h3>
+<p>I use Claude Code every day, for two very different kinds of work. One is ML research, so PyTorch, uv, zarr and SLURM clusters. The other is web and app development, so TypeScript, pnpm, Supabase, and iOS through Capacitor. For a long time I just ran the defaults. My instruction file kept growing, I approved permissions whenever it asked, and everything I knew about my own projects lived in my head or in a README nobody had updated.</p>
+<p>This post is the setup I ended up with after sitting down and rebuilding the whole thing on purpose. What I wanted was fast iteration that stays reproducible, and an agent that gets more useful over time instead of slowly drifting away from how my projects actually work. Everything here is plain files you can copy. No products, no magic. All of it is on GitHub in <a href="https://github.com/CoenvdE/claude-code-setup">CoenvdE/claude-code-setup</a>.</p>
+<p>One idea shaped all of it. <strong>Written instructions are suggestions that cost tokens. Hooks are rules that cost nothing.</strong> Anything you put in a CLAUDE.md gets loaded into every session, spending context whether or not it is relevant, and Claude follows it most of the time but not always. Anything you put in a hook is executed by the harness, spends nothing until it fires, and cannot be skipped. Most of the skill in setting this up is knowing which of the two a given rule belongs in.</p>
+<h3 id="the-mental-model-ram-vs-disk">The mental model: RAM vs disk</h3>
+<p>Claude Code loads your global <code>~/.claude/CLAUDE.md</code> into every single session. That makes it precious, because every line spends tokens on every task whether or not it has anything to do with it. So I treat CLAUDE.md as RAM, and everything else as disk that gets paged in when needed.</p>
+<ul>
+<li><strong>CLAUDE.md</strong> (~60 lines): who I am, how my code is organized, my two work modes, a few hard rules about how I want to work. Nothing that only matters sometimes.</li>
+<li><strong>Rules</strong> (<code>~/.claude/rules/</code>): conventions that load only when relevant files are touched.</li>
+<li><strong>Skills</strong> (<code>~/.claude/skills/</code>): multi-step procedures that load only when invoked or matched.</li>
+<li><strong>Subagents</strong> (<code>~/.claude/agents/</code>): separate roles with their own context window and tool access.</li>
+<li><strong>Hooks</strong>: shell scripts the harness runs at fixed lifecycle events, for rules that must always hold.</li>
+</ul>
+<p>The docs recommend keeping CLAUDE.md under 200 lines. Mine is a third of that, and Claude follows it noticeably better than it did when the file was long.</p>
+<h3 id="two-work-modes-path-scoped">Two work modes, path-scoped</h3>
+<p>My research and web work want opposite conventions. uv against pnpm, pytest against lint-and-build, a datasets doc against a schema doc. Instead of one file full of "if Python then this, if TypeScript then that", I keep two rule files with <code>paths:</code> frontmatter.</p>
+<pre class="highlight"><code class="language-markdown">---
+paths:
+  - "**/*.py"
+  - "**/*.ipynb"
+  - "**/pyproject.toml"
+---
+# Python research conventions
+- Environments &amp; deps: use uv. Don't use bare pip or conda...
+- Deep-learning training: prefer PyTorch Lightning + LightningCLI with YAML configs...</code></pre>
+<p>The rule loads only when Claude reads a matching file. My CLAUDE.md carries a two-line summary of both modes plus one hard rule, which is never to carry conventions across modes. No npm advice in a Python repo, ever. There is one caveat worth knowing about. Path-scoped rules trigger on <em>read</em>, not on write, so in a brand-new project they may not load until a matching file exists, and the summary in CLAUDE.md is what covers that gap. Both rule files are in the repo, <a href="https://github.com/CoenvdE/claude-code-setup/blob/master/rules/python-research.md">python-research.md</a> and <a href="https://github.com/CoenvdE/claude-code-setup/blob/master/rules/web-app.md">web-app.md</a>.</p>
+<p>The research rule carries one clause I would put in any setup where an agent writes tests. "Make the tests pass" and "check the code is correct" are different goals that look identical from the outside, and the first one is much easier. So: never weaken a test to reach green. A failing test is a finding to report, not a tolerance to loosen or a skip to add. Expected values come from theory, from a reference implementation, or from a property that must hold, never from recording whatever the code currently outputs. And every new check ships with a planted defect that proves it can fail.</p>
+<h3 id="skills-procedures-loaded-on-demand">Skills: procedures, loaded on demand</h3>
+<p>Skills are folders with a <code>SKILL.md</code> whose description tells Claude when to invoke them. Mine, roughly in order of how much they earn, each linking to its copyable source in <a href="https://github.com/CoenvdE/claude-code-setup/tree/master/skills">the repo</a>:</p>
+<ul>
+<li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/skills/karpathy-guidelines/SKILL.md"><code>karpathy-guidelines</code></a></strong>: behavioral guardrails for every line of code the agent writes. More on this one below, because it might be the highest-leverage file in the whole setup.</li>
+<li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/skills/new-research-project/SKILL.md"><code>new-research-project</code></a></strong>: scaffolds a new research project from my own project template, or retrofits that template's guardrails into an existing repo.</li>
+<li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/skills/anti-drift-setup/SKILL.md"><code>anti-drift-setup</code></a></strong>: installs the documentation anti-drift system into a repo, which I get to below.</li>
+<li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/skills/dataset-overview/SKILL.md"><code>dataset-overview</code></a> / <a href="https://github.com/CoenvdE/claude-code-setup/blob/master/skills/database-overview/SKILL.md"><code>database-overview</code></a></strong>: maintain a living <code>docs/DATASETS.md</code> for research, or a schema doc for web, by inspecting the real data instead of guessing.</li>
+<li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/skills/claude-setup-audit/SKILL.md"><code>claude-setup-audit</code></a></strong>: re-grounds this whole setup against the current official docs. Claude Code ships behavior changes fast, and a config built six months ago encodes assumptions that may not hold anymore. It reports version gaps, changed behavior, size and permission problems, and features I could be using but am not. It proposes, it does not rewrite. Run it by asking, or with <code>/claude-setup-audit</code>, ideally right after an update.</li>
+<li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/skills/close/SKILL.md"><code>close</code></a></strong>: end-of-session ritual. Propose a commit, append to a session log, print a session rename.</li>
+<li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/commands/commit.md"><code>commit</code></a></strong>: drafts one Conventional Commits message from the actual staged diff, and always asks before committing.</li>
+</ul>
+<p>The rule I hold myself to is that skills live globally in <code>~/.claude/skills/</code> and are available everywhere automatically. A skill only gets copied into a repo when the point is sharing it with collaborators through git.</p>
+<h3 id="the-karpathy-guidelines-deserve-special-mention">The karpathy-guidelines deserve special mention</h3>
+<p>Most of the pieces in this post shape what the agent works on. This one shapes how it writes code, which is why it fires on nearly every task, in both of my work modes. It distills Andrej Karpathy's observations on where LLM coding goes wrong into four habits:</p>
+<ol>
+<li><strong>Think before coding.</strong> Surface assumptions and ambiguities instead of silently picking an interpretation, and push back when a simpler approach exists.</li>
+<li><strong>Simplicity first.</strong> Minimum code that solves the problem. No speculative flexibility, no abstractions for single-use code, no error handling for scenarios that cannot happen.</li>
+<li><strong>Surgical changes.</strong> Touch only what the request requires, match the existing style, clean up your own orphans and nobody else's.</li>
+<li><strong>Goal-driven execution.</strong> Turn a vague task into a verifiable one. "Fix the bug" becomes "write a test that reproduces it, then make it pass", so the agent can loop on its own against real criteria.</li>
+</ol>
+<p>If you copy one skill from my setup, copy this one. It is what keeps me from getting diffs that look impressive and then cost me an hour of cleanup.</p>
+<h3 id="subagents-roles-not-just-procedures">Subagents: roles, not just procedures</h3>
+<p>A skill loads instructions into the session you are already in. A subagent is a separate worker with its own context window, its own tool allowlist, and optionally its own model. That matters in two situations. One is when a job would flood your main context with material you do not want to keep around, like a 40-page PDF or a sweep across a large codebase. The other is when a job should be restricted in what it is allowed to touch.</p>
+<p>Two of mine, at opposite ends:</p>
+<ul>
+<li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/agents/paper-reader.md"><code>paper-reader</code></a></strong> finds a paper in my local library, reads it in page ranges, and returns a structured brief covering problem, method, results, limitations, and relevance to my work. Read-only tools, and a cheaper model, because summarizing does not need the expensive one. The 40 pages stay in its context and only the brief comes back to mine.</li>
+<li><strong><a href="https://github.com/CoenvdE/claude-code-setup/blob/master/agents/model-sparring.md"><code>model-sparring</code></a></strong> is a design-review partner for model work. It reads the model code, whatever metrics I have logged, and my experiment ledger, then comes back with correctness findings and ranked proposals, each one carrying the ablation that would settle it. The restrictions are the interesting part. It may write tests and experiment rows, but never the model, the config, or the data. It proposes, I decide. It also starts by checking whether it applies at all, and if you point it at a web app it says so and stops rather than improvising a review of code it was not built for.</li>
+</ul>
+<p>The design rule I have converged on is to give an agent the narrowest tool set that still lets it finish, and to say in its prompt exactly which files it may write. The reason is independence. A reviewer that can also change the code ends up reviewing its own work on the next run, and it has an easy way out of any finding, which is to quietly edit the problem away instead of reporting it.</p>
+<h3 id="hooks-when-please-always-becomes-always">Hooks: when "please always" becomes "always"</h3>
+<p>I have a writing rule: no em dashes, anywhere. It lived in CLAUDE.md and got violated regularly, because context is advisory. Now it is a 40-line PostToolUse hook, <a href="https://github.com/CoenvdE/claude-code-setup/blob/master/hooks/no-dashes.sh">no-dashes.sh</a>. After every file write or edit it greps <code>.md</code> and <code>.tex</code> files for the forbidden patterns, and on a hit it feeds a correction straight back to the model, which fixes it on the spot. It has already caught Claude mid-session, including while writing the very repo this post links to.</p>
+<p>The general principle is that anything phrased as "always do X" or "never do Y", when it can be checked mechanically, belongs in a hook rather than in a sentence. I forget my own rules. The script does not.</p>
+<h3 id="the-anti-drift-system">The anti-drift system</h3>
+<p>A valuable piece of the setup, and the one I would rebuild first if I lost it. The problem it solves is that docs describe code, code changes, docs rot, and then the agent acts confidently on stale information, which is worse than having no docs at all.</p>
+<p>The fix is three small parts, per repo.</p>
+<ol>
+<li><strong>A knowledge map</strong> (<code>.claude/knowledge-map.json</code>), a list of <code>{match, doc, nudge}</code> entries connecting file paths to the docs that describe them. Usually the paths are code, so migrations pointing at a schema skill, or data loaders pointing at a datasets doc. But any path works. My maps also watch eval outputs, which nudge an experiment-log entry, and even Claude's own memory folder, which I come back to in the memory section. The map is not a one-time config. It starts with a handful of entries and grows as the project does, and the repo's CLAUDE.md carries a line telling Claude to add a mapping whenever a doc starts covering a new area of code.</li>
+<li><strong>A drift hook.</strong> After every write or edit, a shell script checks the edited path against the map. On a match it injects a one-line nudge into the session, something like "migration changed, update the schema skill". On no match it emits nothing at all, costing zero tokens. The important part is that the nudge lands in the session that just made the change, which still has all the context needed to update the doc properly.</li>
+<li><strong>An audit script.</strong> Each documented skill carries <code>sources:</code> frontmatter naming the code it describes, plus a <code>last_validated:</code> date. A deterministic shell script compares those against git history and flags any doc whose sources changed after it was last validated.</li>
+</ol>
+<p>No LLM calls anywhere in the machinery. The agent only spends tokens when something actually drifted.</p>
+<h4 id="one-firing-end-to-end">One firing, end to end</h4>
+<p>Here is what a single drift-catch looks like. The repo's map contains this entry:</p>
+<pre class="highlight"><code class="language-json">{
+  "match": "src/data/",
+  "doc": "docs/DATASETS.md",
+  "nudge": "Data-loading code changed: check docs/DATASETS.md still matches (variables, shapes, preprocessing)."
+}</code></pre>
+<ol>
+<li>I ask Claude to add a new variable to the data pipeline. It edits <code>src/data/era5.py</code>.</li>
+<li>The harness runs the hook after that edit and pipes it a JSON payload containing the edited file path. The hook, which is plain bash and jq, tests that path against every <code>match</code> regex in the map. <code>src/data/era5.py</code> matches <code>src/data/</code>.</li>
+<li>The hook prints the nudge and the harness injects it into the session as extra context. Claude, still holding everything about the change it just made, opens <code>docs/DATASETS.md</code>, updates the variable list with the dims and dtype it just implemented, and bumps the doc's <code>last_validated</code> date to today.</li>
+<li>Weeks later I run the audit script. For each documented skill it compares the <code>sources:</code> paths against git history. If some other data change slipped past the nudge, that doc turns up flagged as <code>src-changed</code>, and I go revalidate it.</li>
+</ol>
+<p>Steps 2 and 3 cost nothing when nothing matches, which is almost always. The system only speaks up when a doc has probably just become wrong, and it speaks to whoever is best placed to fix it right then.</p>
+<h3 id="memory-how-it-works-and-how-it-rots">Memory: how it works, and how it rots</h3>
+<p>Claude Code has two complementary memories and it pays to keep them straight. CLAUDE.md and skills are what you curate and commit. <strong>Auto memory</strong> is what Claude writes for itself. As it works it saves learnings, things like build quirks, my corrections, and debugging insights, as plain markdown files, without being asked.</p>
+<p>The mechanics matter here. Memory lives per project, in <code>~/.claude/projects/&lt;project&gt;/memory/</code>, where the project key comes from the git repository, so all worktrees and subdirectories of one repo share a single memory. A <code>MEMORY.md</code> index, or at least its first 200 lines, gets loaded into every session, and detailed topic files load on demand when they are relevant. All of it is plain markdown you can read, edit, or delete, and <code>/memory</code> opens it directly. When you see "Saved 2 memories" in the interface, this is what just happened.</p>
+<p>Useful, but there are three failure modes that nothing in the default setup guards against.</p>
+<ol>
+<li><strong>Stale facts.</strong> A memory records what was true when it was written. The code moves on and the memory does not. Unlike a committed doc, nothing ever revalidates it, and a stale fact recalled with confidence is worse than no memory at all.</li>
+<li><strong>The blended bucket.</strong> The project key comes from where you launch the session. Start Claude from a parent folder holding ten unrelated repos and all ten share one memory, so web-app learnings surface in the middle of thesis work and the other way round.</li>
+<li><strong>The private silo.</strong> Memory is machine-local and personal. A learning the whole team needs, or that future-me on another machine needs, will sit in a local file forever unless something actively moves it out.</li>
+</ol>
+<p>My setup addresses each one.</p>
+<ul>
+<li><strong>Against staleness</strong>, a memory-hygiene rule in CLAUDE.md says only confirmed, final facts get persisted, never speculative ideas or abandoned approaches, so the pool starts cleaner. That governs memory automatically with no extra wiring, because memories are written by Claude itself mid-session, and CLAUDE.md is in its context at exactly that moment. The thing writing the memory is the thing reading the rule. For facts that have to stay true I do not rely on memory at all. Those go into committed docs and skills, where the anti-drift system revalidates them.</li>
+<li><strong>Against the blended bucket</strong>, the launch-in-the-repo habit further down gives every repo its own correctly scoped memory.</li>
+<li><strong>Against the silo</strong>, the drift map has a bridge entry. The drift hook exists for code-to-docs sync, but its mechanism is generic. It fires after every file write and matches the path against regexes, and a memory save is an ordinary file write, so one entry pointing its regex at the memory directory catches it and fires a nudge asking whether the fact is shareable and non-secret enough to promote into CLAUDE.md or a skill. Note the division of labor. The regex only detects that a memory was written, content unseen. The shareable-versus-secret judgment is Claude's, guided by criteria carried in the nudge text. And the promotion itself is an ordinary committed edit you see in the diff. Mechanism detects, model judges, human confirms.</li>
+</ul>
+<h4 id="memory-drifts-too-so-plan-for-it">Memory drifts too, so plan for it</h4>
+<p>Docs are not the only thing that rots. The memory pool drifts as well. A fact can be genuinely final in one session, say that the build command is <code>npm run build</code>, and be quietly wrong three weeks later after the project moves to pnpm. Memory sits below the anti-drift system's radar of committed files, so it needs its own counters.</p>
+<ul>
+<li><strong>Update, don't duplicate.</strong> Claude's own memory instructions tell it to look for an existing memory covering a fact before saving, to edit that file when the fact has changed, and to delete memories that turned out to be wrong. When a session establishes something contradicting a stored memory, the expected result is one corrected file rather than two conflicting ones. Recent Claude Code versions also stamp each memory with a <code>modified</code> timestamp, so a recalled fact carries its age with it.</li>
+<li><strong>A periodic consolidation pass.</strong> Update-on-conflict only works when the conflict actually gets noticed, so every so often I run <code>/consolidate-memory</code> over a project. It merges near-duplicates, fixes or deletes stale facts, and prunes the index. This one ships with Claude Code rather than being something you have to write, which is why it is not in my repo. It does for memory what the audit script does for docs.</li>
+<li><strong>Manual audit via <code>/memory</code>.</strong> Everything is plain markdown. The command lists every memory file and opens it in your editor. When a "Recalled 2 memories" moment surfaces something that feels off, the fix is thirty seconds of reading and deleting.</li>
+<li><strong>Promotion out of the drift zone.</strong> The most important counter is structural, and to be honest about it, it does not stop memory drift at all. It makes memory drift not matter. Facts that have to stay true do not belong in memory, and the silo nudge pushes them up into CLAUDE.md or a skill, which turns a memory-drift problem into a docs-drift problem, and that is the one the hook and the audit actually solve. The three counters above slow the drift of whatever is left behind. This one moves everything important out of the blast radius.</li>
+</ul>
+<h3 id="permissions-hygiene">Permissions hygiene</h3>
+<p>Two lessons from auditing my own settings, both embarrassing and both common.</p>
+<ol>
+<li><strong>One-off approvals accumulate.</strong> Every "yes, don't ask again" on a specific command saves that exact string to your allowlist forever. I had around 35 entries like <code>cp &lt;one specific png&gt; &lt;one specific destination&gt;</code>, none of which could ever match again. Now I answer plain "yes" for one-offs and save "don't ask again" for genuinely generic commands.</li>
+<li><strong>Broad allows are a real risk.</strong> I found <code>Bash(ssh:*)</code> sitting in my global settings. That is any ssh, to any host, running any remote command, with no prompt. A confused or prompt-injected session could have run commands on the university cluster silently. Deny-list your secrets while you are in there. Mine blocks reads of <code>.env</code>, ssh keys, and cloud credentials outright.</li>
+</ol>
+<h3 id="version-control-your-setup">Version-control your setup</h3>
+<p><code>~/.claude</code> is now a git repo, config only, with all the runtime state gitignored. The whole tracked setup is about 130 KB. It gets history, diffs, an off-machine backup, and it moves to a new machine in a single clone.</p>
+<h3 id="habits-that-tie-it-together">Habits that tie it together</h3>
+<ul>
+<li><strong>Start sessions inside the repo you are working on</strong>, not in a parent folder. Project CLAUDE.md, rules, settings and per-repo memory all attach to the directory you launched from, and one shared session at the root gives every unrelated project a single blended memory.</li>
+<li><strong>A workspace CLAUDE.md marks what is mine and what is reference.</strong> My thesis workspace holds around 30 third-party clones sitting next to my own repos. A ten-line CLAUDE.md declares the clones read-only, so no agent ever "fixes" something inside GraphCast.</li>
+<li><strong><code>/close</code> at the end of a session</strong> keeps a human-readable log of what happened, independent of any chat history.</li>
+</ul>
+<h3 id="closing">Closing</h3>
+<p>Everything described here is copyable from <a href="https://github.com/CoenvdE/claude-code-setup">CoenvdE/claude-code-setup</a>, including an example CLAUDE.md and settings file to start from. You do not have to copy it by hand either. Clone the repo, start a Claude session in it, and ask it to read the README and set the whole thing up in your <code>~/.claude</code>. It will ask you the few things only you know, merge into whatever settings you already have rather than overwriting them, and tell you what it changed. Read that diff before you trust it, the same as any other change an agent makes for you.</p>
+<div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-200"><div></div><div></div></div>
+</div>
+</div>
+</div>
+    <footer class="bg-ocean-900 text-slate-300 py-12 border-t border-ocean-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+<div class="mb-4 md:mb-0">
+<span class="font-serif font-bold text-xl text-white">Coen van den Elsen</span>
+<p class="text-sm text-ocean-200 mt-2">© 2025 Coen van den Elsen. AI for a better world.</p>
+</div>
+<div class="flex space-x-6">
+<a class="text-ocean-200 hover:text-white transition-colors" href="mailto:coen@vandenelsen.nu">
+<span class="sr-only">Email</span>
+<i class="fas fa-envelope text-xl"></i>
+</a>
+<a class="text-ocean-200 hover:text-white transition-colors" href="https://github.com/CoenvdE" target="_blank">
+<span class="sr-only">GitHub</span>
+<i class="fab fa-github text-xl"></i>
+</a>
+<a class="text-ocean-200 hover:text-white transition-colors" href="https://linkedin.com/in/coen-van-den-elsen" target="_blank">
+<span class="sr-only">LinkedIn</span>
+<i class="fab fa-linkedin text-xl"></i>
+</a>
+</div>
+</div>
+</footer>
+
+<script>
+        function setupThemeToggle(btnId, darkIconId, lightIconId) {
+            var themeToggleBtn = document.getElementById(btnId);
+            var themeToggleDarkIcon = document.getElementById(darkIconId);
+            var themeToggleLightIcon = document.getElementById(lightIconId);
+
+            if (!themeToggleBtn) return;
+
+            // Change the icons inside the button based on previous settings
+            if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                themeToggleLightIcon.classList.remove('hidden');
+            } else {
+                themeToggleDarkIcon.classList.remove('hidden');
+            }
+
+            themeToggleBtn.addEventListener('click', function() {
+                // toggle icons inside button
+                themeToggleDarkIcon.classList.toggle('hidden');
+                themeToggleLightIcon.classList.toggle('hidden');
+
+                // if set via local storage previously
+                if (localStorage.getItem('color-theme')) {
+                    if (localStorage.getItem('color-theme') === 'light') {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    }
+                // if NOT set via local storage previously
+                } else {
+                    if (document.documentElement.classList.contains('dark')) {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.setItem('color-theme', 'light');
+                    } else {
+                        document.documentElement.classList.add('dark');
+                        localStorage.setItem('color-theme', 'dark');
+                    }
+                }
+            });
+        }
+        setupThemeToggle('theme-toggle', 'theme-toggle-dark-icon', 'theme-toggle-light-icon');
+        setupThemeToggle('theme-toggle-mobile', 'theme-toggle-dark-icon-mobile', 'theme-toggle-light-icon-mobile');
+    </script>
+</body>
+</html>
