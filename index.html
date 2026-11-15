@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coen van den Elsen - AI Research Engineer</title>
-    <meta name="description" content="AI Research Engineer and Machine Learning Scientist building AI for science, nature, and society. Projects, experience, and blogs on ML research practice and agentic developer tooling.">
+    <title>Coen van den Elsen</title>
+    <meta name="description" content="Staff Scientist at digiLab. Machine learning for science, nature and society: trustworthy, specialist models that run on the device. Work, writing and research.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -12,44 +12,79 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            50: '#f0fdfa',
-                            100: '#ccfbf1',
-                            200: '#99f6e4',
-                            300: '#5eead4',
-                            400: '#2dd4bf',
-                            500: '#14b8a6',
-                            600: '#0d9488',
-                            700: '#0f766e',
-                            800: '#115e59',
-                            900: '#134e4a',
-                            950: '#042f2e',
+                        paper: {
+                            50:  '#fdfcf9',
+                            100: '#faf8f3',
+                            200: '#f2efe7',
+                            300: '#e4dfd3',
+                            400: '#cfc9ba',
                         },
                         ocean: {
-                            800: '#0c4a6e',
-                            900: '#082f49',
+                            100: '#ecebe6',
+                            200: '#c6c4bc',
+                            300: '#a2a099',
+                            600: '#5e605d',
+                            700: '#3b3e3c',
+                            800: '#272a29',
+                            900: '#191c1b',
+                            950: '#101312',
+                        },
+                        brand: {
+                            50:  '#f4f7f6',
+                            100: '#e5edeb',
+                            200: '#c9dad6',
+                            300: '#a3c0b9',
+                            400: '#76a096',
+                            500: '#528276',
+                            600: '#41695f',
+                            700: '#36554d',
+                            800: '#2d4640',
+                            900: '#273b36',
+                            950: '#14211e',
                         }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        serif: ['Merriweather', 'serif'],
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        serif: ['Newsreader', 'Georgia', 'serif'],
                     }
                 }
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..400&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
             scroll-behavior: smooth;
         }
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Merriweather', serif;
+        h1, h2, h3 {
+            font-family: 'Newsreader', Georgia, serif;
+            font-weight: 400;
+            letter-spacing: -0.01em;
         }
-        .bg-ocean-gradient {
-            background: linear-gradient(135deg, #082f49 0%, #134e4a 100%);
+        /* A quiet section label: small, spaced, muted. */
+        .eyebrow {
+            font-size: 0.6875rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        /* Hairline-separated rows, the only structural device on the page. */
+        .rows > * + * {
+            border-top: 1px solid rgb(228 223 211);
+        }
+        .dark .rows > * + * {
+            border-top-color: rgb(39 42 41);
+        }
+        a:focus-visible, button:focus-visible {
+            outline: 2px solid #528276;
+            outline-offset: 3px;
+            border-radius: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * { transition: none !important; scroll-behavior: auto !important; }
         }
     </style>
     <script>
@@ -61,61 +96,67 @@
         }
     </script>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 antialiased selection:bg-brand-500 selection:text-white transition-colors duration-300">
+<body class="bg-paper-100 dark:bg-ocean-950 text-ocean-800 dark:text-ocean-100 antialiased selection:bg-brand-200 dark:selection:bg-brand-800">
 
-    <nav class="fixed top-0 w-full z-[9999] bg-white dark:bg-slate-800/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 dark:border-slate-800 transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <a href="index.html" class="flex-shrink-0 font-serif font-bold text-xl text-ocean-900 dark:text-brand-300 dark:text-brand-400 hover:text-brand-600 dark:hover:text-brand-300 transition-colors">
+    <nav class="sticky top-0 w-full z-[9999] bg-paper-100 dark:bg-ocean-950 border-b border-paper-300 dark:border-ocean-800">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="flex justify-between h-14 items-center">
+                <a href="index.html" class="flex-shrink-0 font-serif text-lg italic text-ocean-900 dark:text-paper-100 hover:text-brand-600 dark:hover:text-brand-300 transition-colors">
                     Coen van den Elsen
                 </a>
-                <div class="hidden md:flex space-x-8 items-center">
-                    <a href="#about" class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">About</a>
-                    <a href="#experience" class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Experience</a>
-                    <a href="#education" class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Education</a>
-                    <a href="#projects" class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Projects</a>
-                    <a href="#blogs" class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Blogs</a>
+                <div class="hidden md:flex space-x-6 items-center">
+                    <a href="#about" class="text-sm text-ocean-600 dark:text-ocean-300 hover:text-brand-600 dark:hover:text-brand-300 transition-colors">About</a>
+                    <a href="#experience" class="text-sm text-ocean-600 dark:text-ocean-300 hover:text-brand-600 dark:hover:text-brand-300 transition-colors">Experience</a>
+                    <a href="#education" class="text-sm text-ocean-600 dark:text-ocean-300 hover:text-brand-600 dark:hover:text-brand-300 transition-colors">Education</a>
+                    <a href="#projects" class="text-sm text-ocean-600 dark:text-ocean-300 hover:text-brand-600 dark:hover:text-brand-300 transition-colors">Projects</a>
+                    <a href="#blogs" class="text-sm text-ocean-600 dark:text-ocean-300 hover:text-brand-600 dark:hover:text-brand-300 transition-colors">Writing</a>
 
-                    <button id="theme-toggle" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 focus:outline-none rounded-lg text-sm p-2.5 transition-colors">
-                        <i id="theme-toggle-dark-icon" class="fas fa-moon hidden text-lg"></i>
-                        <i id="theme-toggle-light-icon" class="fas fa-sun hidden text-lg"></i>
+                    <button id="theme-toggle" type="button" aria-label="Toggle dark mode" class="text-ocean-600 dark:text-ocean-300 hover:text-brand-600 dark:hover:text-brand-300 p-1.5 transition-colors">
+                        <svg id="theme-toggle-dark-icon" class="hidden h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
                     </button>
                 </div>
-                <div class="md:hidden flex items-center space-x-4">
-                    <button id="theme-toggle-mobile" type="button" class="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:bg-slate-700 dark:hover:bg-slate-800 focus:outline-none rounded-lg text-sm p-2.5 transition-colors">
-                        <i id="theme-toggle-dark-icon-mobile" class="fas fa-moon hidden text-lg"></i>
-                        <i id="theme-toggle-light-icon-mobile" class="fas fa-sun hidden text-lg"></i>
+                <div class="md:hidden flex items-center space-x-2">
+                    <button id="theme-toggle-mobile" type="button" aria-label="Toggle dark mode" class="text-ocean-600 dark:text-ocean-300 hover:text-brand-600 dark:hover:text-brand-300 p-1.5 transition-colors">
+                        <svg id="theme-toggle-dark-icon-mobile" class="hidden h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                        <svg id="theme-toggle-light-icon-mobile" class="hidden h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
                     </button>
                     <!-- Mobile menu button -->
-                    <button id="mobile-menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu" class="text-slate-600 dark:text-slate-300 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 focus:outline-none">
-                        <i class="fas fa-bars text-xl"></i>
+                    <button id="mobile-menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu" class="text-ocean-600 dark:text-ocean-300 hover:text-brand-600 dark:hover:text-brand-300 p-1.5 transition-colors">
+                        <svg id="menu-icon-open" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+                        <svg id="menu-icon-close" class="hidden h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
                     </button>
                 </div>
             </div>
         </div>
         <!-- Mobile menu panel (lives inside <nav> so blog pages inherit it via build_blogs.py) -->
-        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 pt-2 pb-4 space-y-1">
-            <a href="#about" class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">About</a>
-            <a href="#experience" class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Experience</a>
-            <a href="#education" class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Education</a>
-            <a href="#projects" class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Projects</a>
-            <a href="#blogs" class="block py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">Blogs</a>
+        <div id="mobile-menu" class="hidden md:hidden border-t border-paper-300 dark:border-ocean-800 bg-paper-100 dark:bg-ocean-950 px-6 pt-2 pb-4 space-y-1">
+            <a href="#about" class="block py-2 text-sm text-ocean-600 dark:text-ocean-300 hover:text-brand-600 dark:hover:text-brand-300 transition-colors">About</a>
+            <a href="#experience" class="block py-2 text-sm text-ocean-600 dark:text-ocean-300 hover:text-brand-600 dark:hover:text-brand-300 transition-colors">Experience</a>
+            <a href="#education" class="block py-2 text-sm text-ocean-600 dark:text-ocean-300 hover:text-brand-600 dark:hover:text-brand-300 transition-colors">Education</a>
+            <a href="#projects" class="block py-2 text-sm text-ocean-600 dark:text-ocean-300 hover:text-brand-600 dark:hover:text-brand-300 transition-colors">Projects</a>
+            <a href="#blogs" class="block py-2 text-sm text-ocean-600 dark:text-ocean-300 hover:text-brand-600 dark:hover:text-brand-300 transition-colors">Writing</a>
         </div>
         <script>
         (function () {
             var btn = document.getElementById('mobile-menu-button');
             var menu = document.getElementById('mobile-menu');
             if (!btn || !menu) return;
-            btn.addEventListener('click', function () {
-                var open = menu.classList.toggle('hidden') === false;
+            var iconOpen = document.getElementById('menu-icon-open');
+            var iconClose = document.getElementById('menu-icon-close');
+            function paint(open) {
                 btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-                btn.querySelector('i').className = open ? 'fas fa-times text-xl' : 'fas fa-bars text-xl';
+                btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+                if (iconOpen) iconOpen.classList.toggle('hidden', open);
+                if (iconClose) iconClose.classList.toggle('hidden', !open);
+            }
+            btn.addEventListener('click', function () {
+                paint(menu.classList.toggle('hidden') === false);
             });
             menu.querySelectorAll('a').forEach(function (a) {
                 a.addEventListener('click', function () {
                     menu.classList.add('hidden');
-                    btn.setAttribute('aria-expanded', 'false');
-                    btn.querySelector('i').className = 'fas fa-bars text-xl';
+                    paint(false);
                 });
             });
         })();
@@ -124,391 +165,265 @@
 
     <!-- Main Content Here -->
 
-    <!-- Hero Section -->
-    <section class="relative bg-ocean-gradient text-white pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        <div class="absolute inset-0 opacity-10">
-            <!-- Subtle pattern overlay -->
-            <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
-                        <path d="M0 40V0h40" fill="none" stroke="currentColor" stroke-width="1"/>
-                    </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#grid-pattern)"/>
-            </svg>
-        </div>
+    <main class="max-w-3xl mx-auto px-6">
 
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col lg:flex-row items-center justify-between">
-                <div class="lg:w-3/5 text-center lg:text-left z-10">
-                    <div class="inline-flex items-center px-3 py-1 rounded-full bg-brand-900/50 border border-brand-500/30 text-brand-300 text-sm font-medium mb-6">
-                        <span class="flex w-2 h-2 rounded-full bg-brand-400 mr-2 animate-pulse"></span>
-                        Working on AI for Good
-                    </div>
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 text-white drop-shadow-sm">
-                        Coen van den Elsen
-                    </h1>
-                    <h2 class="text-xl md:text-2xl text-brand-100 font-light mb-8 max-w-2xl mx-auto lg:mx-0">
-                        AI Research Engineer &amp; Machine Learning Scientist building AI for science, nature, and society.
-                    </h2>
-
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                        <a href="mailto:coen@vandenelsen.nu" class="inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-ocean-900 bg-brand-400 hover:bg-brand-300 dark:bg-brand-500 dark:text-slate-100 dark:hover:bg-brand-400 transition-all shadow-lg hover:shadow-brand-500/30">
-                            <i class="fas fa-envelope mr-2"></i> Get in Touch
-                        </a>
-                        <a href="https://github.com/CoenvdE" target="_blank" class="inline-flex justify-center items-center px-6 py-3 border border-slate-300/30 text-base font-medium rounded-md text-ocean-900 bg-white/90 hover:bg-white dark:text-white dark:bg-slate-800/20 dark:hover:bg-slate-800/40 backdrop-blur-sm transition-all">
-                            <i class="fab fa-github mr-2"></i> GitHub
-                        </a>
-                        <a href="https://linkedin.com/in/coen-van-den-elsen" target="_blank" class="inline-flex justify-center items-center px-6 py-3 border border-slate-300/30 text-base font-medium rounded-md text-ocean-900 bg-white/90 hover:bg-white dark:text-white dark:bg-slate-800/20 dark:hover:bg-slate-800/40 backdrop-blur-sm transition-all">
-                            <i class="fab fa-linkedin mr-2"></i> LinkedIn
-                        </a>
-                        <a href="https://scholar.google.com/citations?user=mrCay34AAAAJ" target="_blank" class="inline-flex justify-center items-center px-6 py-3 border border-slate-300/30 text-base font-medium rounded-md text-ocean-900 bg-white/90 hover:bg-white dark:text-white dark:bg-slate-800/20 dark:hover:bg-slate-800/40 backdrop-blur-sm transition-all">
-                            <i class="fas fa-graduation-cap mr-2"></i> Google Scholar
-                        </a>
-                    </div>
-                </div>
-
-                <div class="lg:w-2/5 mt-16 lg:mt-0 flex justify-center lg:justify-end z-10">
-                    <div class="relative">
-                        <div class="absolute inset-0 bg-brand-500 rounded-full blur-2xl opacity-20 animate-pulse"></div>
-                        <div class="relative rounded-full p-2 bg-white dark:bg-slate-800/10 backdrop-blur-sm border border-white/20 shadow-2xl">
-                            <img src="assets/img/prof_pic.jpg" alt="Coen van den Elsen" class="w-64 h-64 md:w-80 md:h-80 object-cover rounded-full filter hover:brightness-110 transition-all duration-300 border-4 border-white/10">
-                        </div>
-                    </div>
-                </div>
+    <!-- Intro -->
+    <header class="pt-20 pb-16 sm:pt-28 sm:pb-20">
+        <div class="flex flex-col-reverse sm:flex-row sm:items-start sm:gap-10">
+            <div class="sm:flex-1">
+                <h1 class="text-4xl sm:text-5xl text-ocean-900 dark:text-paper-100 mb-4">
+                    Coen van den Elsen
+                </h1>
+                <p class="text-lg text-ocean-700 dark:text-ocean-200 mb-6 leading-relaxed">
+                    Staff Scientist at <a href="https://www.digilab.co.uk/" target="_blank" rel="noopener noreferrer" class="text-brand-600 dark:text-brand-300 underline underline-offset-4 decoration-brand-300 dark:decoration-brand-600 hover:decoration-brand-600 dark:hover:decoration-brand-300 transition-colors">digiLab</a>, working on trustworthy machine learning for science, nature and society.
+                </p>
+                <ul class="flex flex-wrap gap-x-5 gap-y-2 text-sm text-ocean-600 dark:text-ocean-300">
+                    <li><a href="mailto:coen@vandenelsen.nu" class="hover:text-brand-600 dark:hover:text-brand-300 transition-colors">Email</a></li>
+                    <li><a href="https://github.com/CoenvdE" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 dark:hover:text-brand-300 transition-colors">GitHub</a></li>
+                    <li><a href="https://linkedin.com/in/coen-van-den-elsen" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 dark:hover:text-brand-300 transition-colors">LinkedIn</a></li>
+                    <li><a href="https://scholar.google.com/citations?user=mrCay34AAAAJ" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 dark:hover:text-brand-300 transition-colors">Google Scholar</a></li>
+                    <li><a href="assets/pdf/CV_Coen_van_den_Elsen.pdf" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 dark:hover:text-brand-300 transition-colors">CV (PDF)</a></li>
+                </ul>
             </div>
+            <div class="mb-8 sm:mb-0 sm:flex-shrink-0">
+                <img src="assets/img/prof_pic_square.jpg" alt="Coen van den Elsen" width="128" height="128" decoding="async" class="w-28 h-28 sm:w-32 sm:h-32 object-cover rounded-full">
+            </div>
+        </div>
+    </header>
+
+    <!-- About -->
+    <section id="about" class="py-14 border-t border-paper-300 dark:border-ocean-800 scroll-mt-16">
+        <h2 class="eyebrow text-ocean-600 dark:text-ocean-300 mb-6">About</h2>
+        <div class="space-y-4 text-ocean-700 dark:text-ocean-200 leading-relaxed">
+            <p>
+                My objective is to make a meaningful contribution to solving the world's environmental, sustainability and social challenges. To achieve this, I aim to combine my deep interest in the environment, human behaviour, and culture with the study of technology, particularly in the area of Artificial Intelligence. I also draw on my passion for art, creativity and serendipity, because I believe the most meaningful innovation happens where science and imagination meet. Feel free to <a href="mailto:coen@vandenelsen.nu" class="text-brand-600 dark:text-brand-300 underline underline-offset-4 decoration-brand-300 dark:decoration-brand-600 hover:decoration-brand-600 dark:hover:decoration-brand-300 transition-colors">reach out</a>!
+            </p>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="py-20 bg-white dark:bg-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="lg:flex lg:items-center lg:justify-between gap-12">
-                <div class="lg:w-1/2 mb-10 lg:mb-0">
-                    <h2 class="text-3xl font-bold text-ocean-900 dark:text-brand-300 mb-6">About Me</h2>
-                    <div class="w-16 h-1 bg-brand-500 mb-8 rounded"></div>
-                    <div class="prose prose-lg text-slate-600 dark:text-slate-300 space-y-4">
-                        <p>
-                            Currently, I am an AI Research Engineer at <strong>OceanOS</strong>, building a marine foundation model using geospatial data for oceanic intelligence and conservation.
-                        </p>
-                        <p>
-                            My goal is to contribute meaningfully to global sustainability and social challenges by combining my interest in nature, human behavior, and culture with my passion for technology, particularly AI. Rather than just focusing on research, I am deeply committed to <strong>building and implementing AI systems in the real world</strong> to create tangible, positive impact. My Bachelor’s in Beta-gamma with a specialization in Artificial Intelligence taught me to approach complex problems from multiple angles, while my Master’s in AI gave me the practical tools needed to deploy AI solutions for real-world issues.
-                        </p>
-                        <p>
-                            I’ve traveled across Africa, Central America, and Asia, and spent 7 months in Cape Town studying Marine Biology and Development and Sustainability at the University of Cape Town through an exchange program. These experiences broadened my cultural perspective and deepened my global awareness.
-                        </p>
-                    </div>
+    <!-- Experience -->
+    <section id="experience" class="py-14 border-t border-paper-300 dark:border-ocean-800 scroll-mt-16">
+        <h2 class="eyebrow text-ocean-600 dark:text-ocean-300 mb-6">Experience</h2>
+
+        <div class="rows">
+            <article class="py-6 first:pt-0">
+                <div class="sm:flex sm:items-baseline sm:justify-between sm:gap-6 mb-1">
+                    <h3 class="text-xl text-ocean-900 dark:text-paper-100">Staff Scientist</h3>
+                    <span class="text-sm text-ocean-600 dark:text-ocean-300 tabular-nums">Oct 2026 - Present</span>
                 </div>
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mb-3">
+                    <a href="https://www.digilab.co.uk/" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 dark:hover:text-brand-300 transition-colors">digiLab</a>, London, UK
+                </p>
+                <p class="text-ocean-700 dark:text-ocean-200 leading-relaxed">
+                    Helping shape the research directions in theLab. Trustworthy AI for high stakes challenges like nuclear fusion, renewable energy and environmental protection, with specialist models that fit on a device.
+                </p>
+            </article>
 
-                <div class="lg:w-1/2">
-                    <div class="bg-slate-50 dark:bg-slate-900 p-8 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm relative overflow-hidden">
-                        <div class="absolute top-0 right-0 p-4 opacity-5 text-ocean-900 dark:text-brand-300">
-                            <i class="fas fa-microchip text-8xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 relative z-10">Technical Expertise</h3>
-
-                        <div class="space-y-4 relative z-10">
-                            <div>
-                                <h4 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Machine Learning</h4>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="px-3 py-1 bg-brand-500 text-white rounded-full text-sm font-medium border border-brand-600 dark:border-brand-400">PyTorch</span>
-                                    <span class="px-3 py-1 bg-brand-500 text-white rounded-full text-sm font-medium border border-brand-600 dark:border-brand-400">JAX</span>
-                                    <span class="px-3 py-1 bg-brand-500 text-white rounded-full text-sm font-medium border border-brand-600 dark:border-brand-400">Lightning CLI</span>
-                                    <span class="px-3 py-1 bg-brand-500 text-white rounded-full text-sm font-medium border border-brand-600 dark:border-brand-400">Scikit-learn</span>
-                                </div>
-                            </div>
-
-                            <div>
-                                <h4 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Programming & Data</h4>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="px-3 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700">Python</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700">Xarray</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700">Zarr</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700">NumPy</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700">Pandas</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700">R</span>
-                                </div>
-                            </div>
-
-                            <div>
-                                <h4 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Infrastructure & MLOps</h4>
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="px-3 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700">AWS</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700">Docker</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700">W&B</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700">CodeCarbon</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700">Vercel</span>
-                                    <span class="px-3 py-1 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700">Supabase</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <article class="py-6">
+                <div class="sm:flex sm:items-baseline sm:justify-between sm:gap-6 mb-1">
+                    <h3 class="text-xl text-ocean-900 dark:text-paper-100">AI Research Engineer</h3>
+                    <span class="text-sm text-ocean-600 dark:text-ocean-300 tabular-nums">Jan 2025 - Jul 2026</span>
                 </div>
-            </div>
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mb-3">
+                    <a href="https://www.oceanos.earth/" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 dark:hover:text-brand-300 transition-colors">OceanOS</a>, London, UK
+                </p>
+                <p class="text-ocean-700 dark:text-ocean-200 leading-relaxed mb-3">
+                    Developed a marine foundation model using geospatial data to support oceanic intelligence and marine conservation.
+                </p>
+                <ul class="list-disc list-outside pl-5 space-y-1.5 text-sm text-ocean-700 dark:text-ocean-200 leading-relaxed marker:text-ocean-300 dark:marker:text-ocean-600">
+                    <li>Designed a model architecture and pretraining strategy capable of handling spherical spatiotemporal marine data and land-ocean semantics.</li>
+                    <li>Created a terabyte-scale geospatial pretraining dataset, preprocessing Xarray datasets from NetCDF into an optimal Zarr v3 layout.</li>
+                    <li>Built a Dockerized multi-GPU training pipeline on cloud platforms, with failsafes, unit tests and automatic cloud uploads during and after runs.</li>
+                    <li>Monitored the environmental cost of training with CodeCarbon.</li>
+                    <li>Optimised the training pipeline to be 35x faster without performance loss.</li>
+                </ul>
+            </article>
+
+            <article class="py-6">
+                <div class="sm:flex sm:items-baseline sm:justify-between sm:gap-6 mb-1">
+                    <h3 class="text-xl text-ocean-900 dark:text-paper-100">Teaching Assistant, FNWI</h3>
+                    <span class="text-sm text-ocean-600 dark:text-ocean-300 tabular-nums">Sep 2020 - Jan 2025</span>
+                </div>
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mb-3">
+                    <a href="https://www.uva.nl/" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 dark:hover:text-brand-300 transition-colors">University of Amsterdam</a>, Amsterdam, NL
+                </p>
+                <p class="text-ocean-700 dark:text-ocean-200 leading-relaxed">
+                    Led tutorials for around 30 first- and second-year students, and supported instruction in Programming, Linear Algebra, Calculus and Optimisation, Information Visualization, and study orientation and career.
+                </p>
+            </article>
+
+            <article class="py-6">
+                <div class="sm:flex sm:items-baseline sm:justify-between sm:gap-6 mb-1">
+                    <h3 class="text-xl text-ocean-900 dark:text-paper-100">Mentor</h3>
+                    <span class="text-sm text-ocean-600 dark:text-ocean-300 tabular-nums">Sep 2021 - Jul 2022</span>
+                </div>
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mb-3">University of Amsterdam, Amsterdam, NL</p>
+                <p class="text-ocean-700 dark:text-ocean-200 leading-relaxed">
+                    Mentored a group of 30 second-year students, providing academic and peer support.
+                </p>
+            </article>
         </div>
     </section>
 
-    <!-- Experience & Education Section -->
-    <section id="experience" class="py-20 bg-slate-50 dark:bg-slate-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid lg:grid-cols-2 gap-16">
-                <!-- Experience -->
-                <div>
-                    <h2 class="text-3xl font-bold text-ocean-900 dark:text-brand-300 mb-6 flex items-center">
-                        <i class="fas fa-briefcase mr-3 text-brand-500"></i> Experience
-                    </h2>
-                    <div class="w-16 h-1 bg-brand-500 mb-8 rounded"></div>
+    <!-- Education -->
+    <section id="education" class="py-14 border-t border-paper-300 dark:border-ocean-800 scroll-mt-16">
+        <h2 class="eyebrow text-ocean-600 dark:text-ocean-300 mb-6">Education</h2>
 
-                    <div class="space-y-12 border-l-2 border-slate-200 dark:border-slate-700 pl-6 ml-3">
-                        <div class="relative">
-                            <span class="absolute -left-[35px] top-1 h-5 w-5 rounded-full border-4 border-white bg-brand-500 shadow-sm"></span>
-                            <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
-                                <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100">AI Research Engineer</h3>
-                                <span class="text-sm font-medium text-brand-600 bg-brand-50 px-3 py-1 rounded-full border border-brand-100">2025 - Present</span>
-                            </div>
-                            <h4 class="text-lg font-medium text-slate-600 dark:text-slate-300 mb-3"><a href="https://www.oceanos.earth/" target="_blank" class="hover:text-brand-600 transition-colors">OceanOS</a> <span class="text-sm font-normal text-slate-400">| London, UK</span></h4>
-                            <p class="text-slate-600 dark:text-slate-300 mb-4">Developed a marine foundation model using geospatial data to support oceanic intelligence and marine conservation.</p>
-                            <ul class="list-disc list-inside text-slate-600 dark:text-slate-300 space-y-1 text-sm marker:text-brand-400">
-                                <li>Created geospatial pretraining datasets from NetCDF/Zarr files using Xarray.</li>
-                                <li>Designed 3D spatiotemporal model architecture for marine data.</li>
-                                <li>Built Dockerized, multi-GPU training pipeline with cloud support.</li>
-                                <li>Implemented training failsafes and cloud backups.</li>
-                                <li>Achieved 35× training speedup without performance loss.</li>
-                            </ul>
-                        </div>
-
-                        <div class="relative">
-                            <span class="absolute -left-[35px] top-1 h-5 w-5 rounded-full border-4 border-white bg-slate-300 shadow-sm"></span>
-                            <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
-                                <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100">Teaching Assistant</h3>
-                                <span class="text-sm font-medium text-slate-500">2020 - 2025</span>
-                            </div>
-                            <h4 class="text-lg font-medium text-slate-600 dark:text-slate-300 mb-3"><a href="https://www.uva.nl/" target="_blank" class="hover:text-brand-600 transition-colors">University of Amsterdam</a> <span class="text-sm font-normal text-slate-400">| Amsterdam, NL</span></h4>
-                            <p class="text-slate-600 dark:text-slate-300">Led tutorials for ~30 first- and second-year students in Programming, Linear Algebra, Calculus and Optimisation, and Information Visualization. Mentored ~30 second-year students and led the Scientific Programming course for all ages and educational backgrounds.</p>
-                        </div>
-                    </div>
+        <div class="rows">
+            <article class="py-6 first:pt-0">
+                <div class="sm:flex sm:items-baseline sm:justify-between sm:gap-6 mb-1">
+                    <h3 class="text-xl text-ocean-900 dark:text-paper-100">MSc Artificial Intelligence</h3>
+                    <span class="text-sm text-ocean-600 dark:text-ocean-300 tabular-nums">Sep 2023 - Jul 2026</span>
                 </div>
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mb-2">University of Amsterdam, Amsterdam, NL</p>
+                <p class="text-ocean-700 dark:text-ocean-200">Graduated cum laude.</p>
+            </article>
 
-                <!-- Education -->
-                <div id="education">
-                    <h2 class="text-3xl font-bold text-ocean-900 dark:text-brand-300 mb-6 flex items-center">
-                        <i class="fas fa-graduation-cap mr-3 text-brand-500"></i> Education
-                    </h2>
-                    <div class="w-16 h-1 bg-brand-500 mb-8 rounded"></div>
-
-                    <div class="space-y-12 border-l-2 border-slate-200 dark:border-slate-700 pl-6 ml-3">
-                        <div class="relative">
-                            <span class="absolute -left-[35px] top-1 h-5 w-5 rounded-full border-4 border-white bg-brand-500 shadow-sm"></span>
-                            <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
-                                <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100">MSc Artificial Intelligence</h3>
-                                <span class="text-sm font-medium text-brand-600 bg-brand-50 px-3 py-1 rounded-full border border-brand-100">2023 - Present</span>
-                            </div>
-                            <h4 class="text-lg font-medium text-slate-600 dark:text-slate-300 mb-1">University of Amsterdam</h4>
-                            <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">GPA 8.1</p>
-                        </div>
-
-                        <div class="relative">
-                            <span class="absolute -left-[35px] top-1 h-5 w-5 rounded-full border-4 border-white bg-slate-300 shadow-sm"></span>
-                            <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
-                                <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100">Exchange Program</h3>
-                                <span class="text-sm font-medium text-slate-500">Jul 2022 - Dec 2022</span>
-                            </div>
-                            <h4 class="text-lg font-medium text-slate-600 dark:text-slate-300 mb-1">University of Cape Town</h4>
-                            <p class="text-sm text-slate-600 dark:text-slate-300">Marine Resources and Geography, Development and Sustainability</p>
-                        </div>
-
-                        <div class="relative">
-                            <span class="absolute -left-[35px] top-1 h-5 w-5 rounded-full border-4 border-white bg-slate-300 shadow-sm"></span>
-                            <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
-                                <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100">BSc Natural and Social Sciences</h3>
-                                <span class="text-sm font-medium text-slate-500">2019 - 2023</span>
-                            </div>
-                            <h4 class="text-lg font-medium text-slate-600 dark:text-slate-300 mb-1">University of Amsterdam</h4>
-                            <p class="text-sm text-slate-600 dark:text-slate-300 mb-1">Specialization in Artificial Intelligence. Honors program.</p>
-                            <p class="text-sm text-slate-500 dark:text-slate-400 font-medium">GPA 8.02/10</p>
-                        </div>
-                    </div>
+            <article class="py-6">
+                <div class="sm:flex sm:items-baseline sm:justify-between sm:gap-6 mb-1">
+                    <h3 class="text-xl text-ocean-900 dark:text-paper-100">Exchange Program</h3>
+                    <span class="text-sm text-ocean-600 dark:text-ocean-300 tabular-nums">Jul 2022 - Dec 2022</span>
                 </div>
-            </div>
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mb-2">University of Cape Town, Cape Town, South Africa</p>
+                <p class="text-ocean-700 dark:text-ocean-200">Marine Resources and Geography, Development and Sustainability.</p>
+            </article>
+
+            <article class="py-6">
+                <div class="sm:flex sm:items-baseline sm:justify-between sm:gap-6 mb-1">
+                    <h3 class="text-xl text-ocean-900 dark:text-paper-100">BSc Natural and Social Sciences</h3>
+                    <span class="text-sm text-ocean-600 dark:text-ocean-300 tabular-nums">Sep 2019 - Jul 2023</span>
+                </div>
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mb-2">University of Amsterdam, Amsterdam, NL</p>
+                <p class="text-ocean-700 dark:text-ocean-200">Specialisation in Artificial Intelligence. Honors programme. GPA 8.02 / 10.</p>
+            </article>
         </div>
     </section>
 
-    <!-- Projects Section -->
-    <section id="projects" class="py-20 bg-white dark:bg-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center text-ocean-900 dark:text-brand-300 mb-6">Selected Projects & Research</h2>
-            <div class="w-16 h-1 bg-brand-500 mx-auto mb-16 rounded"></div>
+    <!-- Projects -->
+    <section id="projects" class="py-14 border-t border-paper-300 dark:border-ocean-800 scroll-mt-16">
+        <h2 class="eyebrow text-ocean-600 dark:text-ocean-300 mb-6">Projects &amp; research</h2>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-                <!-- Project 1 (MSc thesis) -->
-                <div class="bg-slate-50 dark:bg-slate-900 rounded-xl p-8 border border-brand-200 shadow-sm hover:shadow-lg hover:border-brand-400 transition-all group relative overflow-hidden">
-                    <div class="absolute top-0 right-0 bg-brand-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider">MSc Thesis</div>
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="p-3 bg-brand-100 text-brand-600 rounded-lg group-hover:bg-brand-500 group-hover:text-white transition-colors">
-                            <i class="fas fa-cloud-sun-rain text-xl"></i>
-                        </div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400 mt-2">2026</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-3 group-hover:text-brand-600 transition-colors">
-                        <a href="assets/pdf/MSc_Thesis_Coen_van_den_Elsen_Geometric_Weather.pdf" target="_blank" rel="noopener noreferrer" class="focus:outline-none">
-                            A Scalable Geometric Deep Learning Approach to Weather Forecasting <i class="fas fa-external-link-alt text-sm ml-1"></i>
-                        </a>
+        <div class="rows">
+            <article class="py-6 first:pt-0">
+                <div class="sm:flex sm:items-baseline sm:justify-between sm:gap-6 mb-2">
+                    <h3 class="text-xl text-ocean-900 dark:text-paper-100">
+                        <a href="assets/pdf/MSc_Thesis_Coen_van_den_Elsen_Geometric_Weather.pdf" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 dark:hover:text-brand-300 transition-colors">A Scalable Geometric Deep Learning Approach to Weather Forecasting</a>
                     </h3>
-                    <p class="text-slate-600 dark:text-slate-300 mb-4 text-sm leading-relaxed">
-                        How geometric inductive biases shape weather-model skill and <em>physical</em> fidelity, isolating one design choice at a time on global ERA5. Introduces <strong>Platonic-Erwin</strong>, a linearly-scaling ball-tree transformer with roto-translation group equivariance. Symmetry helps as an inductive bias but not as a hard constraint: scale buys deterministic skill, geometry buys spectral fidelity, calibration and parameter efficiency.
-                        <br><br>
-                        <strong>Supervisor:</strong> David Wessels. <strong>Examiner:</strong> Erik Bekkers.
-                    </p>
-                    <div class="mt-auto pt-4 border-t border-slate-200 dark:border-slate-700 flex flex-wrap items-center gap-x-4 gap-y-2">
-                        <span class="text-xs font-semibold text-ocean-600 uppercase tracking-wider">University of Amsterdam</span>
-                        <a href="assets/pdf/MSc_Thesis_Coen_van_den_Elsen_Geometric_Weather.pdf" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-brand-600 hover:text-brand-500 uppercase tracking-wider">
-                            <i class="fas fa-file-pdf mr-1"></i>Thesis
-                        </a>
-                        <a href="https://github.com/CoenvdE/geometric-weather" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-brand-600 hover:text-brand-500 uppercase tracking-wider">
-                            <i class="fab fa-github mr-1"></i>Code
-                        </a>
-                    </div>
+                    <span class="text-sm text-ocean-600 dark:text-ocean-300 tabular-nums">2026</span>
                 </div>
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mb-3">MSc thesis, University of Amsterdam. Supervisor David Wessels, examiner Erik Bekkers. Grade 8.5.</p>
+                <p class="text-ocean-700 dark:text-ocean-200 leading-relaxed mb-3">
+                    How geometric inductive biases shape weather-model skill and <em>physical</em> fidelity, isolating one design choice at a time on global ERA5. Introduces Platonic-Erwin, a linearly-scaling ball-tree transformer with roto-translation group equivariance. Symmetry helps as an inductive bias but not as a hard constraint: scale buys deterministic skill, geometry buys spectral fidelity, calibration and parameter efficiency.
+                </p>
+                <p class="flex flex-wrap gap-x-4 text-sm">
+                    <a href="assets/pdf/MSc_Thesis_Coen_van_den_Elsen_Geometric_Weather.pdf" target="_blank" rel="noopener noreferrer" class="text-brand-600 dark:text-brand-300 hover:text-brand-700 dark:hover:text-brand-200 underline underline-offset-4 decoration-brand-300 dark:decoration-brand-600 transition-colors">Thesis PDF</a>
+                    <a href="https://github.com/CoenvdE/geometric-weather" target="_blank" rel="noopener noreferrer" class="text-brand-600 dark:text-brand-300 hover:text-brand-700 dark:hover:text-brand-200 underline underline-offset-4 decoration-brand-300 dark:decoration-brand-600 transition-colors">Code</a>
+                </p>
+            </article>
 
-                <!-- Project 2 -->
-                <div class="bg-slate-50 dark:bg-slate-900 rounded-xl p-8 border border-slate-100 dark:border-slate-700 hover:shadow-lg hover:border-brand-200 transition-all group relative">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="p-3 bg-indigo-100 text-indigo-600 rounded-lg group-hover:bg-indigo-500 group-hover:text-white transition-colors">
-                            <i class="fas fa-search text-xl"></i>
-                        </div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">2025</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-3 group-hover:text-brand-600 transition-colors">
-                        <a href="https://arxiv.org/abs/2502.13506" target="_blank" rel="noopener noreferrer" class="focus:outline-none">
-                            <span class="absolute inset-0" aria-hidden="true"></span>
-                            Reproducing NevIR: Negation in Neural IR <i class="fas fa-external-link-alt text-sm ml-1"></i>
-                        </a>
+            <article class="py-6">
+                <div class="sm:flex sm:items-baseline sm:justify-between sm:gap-6 mb-2">
+                    <h3 class="text-xl text-ocean-900 dark:text-paper-100">
+                        <a href="https://arxiv.org/abs/2502.13506" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 dark:hover:text-brand-300 transition-colors">Reproducing NevIR: Negation in Neural Information Retrieval</a>
                     </h3>
-                    <p class="text-slate-600 dark:text-slate-300 mb-4 text-sm leading-relaxed">
-                        Published at SIGIR 2025. Replicated and extended NevIR to assess IR models' handling of negation. Found only cross-encoders and listwise LLM re-rankers achieved moderate performance. Showed poor generalization when fine-tuning across negation datasets.
-                    </p>
-                    <div class="mt-auto pt-4 border-t border-slate-200 dark:border-slate-700">
-                        <span class="text-xs font-semibold text-ocean-600 uppercase tracking-wider">University of Amsterdam</span>
-                    </div>
+                    <span class="text-sm text-ocean-600 dark:text-ocean-300 tabular-nums">2025</span>
                 </div>
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mb-3">Published at SIGIR 2025, University of Amsterdam.</p>
+                <p class="text-ocean-700 dark:text-ocean-200 leading-relaxed">
+                    Replicated and extended NevIR to assess how IR models handle negation. Only cross-encoders and listwise LLM re-rankers reached moderate performance, still below human level, and fine-tuning across negation datasets generalised poorly.
+                </p>
+            </article>
 
-                <!-- Project 3 -->
-                <div class="bg-slate-50 dark:bg-slate-900 rounded-xl p-8 border border-slate-100 dark:border-slate-700 hover:shadow-lg hover:border-brand-200 transition-all group relative">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="p-3 bg-ocean-100 text-ocean-600 rounded-lg group-hover:bg-ocean-600 group-hover:text-white transition-colors">
-                            <i class="fas fa-shapes text-xl"></i>
-                        </div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">2023</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-3 group-hover:text-brand-600 transition-colors">
-                        <a href="https://github.com/raoulritter/geometric-algebra-simplicial-transformers" target="_blank" rel="noopener noreferrer" class="focus:outline-none">
-                            <span class="absolute inset-0" aria-hidden="true"></span>
-                            Geometric Algebra Simplicial Transformer <i class="fab fa-github text-sm ml-1"></i>
-                        </a>
+            <article class="py-6">
+                <div class="sm:flex sm:items-baseline sm:justify-between sm:gap-6 mb-2">
+                    <h3 class="text-xl text-ocean-900 dark:text-paper-100">
+                        <a href="https://github.com/raoulritter/geometric-algebra-simplicial-transformers" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 dark:hover:text-brand-300 transition-colors">Geometric Algebra Simplicial Transformer</a>
                     </h3>
-                    <p class="text-slate-600 dark:text-slate-300 mb-4 text-sm leading-relaxed">
-                        Proposed a novel class of equivariant transformers. Leveraged simplicial complexes and Clifford algebra to capture full symmetry group equivariance.
-                    </p>
-                    <div class="mt-auto pt-4 border-t border-slate-200 dark:border-slate-700">
-                        <span class="text-xs font-semibold text-ocean-600 uppercase tracking-wider">University of Amsterdam</span>
-                    </div>
+                    <span class="text-sm text-ocean-600 dark:text-ocean-300 tabular-nums">2023</span>
                 </div>
-            </div>
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mb-3">Deep Learning 2 project, University of Amsterdam.</p>
+                <p class="text-ocean-700 dark:text-ocean-200 leading-relaxed">
+                    Proposed a novel class of equivariant transformers, using simplicial complexes and Clifford algebra to capture full symmetry group equivariance.
+                </p>
+            </article>
+
+            <article class="py-6">
+                <div class="sm:flex sm:items-baseline sm:justify-between sm:gap-6 mb-2">
+                    <h3 class="text-xl text-ocean-900 dark:text-paper-100">Predicting Perceived Attributes of Urban Images</h3>
+                    <span class="text-sm text-ocean-600 dark:text-ocean-300 tabular-nums">2022</span>
+                </div>
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mb-3">BSc thesis, University of Amsterdam.</p>
+                <p class="text-ocean-700 dark:text-ocean-200 leading-relaxed">
+                    Used GIST features to cluster Amsterdam street scenes, and explored how well those clusters capture perceived attributes of urban environments.
+                </p>
+            </article>
+
+            <article class="py-6">
+                <div class="sm:flex sm:items-baseline sm:justify-between sm:gap-6 mb-2">
+                    <h3 class="text-xl text-ocean-900 dark:text-paper-100">Robustness Against Label Noise in Road Defect Severity Estimation</h3>
+                    <span class="text-sm text-ocean-600 dark:text-ocean-300 tabular-nums">2021</span>
+                </div>
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mb-3">Learning and Deciding project, University of Amsterdam.</p>
+                <p class="text-ocean-700 dark:text-ocean-200 leading-relaxed">
+                    Researched CNN-based road defect severity estimation and classification, studied the impact of label noise and proposed robustness strategies.
+                </p>
+            </article>
         </div>
     </section>
 
+    <!-- Writing -->
+    <section id="blogs" class="py-14 border-t border-paper-300 dark:border-ocean-800 scroll-mt-16">
+        <h2 class="eyebrow text-ocean-600 dark:text-ocean-300 mb-6">Writing</h2>
 
-    <!-- Blogs Section -->
-    <section id="blogs" class="py-20 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-ocean-900 dark:text-brand-300 mb-4">Blogs</h2>
-                <div class="w-24 h-1 bg-brand-500 mx-auto rounded-full"></div>
-                <p class="mt-4 text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">Insights, tutorials, and research musings.</p>
-            </div>
+        <div class="rows">
+            <article class="relative py-6 first:pt-0 group">
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mb-1 tabular-nums">9 November 2026</p>
+                <h3 class="text-xl text-ocean-900 dark:text-paper-100 mb-1">
+                    <a href="https://ropdam.substack.com/p/our-coding-brain" target="_blank" rel="noopener noreferrer" class="group-hover:text-brand-600 dark:group-hover:text-brand-300 transition-colors"><span class="absolute inset-0" aria-hidden="true"></span>Our coding brain</a>
+                </h3>
+                <p class="text-ocean-700 dark:text-ocean-200">The Obsidian vault that runs our coding agents.</p>
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mt-1">With Robin Opdam, on Substack.</p>
+            </article>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Blog Card 1 -->
-                <div class="relative bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-md transition-shadow group flex flex-col h-full">
-                    <div class="relative h-48 bg-slate-100 dark:bg-slate-700 overflow-hidden">
-                        <img src="images/training-blog/intro_image_larger_scale.png" alt="Training at Larger Scale" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="text-xl font-bold text-ocean-900 dark:text-brand-300 mb-2">
-                            <a href="blogs/training-at-larger-scale/index.html" class="focus:outline-none">
-                                <span class="absolute inset-0" aria-hidden="true"></span>
-                                Training at Larger Scale
-                            </a>
-                        </h3>
-                        <p class="text-slate-600 dark:text-slate-300 text-sm mb-4 flex-grow">A guide on scaling machine learning from small to larger training setups.</p>
-                        <a href="blogs/training-at-larger-scale/index.html" class="inline-flex items-center text-brand-600 hover:text-brand-500 font-medium">
-                            Read more <i class="fas fa-arrow-right ml-2 text-sm"></i>
-                        </a>
-                    </div>
-                </div>
-                <!-- RoPE: re-add homepage card here when the post is ready (see import_rope_blog.py). -->
-                <!-- Blog Card: Claude workflow -->
-                <div class="relative bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-md transition-shadow group flex flex-col h-full">
-                    <div class="relative h-48 bg-gradient-to-br from-ocean-900 via-brand-700 to-brand-500 overflow-hidden flex items-center justify-center">
-                        <i class="fas fa-terminal text-6xl text-white/80 group-hover:scale-110 transition-transform duration-500"></i>
-                    </div>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="text-xl font-bold text-ocean-900 dark:text-brand-300 mb-2">
-                            <a href="blogs/claude-workflow/index.html" class="focus:outline-none">
-                                <span class="absolute inset-0" aria-hidden="true"></span>
-                                A Claude Code Setup for Fast Building and Research
-                            </a>
-                        </h3>
-                        <p class="text-slate-600 dark:text-slate-300 text-sm mb-4 flex-grow">Rules, skills, hooks and an anti-drift system that keep an AI collaborator fast, safe and honest.</p>
-                        <a href="blogs/claude-workflow/index.html" class="inline-flex items-center text-brand-600 hover:text-brand-500 font-medium">
-                            Read more <i class="fas fa-arrow-right ml-2 text-sm"></i>
-                        </a>
-                    </div>
-                </div>
-                <!-- Blog Card: Research template -->
-                <div class="relative bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-md transition-shadow group flex flex-col h-full">
-                    <div class="relative h-48 bg-gradient-to-br from-brand-500 via-ocean-800 to-ocean-900 overflow-hidden flex items-center justify-center">
-                        <i class="fas fa-flask text-6xl text-white/80 group-hover:scale-110 transition-transform duration-500"></i>
-                    </div>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="text-xl font-bold text-ocean-900 dark:text-brand-300 mb-2">
-                            <a href="blogs/research-template/index.html" class="focus:outline-none">
-                                <span class="absolute inset-0" aria-hidden="true"></span>
-                                A Solid Research Template
-                            </a>
-                        </h3>
-                        <p class="text-slate-600 dark:text-slate-300 text-sm mb-4 flex-grow">Efficient, trustworthy ML research: guardrail tests, performance callbacks and provenance, wired for Claude Code.</p>
-                        <a href="blogs/research-template/index.html" class="inline-flex items-center text-brand-600 hover:text-brand-500 font-medium">
-                            Read more <i class="fas fa-arrow-right ml-2 text-sm"></i>
-                        </a>
-                    </div>
-                </div>
+            <article class="relative py-6 group">
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mb-1 tabular-nums">24 July 2026</p>
+                <h3 class="text-xl text-ocean-900 dark:text-paper-100 mb-1">
+                    <a href="blogs/claude-workflow/index.html" class="group-hover:text-brand-600 dark:group-hover:text-brand-300 transition-colors"><span class="absolute inset-0" aria-hidden="true"></span>A Claude Code Setup for Fast Building and Research</a>
+                </h3>
+                <p class="text-ocean-700 dark:text-ocean-200">Rules, skills, hooks and an anti-drift system that keep an AI collaborator fast, safe and honest.</p>
+            </article>
 
-            </div>
+            <article class="relative py-6 group">
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mb-1 tabular-nums">24 July 2026</p>
+                <h3 class="text-xl text-ocean-900 dark:text-paper-100 mb-1">
+                    <a href="blogs/research-template/index.html" class="group-hover:text-brand-600 dark:group-hover:text-brand-300 transition-colors"><span class="absolute inset-0" aria-hidden="true"></span>A Solid Research Template</a>
+                </h3>
+                <p class="text-ocean-700 dark:text-ocean-200">Efficient, trustworthy ML research: guardrail tests, performance callbacks and provenance, wired for Claude Code.</p>
+            </article>
+
+            <!-- RoPE: re-add a row here when the post is ready (see import_rope_blog.py). -->
+
+            <article class="relative py-6 group">
+                <p class="text-sm text-ocean-600 dark:text-ocean-300 mb-1 tabular-nums">6 May 2025</p>
+                <h3 class="text-xl text-ocean-900 dark:text-paper-100 mb-1">
+                    <a href="blogs/training-at-larger-scale/index.html" class="group-hover:text-brand-600 dark:group-hover:text-brand-300 transition-colors"><span class="absolute inset-0" aria-hidden="true"></span>Training at Larger Scale</a>
+                </h3>
+                <p class="text-ocean-700 dark:text-ocean-200">A guide on scaling machine learning from small to larger training setups.</p>
+            </article>
         </div>
     </section>
+
+    </main>
 
     <!-- Footer -->
-    <footer class="bg-ocean-900 text-slate-300 py-12 border-t border-ocean-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-4 md:mb-0">
-                <span class="font-serif font-bold text-xl text-white">Coen van den Elsen</span>
-                <p class="text-sm text-ocean-200 mt-2">&copy; 2025 Coen van den Elsen. AI for a better world.</p>
-            </div>
-            <div class="flex space-x-6">
-                <a href="mailto:coen@vandenelsen.nu" class="text-ocean-200 hover:text-white transition-colors">
-                    <span class="sr-only">Email</span>
-                    <i class="fas fa-envelope text-xl"></i>
-                </a>
-                <a href="https://github.com/CoenvdE" target="_blank" class="text-ocean-200 hover:text-white transition-colors">
-                    <span class="sr-only">GitHub</span>
-                    <i class="fab fa-github text-xl"></i>
-                </a>
-                <a href="https://linkedin.com/in/coen-van-den-elsen" target="_blank" class="text-ocean-200 hover:text-white transition-colors">
-                    <span class="sr-only">LinkedIn</span>
-                    <i class="fab fa-linkedin text-xl"></i>
-                </a>
-            </div>
+    <footer class="border-t border-paper-300 dark:border-ocean-800 py-10">
+        <div class="max-w-3xl mx-auto px-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <p class="text-sm text-ocean-600 dark:text-ocean-300">&copy; 2026 Coen van den Elsen</p>
+            <ul class="flex gap-5 text-sm text-ocean-600 dark:text-ocean-300">
+                <li><a href="mailto:coen@vandenelsen.nu" class="hover:text-brand-600 dark:hover:text-brand-300 transition-colors">Email</a></li>
+                <li><a href="https://github.com/CoenvdE" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 dark:hover:text-brand-300 transition-colors">GitHub</a></li>
+                <li><a href="https://linkedin.com/in/coen-van-den-elsen" target="_blank" rel="noopener noreferrer" class="hover:text-brand-600 dark:hover:text-brand-300 transition-colors">LinkedIn</a></li>
+            </ul>
         </div>
     </footer>
 
